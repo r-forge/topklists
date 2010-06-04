@@ -1,0 +1,64 @@
+\name{init.p}
+\alias{init.p}
+\title{
+Initialization method for probabilities
+}
+\description{
+Initialization method for probabilities
+}
+\usage{
+init.p(topK, n, k, init.m = "p", init.w = 0)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{topK}{
+a list of input lists, with items coded from 1 to n
+}
+  \item{n}{
+total number of items
+}
+  \item{k}{
+length of target list
+}
+  \item{init.m}{
+initialization method, "p" point mass, "s" smooth, "cp" point mass using composite ranks, "cs" smooth using composite ranks
+}
+  \item{init.w}{
+initialization weight
+}
+}
+\value{
+A probability matrix
+}
+\references{
+%% ~put references to the literature/web site here ~
+%TODO: ref
+}
+\author{
+Shili Lin <shili@stat.ohio-state.edu>
+}
+\note{
+%%  ~~further notes~~
+}
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+}
+\examples{
+set.seed(1234)
+
+rank.pool <- 1:10
+a <- sample(rank.pool, 10)
+b <- sample(rank.pool, 10)
+c <- sample(rank.pool, 10)
+rlist <- list(a, b, c)
+
+
+init.p(rlist, length(unique(unlist(rlist))), 5, "cp")
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ htest }
+\keyword{ robust }
