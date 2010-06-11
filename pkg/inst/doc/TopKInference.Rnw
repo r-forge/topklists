@@ -1,0 +1,71 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+
+%opening
+\title{Using TopKInference}
+%\VignetteIndexEntry{Using TopKInference} 
+\author{Michael Schimek}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{Prepare data}
+Estimate the point of degeneration of signal (begginning of the noise), under parameter settings (const = C, v=ni)
+
+<<>>=
+
+k.to.estimate = 30
+x = c(rep(1,k.to.estimate), rbinom(100, 1, 0.2))
+
+#x = c(rbinom(150, 1, 0.5))
+
+v.vect=seq(2,length(x), by=2)
+
+res.j0.10=matrix(NA,length(v.vect), 5)
+res.j0.10.Js = list()
+
+i=0
+
+for (v in v.vect)
+ {
+	i=i+1
+	res=compute.stream(x, const=0.5, v)
+	res.j0.10[i,1] = v
+	res.j0.10[i,2] = res[[1]][1]
+	res.j0.10[i,3] = res[[2]][1]
+	
+	temp.paste = ""
+	v.vector.paste = ""
+
+	for (j in c(1:length(res[[3]])))
+	{
+		temp.paste = paste(temp.paste, res[[3]][j])
+	}
+
+	res.j0.10[i,4] = temp.paste
+
+	for (a in c(1:length(res[[4]])))
+	{
+		v.vector.paste = paste(v.vector.paste, res[[4]][a])
+	}
+	res.j0.10[i,5] = v.vector.paste
+}
+
+colnames(res.j0.10)=c("v", "j0_est", "reason.break", "Js", "v.vector")
+res.j0.10
+@
+
+\section{Visualize the result}
+
+<<fig=T>>=
+plot(res.j0.10[,1], res.j0.10[,2], pch=19, ylim=c(0, length(x)))
+abline(a=k.to.estimate, b=0, col="green")
+lines(res.j0.10[,1], res.j0.10[,2])
+@
+
+\end{document}

@@ -6,8 +6,8 @@
 
 
 %opening
-\title{Using ExcCEMC with parameter files}
-%\VignetteIndexEntry{Using ExcCEMC with parameter files} 
+\title{Using TopKCEMC}
+%\VignetteIndexEntry{Using TopKCEMC} 
 \author{Shili Lin}
 
 \begin{document}
