@@ -1,0 +1,45 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+
+%opening
+\title{Using TopKSpace}
+%\VignetteIndexEntry{Using TopKSpace} 
+\author{Shili Lin}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+For running the examples in this vignette you have to load the sample data first
+
+<<>>=
+library(topklists)
+data(TopKSpaceSampleInput)
+@
+
+\section{Calling the functions}
+
+<<>>=
+bb1=Borda(input,space) #platform dependent
+bb2=Borda(input,input) #top-k spaces
+
+mm=trans.matrix(input,space) #platform dependent
+MC1=MC.ranks(mm[[2]],mm[[4]])
+MC2=MC.ranks(mm[[2]],mm[[5]])
+MC3=MC.ranks(mm[[2]],mm[[6]])
+mm1=trans.matrix(input,input) #top-k spaces
+MC11=MC.ranks(mm1[[2]],mm1[[4]])
+MC21=MC.ranks(mm1[[2]],mm1[[5]])
+MC31=MC.ranks(mm1[[2]],mm1[[6]])
+@
+
+\section{Session info}
+<<>>=
+sessionInfo()
+@
+
+\end{document}

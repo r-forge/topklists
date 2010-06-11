@@ -2,10 +2,10 @@
 \alias{trans.matrix}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Compute transition matrices for all three MC algorithms
+Compute transition matrices
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Compute transition matrices for all three MC algorithms
 }
 \usage{
 trans.matrix(input, space)
@@ -20,7 +20,7 @@ trans.matrix(input, space)
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Both input and space are lists of the same length=nList
 }
 \value{
 %%  ~Describe the value returned

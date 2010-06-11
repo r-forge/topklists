@@ -5,7 +5,7 @@
 Method for counting K(j0_est)
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Method to count K(j0_est) for each pair of several ranked lists. 
 }
 \usage{
 j0.multi(Data, m.dist, v)

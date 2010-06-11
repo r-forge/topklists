@@ -5,7 +5,7 @@
 Calculate the l2 norm
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Calculated the l2 norm.
 }
 \usage{
 l2norm(x, na.rm = TRUE)
