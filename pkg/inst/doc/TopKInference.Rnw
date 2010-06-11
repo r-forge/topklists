@@ -68,4 +68,10 @@ abline(a=k.to.estimate, b=0, col="green")
 lines(res.j0.10[,1], res.j0.10[,2])
 @
 
+\section{Session info}
+<<>>=
+sessionInfo()
+@
+
+
 \end{document}
