@@ -3,8 +3,8 @@ Type: Package
 Title: Inference, aggregation and visualization for top-k rank lists
 Version: 1.0
 Date: 2010-06-11
-Author: Michael Schimek, Shili Lin, Karl Kugler, with contributions by Feiyou Qiu, Ding Jie
-Maintainer: Michael Schimek <michael.schimek@medunigraz.at>
+Author: Michael G. Schimek, Shili Lin, Karl Kugler, with contributions by Feiyou Qiu, Ding Jie
+Maintainer: Michael G. Schimek <michael.schimek@medunigraz.at>
 Depends: 
 Description: More about what it does (maybe more than one line)
 License: GPL-2
