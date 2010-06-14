@@ -14,7 +14,7 @@ More about what it does (maybe more than one line)
 Package: \tab topklists\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
-Date: \tab 2010-04-26\cr
+Date: \tab 2010-06-11\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
@@ -24,7 +24,7 @@ LazyLoad: \tab yes\cr
 \author{
 Michael Schimek, Shili Lin, Karl Kugler, with contributions by Feiyou Qiu, Ding Jie
 
-Maintainer: Michael Schimek <michael.schimek@donau-uni.ac.at>
+Maintainer: Michael G. Schimek <michael.schimek@medunigraz.at>
 }
 \references{
 ~~ Literature or other references for background information ~~
