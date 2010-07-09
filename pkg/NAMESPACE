@@ -1,4 +1,4 @@
-useDynLib(topklists)
+useDynLib(TopKLists)
 
 ##export everything that does not start with a .
 exportPattern("^[^\\.]")

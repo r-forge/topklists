@@ -40,7 +40,7 @@ For samples of input txt files, see inst directory of this package
 }
 \examples{
 ## to demonstrate the use we have to temporarilly change the working directory
-mypath <- system.file(package="topklists")
+mypath <- system.file(package="TopKLists")
 temp <- getwd()
 
 setwd(paste(mypath, "extdata", sep="/"))

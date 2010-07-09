@@ -17,7 +17,7 @@
 For running the examples in this vignette you have to load the sample data first
 
 <<>>=
-library(topklists)
+library(TopKLists)
 data(TopKSpaceSampleInput)
 @
 

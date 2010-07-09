@@ -14,6 +14,12 @@
 
 \end{abstract}
 
+First load the TopKLists package
+
+<<>>=
+library(TopKLists)
+@
+
 \section{Prepare data}
 Estimate the point of degeneration of signal (begginning of the noise), under parameter settings (const = C, v=ni)
 

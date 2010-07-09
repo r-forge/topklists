@@ -20,10 +20,10 @@
 
 
 \section{Load package}
-To get access to the \texttt{ExcCEMC}-function you have to attach the package \texttt{topklists} first.
+To get access to the \texttt{ExcCEMC}-function you have to attach the package \texttt{TopKLists} first.
 
 <<>>=
-library(topklists)
+library(TopKLists)
 @
 
 \section{Input files}
@@ -119,7 +119,7 @@ After having defined your input you can finally call the algorithm:
 temp <- getwd()
 
 #change path
-mypath <- system.file(package="topklists")
+mypath <- system.file(package="TopKLists")
 setwd(paste(mypath, "extdata", sep="/"))
 
 #call function
