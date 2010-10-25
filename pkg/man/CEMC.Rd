@@ -1,63 +1,72 @@
 \name{CEMC}
 \alias{CEMC}
+%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Perform cross-entropy Monte Carlo simulations
+CEMC combination of TopKLists
 }
 \description{
-Perform cross-entropy Monte Carlo simluations
+Perform cross-entropy Monte Carlo simluations for generating combined ranked list using CEMC
+taking into account difference spaces of input ranked lists
 }
 \usage{
-CEMC(topK, k, dm = "s", N = NULL, N1 = NULL, rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0, d.w = NULL, input.par = NULL)
+CEMC(input, k, space = NULL, dm = "Kendall", kp = 0.5, N = NULL, N1 = NULL, rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0, d.w = NULL, input.par = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{topK}{
-A list of several top K lists, may have different length, one column for each list, ended with NA's
+  \item{input}{
+A list of several TopKLists, may have different length
 }
   \item{k}{
-Length of needed list
+Desired length of combined list
+}
+  \item{space}{
+Underlying spaces for the lists, NULL means all lists share common space
 }
   \item{dm}{
-Distance measure, "s" for spearman, "k" for kendall(p=0)
+Distance measure, "Kendall" or "Spearman"
+}
+  \item{kp}{
+Partial distance used in Kendall's tau distance measure
 }
   \item{N}{
-Number of samples each iterate
+Number of samples generated in each iterate
 }
   \item{N1}{
-Number of best samples retained each iterate
+Number of samples retained after each iterate 
 }
   \item{rho}{
-Proportion of samples used to estimated new probability matrix (default = 0.1)
+Proportion of samples used to estimate new probability matrix
 }
   \item{e1}{
-for p
+Stop criteria w.r.t. p
 }
   \item{e2}{
-for y
+Stop criteria w.r.t. y
 }
   \item{w}{
 Weight of the new probabilities estimate each iterate
 }
   \item{b}{
-Parameter used in .blur function
+Parameter used in blur function
 }
   \item{init.m}{
-Initialization method, see the function \code{\link{init.p}} for details
+Initialization method, see the function \code{init.p} for details
 }
   \item{init.w}{
-Probability matrix initialization:
+Probability matrix initialization. (See Details)
 }
   \item{d.w}{
 Weights for distances from different input lists
 }
   \item{input.par}{
-Dataframe of input parameters
+Input parameters in a data.frame
 }
 }
 \details{
+init.w: probability matrix initialization:
+(1-init.w) * uniform +  init.w * estimated from input lists
 }
 \value{
-CEMC returns names list containing the results, as well as information on the method call
 }
 \references{
 }
@@ -65,17 +74,25 @@ CEMC returns names list containing the results, as well as information on the me
 Shili Lin <shili@stat.ohio-state.edu>
 }
 \note{
+%%  ~~further notes~~
 }
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+set.seed(1234)
+a <- LETTERS[sample(1:20, 10)]
+b <- LETTERS[sample(1:20, 10)]
+c <- LETTERS[sample(1:20, 10)]
 
-A <- sample(1:10, 10)
-B <- sample(1:10, 10)
-C <- sample(1:10, 10)
+myin <- list(a, b, c)
 
-CEMC(cbind(A, B, C), 10)
+CEMC(myin, 10, init.m= "p")
 }
-\keyword{ robust }
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
 \keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

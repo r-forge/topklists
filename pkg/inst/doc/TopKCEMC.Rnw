@@ -20,113 +20,30 @@
 
 
 \section{Load package}
-To get access to the \texttt{ExcCEMC}-function you have to attach the package \texttt{TopKLists} first.
-
+To get access to the \texttt{CEMC}-function you have to attach the package \texttt{TopKLists} first.
 <<>>=
 library(TopKLists)
 @
 
-\section{Input files}
-There are two types of input files:
+\section{Sample data}
+<<>>=
+a <- LETTERS[sample(1:20, 10)]
+b <- LETTERS[sample(1:20, 10)]
+c <- LETTERS[sample(1:20, 10)]
 
-\begin{itemize}
- \item Data files, which include the lists to be used as input information
- \item Parameter files, which contains the settings for executing the program
-\end{itemize}
-
-Note that in the input files, anything after \texttt{\#} denote comments.
-
-
-\subsection{Data files}
-There are two formats for data file. You can choose either option, as detailed below. We recommend the second one.
-
-\subsubsection{All lists in one file}
-All lists in one file. In this format, you need to provide the total number of lists and total number of each items. An example of  this input is in "All\_in\_one\_example.txt"
-
-\begin{verbatim}
-n                       ###### Total number of lists to be aggregation
-k1                      ###### Total number of elements in list1
-G11                     ###### k1 identifiers for the k1 elements in list1
-G12
-....
-G1k1
-k2                      ###### Total number of elements in the list2
-G11                     ###### k2 identifiers for the k1 elements in list2
-G12
-....
-G1k1
-....
-....
-kn                      ###### Total number of elements in the list_n
-G11                     ###### kn identifiers for the k1 elements in listn
-G12
-....
-G1kn
-\end{verbatim}
-
-\subsubsection{One file per list}
-In each file the format is as follows. An example of this input is in "inputlist1.txt","inputlist2.txt","inputlist3.txt"
-
-\begin{verbatim}
-G1                      ###### k_i identifiers for the k1 elements in list_i
-G2
-...
-\end{verbatim}
+myin <- list(a, b, c)
+@
 
 
-\subsection{Parameter files}
-The parameter file needsto be saved as "para.txt". See the "para.txt" in your working directory as an example. For the runing parameter, we suggest you use the default set in this example file.
-
-\begin{verbatim}
-InputStyle=a   # a=0 if lists in input format(i)(a single file)
-                 # a=1 if lists in input format(i)(one file per list)
-  FileNames=b    # b="file1,file2,...,filen", 
-		 # if InputStyle=0 you only need to specify on input file
-  OutputType=c   # c=0  	:Screen output
-                 # c=1    :output to text file;
-		 #The output  file will be "tempout.txt"
-                 # c=2    :both Screen output and txt file output;
-  prob_out=d     # d=0    :no output for probability matrix
-                 # d=1    :output for probability matrix
-  dm=e         	 # e='s'  :distance measure for Spearman's footrule
-                 # e="k"  :distance measure for Kendall's tau
-  k=f            # f	  :f is the size of the ordered list to be 
-		 # outputed. K can't exceed the maximum of the input lists.
-
-  #The following tunning par specifications are our 
-  # recommendation, but they can be changed by user
-  N=n 	         # n      :number of random samples in each iterate
-                 #(default value: 10*total number of different 
-		 # items in the input lists)
-  N1=n1          # n1     :number of random samples retained from 
-	         # the previous iterate each time (default value: 0.1 * N)
-  rho=r          # r      :proportion of top random samples used to 
-                 # estimated new probability matrix (default value: 0.1)
-  w=w            # w:     :weight of the estimated probability matrix. 
-                 # The new probability matrix after each iterate is: 
-                 # w * estimated matrix + (1-w) * matrix 
-                 # after previous iterate (default value: 0.5)
-  d.w=dw         # dw 	   :the weighted average distances between 
-                 # aggregated lists and input lists.
-                 # (default value: 1 for all input lists)
-\end{verbatim}
-
-\section{Call of ExcCEMC}
+\section{Call of CEMC}
 After having defined your input you can finally call the algorithm:
 
 <<>>=
-#memorize for later
-temp <- getwd()
+res <- CEMC(myin, 6, init.m= "p")
 
-#change path
-mypath <- system.file(package="TopKLists")
-setwd(paste(mypath, "extdata", sep="/"))
+res$list
 
-#call function
-ExcCEMC(para="para.txt")
-
-##set wd back to normal
-setwd(temp)
+res$dist
 
 @
 

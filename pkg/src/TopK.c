@@ -79,10 +79,11 @@ int randomsamp(int n, double *p)
 
 void kendallc(int *rank_a, int *rank_b, int *n, int *nb, double *p, double *dist) 
 {
-
+  //calculate kendall's tau distances between a list rank_a and several lists
+  //in rank_b  
   int i,j,k;
-  int tn=*n; 
-  int tnb=*nb; 
+  int tn=*n; //number of items in each list
+  int tnb=*nb; //number of lists in rank_b 
 
   for (i=0;i<tnb;i++) {
     for (j=0;j<tn-1;j++) {
@@ -93,6 +94,47 @@ void kendallc(int *rank_a, int *rank_b, int *n, int *nb, double *p, double *dist
 	  dist[i] += 1;
 	else if (rank_a[j]==rank_a[k] || rank_b[tn*i+j]==rank_b[tn*i+k])
 	  dist[i] += *p;
+      }
+    }
+  }
+}
+
+void kendall2c(int *rank_a, int *rank_b, int *n, int *nb, int *la, int *lb,
+	      double *p,  double *dist)
+{
+  //calculate kendall's tau distances between a list rank_a and several lists 
+  //in rank_b with consideration for different underlying spaces    
+
+  //la: length of list rank_a
+  //lb: length of lists in rank_b
+  //ranks: positive integer no larger than la or lb: ranked 
+  //       la+1 or lb+1: in the space but unranked
+  //       0: not in the space
+
+  int i,j,k;
+  int tn=*n; //number of all items among all lists            
+  int tnb=*nb; //number of lists in rank_b                                
+  int a1,a2,b1,b2; //ranks of two items in two lists
+
+  for (i=0;i<tnb;i++) {
+    for (j=0;j<tn-1;j++) {
+      for (k=j+1;k<tn;k++) {
+	a1 = rank_a[j];
+	a2 = rank_a[k];
+	b1 = rank_b[tn*i+j];
+	b2 = rank_b[tn*i+k];
+	//each item should be ranked in at least one of the two lists
+	if (((a1>0 && a1<=*la) || (b1>0 && b1<=*lb)) && 
+	    ((a2>0 && a2<=*la) || (b2>0 && b2<=*lb))) {
+	  if (a1 == 0 || a2 == 0 || b1 == 0 || b2 == 0) 
+	    dist[i] += *p; //at least one item is not in the space of one list
+	  else if (a1==a2 || b1==b2)
+	    dist[i] += *p;
+	  else if (a1<a2 && b1>b2)
+	    dist[i] += 1;
+	  else if (a1>a2 && b1<b2)
+	    dist[i] += 1;
+	}
       }
     }
   }

@@ -5,21 +5,27 @@
 Calculate modified Spearman's footrule distance between two top K lists
 }
 \description{
-Spearman's footrule is a measure fir distance between ranked lists. It given as the sum of absolute differences between ranks of two lists. This modificated version allows for comparing partial lists.
+Spearman's footrule is a measure for distance between ranked lists. It given as the sum of absolute differences between ranks of two lists. This modificated version allows for comparing partial lists.
 }
 \usage{
-spearman(a, b, n = 0)
+spearman(rank.a, rank.b, k.a, k.b, n)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{a}{
-a single top k list
+  \item{rank.a}{
+A single TopKList
 }
-  \item{b}{
-a matrix with the top k list(s) need to be compared to list a, each column is one list
+  \item{rank.b}{
+A vector of matrix form of TopKList(s) to be compared to list \code{a}
+}
+  \item{k.a}{
+Value of \code{k} for \code{rank.a}
+}
+  \item{k.b}{
+Value of \code{k} for \code{rank.b}
 }
   \item{n}{
-total number of objects, numbered from 1 to n
+Total number of objects, numbered from 1 to n
 }
 }
 \details{
@@ -43,15 +49,9 @@ Implemented using native C code. For the R version see \code{\link{kendall}}.
 }
 \examples{
 set.seed(1234)
-rank.pool <- 1:10
-a <- sample(rank.pool, 10)
-b <- sample(rank.pool, 10)
-#for comparing two lists
-kendall.c(a, b)
-
-#for comparing more than two lists make a matrix
-c <- sample(rank.pool, 10)
-kendall.c(a, cbind(b, c))
+a <- sample(1:10, 10)
+b <- sample(1:10, 10)
+spearman(a, b, 6, 6, 10)
 
 }
 \keyword{ arith }

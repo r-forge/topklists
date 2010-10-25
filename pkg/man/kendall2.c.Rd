@@ -1,13 +1,13 @@
-\name{kendall}
-\alias{kendall}
+\name{kendall2.c}
+\alias{kendall2.c}
 \title{
-Calculate modified Kendall's Tau distance
+Modified Kendall's tau Distance (Native C Implementation)
 }
 \description{
-Kendall's Tau is equal to the number of adjunct pairwise exchanges required to convert one ranking into another. This modified version allows for partial lists to be compared.
+Kendall's tau distance between top K lists with different underlying spaces
 }
 \usage{
-kendall(rank.a, rank.b, k.a, k.b, n, p = 0)
+kendall2.c(rank.a, rank.b, k.a, k.b, n, p = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,6 +31,7 @@ Distance added for tied pair (potential problem when p != 0)
 }
 }
 \details{
+%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
 Returns modified Kendall's Tau distance against a for each lists within b 
@@ -42,19 +43,19 @@ Returns modified Kendall's Tau distance against a for each lists within b
 Shili Lin <shili@stat.ohio-state.edu>
 }
 \note{
-A faster implementation using native C code is given as \code{\link{kendall.c}}
+%%  ~~further notes~~
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{kendall.c}}, \code{\link{spearman}}
+%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 set.seed(1234)
 a <- sample(1:10, 10)
-b <- sample(1:10, 10)
-kendall(a, b, 6, 6, 10)
+b <- sample(5:15, 10)
+kendall2.c(a, b, 6, 6, 10)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
