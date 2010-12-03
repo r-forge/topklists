@@ -7,5 +7,7 @@ Author: Michael G. Schimek, Medical University of Graz, Austria (software develo
 Maintainer: Michael G. Schimek <michael.schimek@medunigraz.at>
 Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
+Depends: grid
 URL: http://topklists.r-forge.r-project.org
 LazyLoad: yes
+

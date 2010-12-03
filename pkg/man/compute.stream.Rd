@@ -9,12 +9,12 @@ The algorithm consists of an ordered sequence of "test stages" s1, s2....
 Stage sk is associated with an integer Jsk, which when k is odd, is a potential lower bound to j0
 }
 \usage{
-compute.stream(Idata, const = 0.6, v, r = 1.2)
+compute.stream(Idata, const=0.251, v, r=1.2)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Idata}{
-input data is a vector of 0's and 1's
+Input data is a vector of 0's and 1's
 }
   \item{const}{
 %%     ~~Describe \code{const} here~~
@@ -37,7 +37,7 @@ A named list containing:
 %% ~put references to the literature/web site here ~
 }
 \author{
-%%  ~~who you are~~
+ Eva Budinska <budinska@iba.muni.cz>
 }
 \examples{
 set.seed(465)

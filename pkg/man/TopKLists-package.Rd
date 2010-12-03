@@ -11,8 +11,10 @@ More about what it does (maybe more than one line)
 ~~ A concise (1-5 lines) description of the package ~~
 }
 \details{
-~~ An overview of how to use the package, including the most important ~~
-~~ functions ~~
+The package is split into three main moduls:
+- TopKInference: TODO
+- TopSpace: TODO 
+- TopKGraphics: Here we provide functions for visualizing the results from the other modules
 }
 \author{
 Michael G. Schimek, Medical University of Graz, Austria (software

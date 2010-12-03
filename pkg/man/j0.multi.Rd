@@ -8,14 +8,14 @@ Method for counting K(j0_est)
 Method to count K(j0_est) for each pair of several ranked lists. 
 }
 \usage{
-j0.multi(Data, m.dist, v)
+j0.multi(Data,delta, v)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Data}{
 input matrix, each coloum presents one list
 }
-  \item{m.dist}{
+  \item{delta}{
 the maximal distance of the objects in ranking
 }
   \item{v}{
@@ -26,7 +26,7 @@ parameter for estimating j0
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-a list containing
+A list containing the maximal estimated J0 through all combinations of 2 lists:
 \item{maxK}{maximal estimated J0 through all combinations of 2 lists}
 \item{K}{matrix with all pair-wise comparison}
 }
@@ -48,11 +48,11 @@ a list containing
 \examples{
 set.seed(4657)
 
-A <- sample(1:10, 10)
-B <- sample(1:10, 10)
-C <- sample(1:10, 10)
+lists <- data.frame(L1=c("A","B","C","D","E","F","G","H","J","I","K","L","M","N"))
+lists$L2 <- c("B","C","A","E","G","F","G","J","K","L","M","N","I","H")
+lists$L3 <- sample(LETTERS[1:14])
+res.j0.temp = j0.multi(lists, delta=5, v=3)
 
-j0.multi(cbind(A, B, C), 10, 10)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
