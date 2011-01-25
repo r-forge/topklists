@@ -2,11 +2,11 @@
 \alias{compute.stream}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Method to estimate j0
+The actual function estimating the point of degeneration on the signal-noise vector of 0's and 1's created by prepareIdata.
 }
 \description{
 The algorithm consists of an ordered sequence of "test stages" s1, s2....
-Stage sk is associated with an integer Jsk, which when k is odd, is a potential lower bound to j0
+I stage sk an integer Jsk is estimated, which is a potential lower bound to j0 (when k is odd), or potential upper bound to j0 (when k is even).
 }
 \usage{
 compute.stream(Idata, const=0.251, v, r=1.2)
@@ -14,24 +14,24 @@ compute.stream(Idata, const=0.251, v, r=1.2)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Idata}{
-Input data is a vector of 0's and 1's
+Input data is a signal-noise vector of 0s and 1s (see \code{prepareIdata})
 }
   \item{const}{
-%%     ~~Describe \code{const} here~~
+const is 
 }
   \item{v}{
-%%     ~~Describe \code{v} here~~
+Represents a tuning parameter representing the degree of randomness in the assignments. In each step the noise is estimated from Idata as probability of 1 within the interval of size v, moving from Jsk\-v\*r if k is odd or Jsk\+v\*r if k is even, until the convergence or a break (see r).
 }
   \item{r}{
-%%     ~~Describe \code{r} here~~
+a constant determining the starting point from which the probability of 1 is estimated in a winodow of size v (see \code{v}).
 }
 }
 \value{
 A named list containing:
  \item{j0_est }{The estimated position for Idata turning into noise}
- \item{reason.break}{The reason why the computation has ended}
- \item{js}{}
- \item{v.vector}{}
+ \item{reason.break}{The reason why the computation has ended - convergence or other break}
+ \item{js}{The sequence of estimated j0 in each round, shows also the convergence}
+ \item{v}{Value of parameter v used for computation}
 }
 \references{
 %% ~put references to the literature/web site here ~
