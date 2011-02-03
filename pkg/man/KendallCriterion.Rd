@@ -42,7 +42,7 @@ KendallCriterion(input, space, aggregate, p, w)
 %% ~put references to the literature/web site here ~
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Jie Ding <ding@stat.osu.edu>
 }
 \note{
 %%  ~~further notes~~

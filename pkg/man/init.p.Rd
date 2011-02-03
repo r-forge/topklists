@@ -35,7 +35,7 @@ A probability matrix
 %TODO: ref
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Jie Ding <ding@stat.osu.edu>
 }
 \note{
 %%  ~~further notes~~

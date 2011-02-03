@@ -39,7 +39,7 @@ returns modified spearman distance against a for each lists within b
 %%TODO: ref
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Jie Ding <ding@stat.osu.edu>
 }
 \note{
 Implemented using native C code. For the R version see \code{\link{kendall}}.

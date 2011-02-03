@@ -28,7 +28,7 @@ the geometric mean
 %% ~put references to the literature/web site here ~
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Shili Lin <shili@stat.osu.edu>
 }
 \note{
 %%  ~~further notes~~

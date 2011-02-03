@@ -40,7 +40,7 @@ Returns modified Kendall's Tau distance against a for each lists within b
 %% ~put references to the literature/web site here ~
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Jie Ding <ding@stat.osu.edu>
 }
 \note{
 %%  ~~further notes~~

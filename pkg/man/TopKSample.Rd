@@ -24,7 +24,7 @@ N TopKlists
 %% ~put references to the literature/web site here ~
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Jie Ding <ding@stat.osu.edu>
 }
 \note{
 By default the C implementation is used due to the better performance.

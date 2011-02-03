@@ -45,14 +45,9 @@ Shili Lin <shili@stat.ohio-state.edu>
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function(x, na.rm=TRUE){
-        return(mean(abs(x)^2,na.rm=TRUE))
-        }
+set.seed(122)
+vals <- sample(1:100, 10)
+l2norm(vals)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

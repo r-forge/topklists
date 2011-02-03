@@ -5,7 +5,7 @@
 Compute transition matrices
 }
 \description{
-Compute transition matrices for all three MC algorithms
+Build transition matrices for all three Markov chain algorithms
 }
 \usage{
 trans.matrix(input, space)
