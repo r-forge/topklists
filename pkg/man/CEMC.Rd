@@ -9,11 +9,11 @@ Perform cross-entropy Monte Carlo simluations for generating combined ranked lis
 taking into account difference spaces of input ranked lists
 }
 \usage{
-CEMC(input, k, space = NULL, dm = "Kendall", kp = 0.5, N = NULL, N1 = NULL, rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0, d.w = NULL, input.par = NULL)
+CEMC(topK, k, space = NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL, rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0, d.w = NULL, input.par = NULL, extra=0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{input}{
+  \item{topK}{
 A list of several TopKLists, may have different length
 }
   \item{k}{
@@ -23,7 +23,7 @@ Desired length of combined list
 Underlying spaces for the lists, NULL means all lists share common space
 }
   \item{dm}{
-Distance measure, "Kendall" or "Spearman"
+Distance measure, "s" for spearman, "k" for kendall(p=0)
 }
   \item{kp}{
 Partial distance used in Kendall's tau distance measure
@@ -60,6 +60,9 @@ Weights for distances from different input lists
 }
   \item{input.par}{
 Input parameters in a data.frame
+}
+  \item{extra}{
+TODO: describe
 }
 }
 \details{

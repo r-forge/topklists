@@ -1,45 +1,144 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8x]{inputenc}
+\usepackage{Sweave}
 
 %opening
-\title{Using TopKSpace}
-%\VignetteIndexEntry{Using TopKSpace} 
-\author{Shili Lin}
+\title{TopKLists: Usage of Two-classes of TopKSpace-based Methods}
+%\VignetteIndexEntry{Usage of TopKSpace} 
+\author{Shili Lin, Karl Kugler}
 
 \begin{document}
 
 \maketitle
+\section{Introduction and Background}
+See \cite{Lin2010} for details on methods.
 
-\begin{abstract}
-
-\end{abstract}
-
-For running the examples in this vignette you have to load the sample data first
-
+For running the examples in this vignette you have to load the functions first:
 <<>>=
 library(TopKLists)
-data(TopKSpaceSampleInput)
+#data(TopKSpaceSampleInput)
+@
+
+\subsection{Generate three variable input list and common space}
+<<>>=
+L1=1:30
+L2=c(1:10,31:40,11:15)
+L3=c(1:10,16:20,11:15)
+input=list(L1,L2,L3)
+space=list(1:40,1:40,1:40)
 @
 
 \section{Calling the functions}
 
+\subsection{Run three Borda algorithms}
+\subsubsection{Call with platform dependent assumption}
 <<>>=
-bb1=Borda(input,space) #platform dependent
-bb2=Borda(input,input) #top-k spaces
-
-mm=trans.matrix(input,space) #platform dependent
-MC1=MC.ranks(mm[[2]],mm[[4]])
-MC2=MC.ranks(mm[[2]],mm[[5]])
-MC3=MC.ranks(mm[[2]],mm[[6]])
-mm1=trans.matrix(input,input) #top-k spaces
-MC11=MC.ranks(mm1[[2]],mm1[[4]])
-MC21=MC.ranks(mm1[[2]],mm1[[5]])
-MC31=MC.ranks(mm1[[2]],mm1[[6]])
+bb1=Borda(input,space)
 @
 
-\section{Session info}
+\subsubsection{Call with top-k assumption}
+<<>>=
+bb2=Borda(input,input)
+@
+
+\subsubsection{Plotting Borda's scores}
+<<fig=T>>=
+plot(1:30,bb1[[2]][1:30,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
+ylab="Borda's score", sub=("(a)"))
+lines(1:30,bb1[[2]][1:30,2], type="o", col="red", pch=2,lty=2)
+lines(1:30,bb1[[2]][1:30,3], type="o", col="red", pch=3,lty=2)
+lines(1:30,bb2[[2]][1:30,1], type="o", col="blue", pch=1,lty=4)
+lines(1:30,bb2[[2]][1:30,2], type="o", col="blue", pch=2,lty=4)
+lines(1:30,bb2[[2]][1:30,3], type="o", col="blue", pch=3,lty=4)
+legend(18,10,legend=c("Platform dependent", "Top k spaces"), col=c("red","blue"),
+lty=c(2,4))
+legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
+@
+
+\subsection{Run three MC algorithms}
+\subsubsection{Call with Platform dependent assumption}
+<<>>=
+mm=trans.matrix(input,space)
+MC1=MC.ranks(mm[[2]],mm[[4]])
+probMC1=rev(sort(MC1[[2]]))[1:30] 
+MC2=MC.ranks(mm[[2]],mm[[5]])
+probMC2=rev(sort(MC2[[2]]))[1:30]
+MC3=MC.ranks(mm[[2]],mm[[6]])
+probMC3=rev(sort(MC3[[2]]))[1:30]
+@
+
+\subsubsection{Call with top-k assumption}
+<<>>=
+mm=trans.matrix(input,input)
+MC11=MC.ranks(mm[[2]],mm[[4]])
+probMC11=rev(sort(MC11[[2]]))[1:30]
+MC21=MC.ranks(mm[[2]],mm[[5]])
+probMC21=rev(sort(MC21[[2]]))[1:30]
+MC31=MC.ranks(mm[[2]],mm[[6]])
+probMC31=rev(sort(MC31[[2]]))[1:30]
+@
+
+\subsubsection{Generating plot of equilibrium probabilities}
+<<fig=T>>=
+plot(1:30,probMC1, type="o", col="red", lty=2, pch=1, xlab="Ranking",
+ylab="Stationary probability", sub=("(b)"))
+lines(1:30,probMC2, type="o", col="red", pch=2, lty=2)
+lines(1:30,probMC3, type="o", col="red", pch=3, lty=2)
+lines(1:30,probMC11, type="o", col="blue", pch=1, lty=4)
+lines(1:30,probMC21, type="o", col="blue", pch=2, lty=4)
+lines(1:30,probMC31, type="o", col="blue", pch=3, lty=4)
+legend(18,0.14,legend=c("Platform depndent", "Top k space"), col=c("red","blue"),
+lty=c(2,4))
+legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=1:3)
+@
+
+\subsection{Run CEMC algorithm}
+\subsubsection{Call with platform dependent assumption}
+<<>>=
+set.seed(1234)
+pd = CEMC(input, 30, space=space, N=2000)
+pd$topK
+pd$p 
+pd$input.par
+@
+
+\subsubsection{Call with top-k assumption}
+<<>>=
+set.seed(1234)
+pd = CEMC(input, 30, space=space, N=2000)
+pd$topK
+pd$p
+@
+
+\section{Comparison the performances based on different algorithms}
+Modified Kendall's distance between the aggregate list and the input lists
+can be used to evaluate the relative performances of the algorithms.
+The following give two examples; the first is under the assumption of 
+platform dependent and the second is under the top-k space assumption.  
+
+<<>>=
+kc.ARM=KendallCriterion(input, space, bb1[[1]][, 1], p = 0.5,
+w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 * (20 -+ 1))))
+
+@
+
+<<>>=
+kc.MC3=KendallCriterion(input, input, MC31[[3]],
+p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 *
+(20 - 1))))
+@
+
+\section*{References}
+ \begin{thebibliography}{}
+    \bibitem{Lin2010}
+         Lin, S. (2010) Space oriented rank-based data integration. Statistical Applications in Genetics and Molecular Biolog, 20, Article 20. DOI: 10.2202/1544-6115.1534.		
+    \end{thebibliography}
+
+
+\section*{Session info}
 <<>>=
 sessionInfo()
 @
 
 \end{document}
+

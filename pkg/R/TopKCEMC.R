@@ -3,18 +3,18 @@
 ###Last modified: 04/28/10
 
 `CEMC` <-
-function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
-         rho=0.1,e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0,d.w=NULL,
-         input.par=NULL){  
+function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
+         e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
+         extra=0){  
 
   ##I'd like to remove most of the input parameters since it is not apparent
   ##how to specify values for many of them for end users
   ##Parameters probably can be removed: b,init.m,init.w,e1,e2,one of N1 and rho
   
-  ##input: a list of several top K lists, may have different length
-  ##space: underlying spaces for the lists, NULL means all lists share common space
+  ##topK: a list of several top K lists, may have different length
+  ##space: underlying spaces for the lists
   ##k: desired length of combined list
-  ##dm: distance measure, "Kendall" or "Spearman"
+  ##dm: distance measure, "s" for spearman, "k" for kendall(p=0)
   ##kp: partial distance used in Kendall's tau distance measure
   ##N: number of samples generated in each iterate
   ##N1: number of samples retained after each iterate 
@@ -22,7 +22,7 @@ function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
   ##e1: stop criteria w.r.t. p
   ##e2: stop criteria w.r.t. y
   ##w: weight of the new probabilities estimate each iterate
-  ##b: parameter used in blur function
+  ##b: parameter used in .blur function
   ##init.m: initialization method, see the function init.p for details
   ##init.w: probability matrix initialization:
   ##      (1-init.w) * uniform +  init.w * estimated from input lists
@@ -34,44 +34,36 @@ function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
       assign(p.n,input.par[1,p.n])
   }
 
-  if (is.null(input))
-    stop("Input lists must not be null")
-
-  if (length(input) < 2)
-    stop("You have to provide at least two input lists")
-
-  if (dm != "Kendall" && dm != "Spearman")
-    stop("Invalid distance measure")
-  
   time.start <- proc.time()
 
-  list.input <- input
+  topK.input <- topK
   space.input <- space
   
-  a <- length(input) # number of input top K lists
+  a <- length(topK) # number of input top K lists
   k.a <- numeric(a) # lengths of input lists
   for (i in 1:a)
-    k.a[i] <- length(input[[i]])
-  item <- sort(unique(unlist(input))) # all items in the input top K lists
+    k.a[i] <- length(topK[[i]])
+  item <- sort(unique(unlist(topK))) # all items in the input top K lists
   n <- length(item)
-
+  if (extra > 0) {
+    n <- n + extra
+    k <- k + extra
+  }
   ##recode ranks: ranked=1:k.a, unranked but in space=k.a+1, not in space=0 
   rank.a <- matrix(0,nrow=n,ncol=a)
-  if (is.null(space)) {
-    space <- vector("list",a)
+  if (is.null(space)) { 
     for (i in 1:a) {
-      space[[i]] <- item
-      input[[i]] <- match(input[[i]],item) # recode items from 1 to n
+      topK[[i]] <- match(topK[[i]],item) # recode items from 1 to n
       rank.a[,i] <- 1+k.a[i]
-      rank.a[input[[i]],i] <- 1:k.a[i]
+      rank.a[topK[[i]],i] <- 1:k.a[i]
     }
   }
   else {
     for (i in 1:a) {
-      input[[i]] <- match(input[[i]],item) # recode items from 1 to n
+      topK[[i]] <- match(topK[[i]],item) # recode items from 1 to n
       space[[i]] <- match(space[[i]],item) 
       rank.a[space[[i]],i] <- 1+k.a[i]
-      rank.a[input[[i]],i] <- 1:k.a[i]
+      rank.a[topK[[i]],i] <- 1:k.a[i]
     }
   }
   
@@ -81,35 +73,31 @@ function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
   if (is.null(N1))
     N1 <- round(0.1 * N)
 
-  p <- init.p(input,n,k,init.m,init.w)
+  p <- init.p(topK,n,k,init.m,init.w)
   p2 <- p
   y <- 0
   samp2 <- TopKSample.c(.blur(p,b),N1)
   iter <- 0
   y.count <- 0 # counter used in stopping rule
-
-  ##default weights are the largest distance between two lists with length k.a 
-  if (is.null(d.w)) {
-    if (dm == "Kendall") 
-      d.w <- k.a*(k.a-1)/2
-    else 
-      d.w <- round((k.a*k.a-1)/4)
-    d.w <- d.w/sum(d.w)
-  }
-
+  
+  if (is.null(d.w))
+    d.w <- rep(1,a) # equal weight as default
   
   repeat {
     iter <- iter + 1
     samp <- cbind(samp2,TopKSample.c(.blur(p,b),N-N1))
 
+ ##   if (iter == 10)
+ ##     samp[,N] <- new.c
+    
     rank.b <- matrix(k+1,nrow=n,ncol=N)
     rank.b[cbind(as.vector(samp),rep(1:N,each=k))] <- 1:k
     
     dist <- numeric(N)
     for (i in 1:a) {
-      if (dm=="Spearman")
+      if (dm=="s")
         dist <- dist + spearman(rank.a[,i],rank.b,k.a[i],k,n) * d.w[i]
-      else if (dm=="Kendall") 
+      else if (dm=="k") 
         dist <- dist + kendall2.c(rank.a[,i],rank.b,k.a[i],k,n,kp) * d.w[i]
       else stop("Invalid distance measure")
     }
@@ -117,6 +105,8 @@ function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
     samp2 <- samp[,order(dist)[1:N1]]
     samp3 <- samp[,dist<=y2]
     n.samp3 <- dim(samp3)[2]
+#    print(samp2[,1])
+#    print(min(dist))
     for (i in 1:k)
       for (j in 1:n)
         p2[j,i] <- sum(samp3[i,]==j)/n.samp3
@@ -131,7 +121,7 @@ function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
   result <- samp[,order(dist)[1]]
   rank.result <- rep(k+1,n)
   rank.result[result] <- 1:k
-  dimnames(p) <- list(item,1:(k+1))
+  dimnames(p) <- list(c(item,rep(0,extra)),1:(k+1))
 
   diff.p <- mean(abs(p[result,1:k] - diag(k)))
   #difference between sorted p and the identity matrix
@@ -139,7 +129,7 @@ function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
   uc <- mean(1-p[cbind(result,1:k)])    
   #mean uncertainty for the final list
   
-  result.ori <- item[result] #result in original coding
+  result.ori <- item[result[result <= n-extra]] #result in original coding
   
   dist.s <- 0
   dist.k <- 0
@@ -151,22 +141,12 @@ function(input,k,space=NULL,dm="Kendall",kp=0.5,N=NULL,N1=NULL,
   time.end <- proc.time()
   time.use <- sum((time.end-time.start)[-3])
   
-#  list(topK=result.ori,p=p,
-#       output.other=data.frame(diff.p=diff.p, uc=uc,dist.s=dist.s,
-#       dist.k=dist.k, iter=iter, time=time.use),
-#       input.list=topK.input,input.space=space.input,d.w=d.w,
-#       input.par=data.frame(k=k,dm=I(dm),kp=kp,N=N,N1=N1,extra=extra,
-#       rho=rho,e1=e1,e2=e2,w=w,b=b,init.m=I(init.m),init.w=init.w))
-  res <- list()
-  res$list <- result.ori
-  res$input <- list.input
-  res$space <- space.input
-  if (dm == "Kendall")
-    res$dist <- dist.k
-  else
-    res$dist <- dist.s
-
-  return(res)
+  list(topK=result.ori,p=p,
+       output.other=data.frame(diff.p=diff.p, uc=uc,dist.s=dist.s,
+       dist.k=dist.k, iter=iter, time=time.use),
+       input.list=topK.input,input.space=space.input,d.w=d.w,
+       input.par=data.frame(k=k,dm=I(dm),kp=kp,N=N,N1=N1,extra=extra,
+       rho=rho,e1=e1,e2=e2,w=w,b=b,init.m=I(init.m),init.w=init.w))
 }
 
 `TopKSample` <-
@@ -215,7 +195,6 @@ function(p,N) {
 
 }
 
-##KKU: made it hidden blur -> .blur 
 `.blur` <-
 function(p,b) {
 
@@ -235,7 +214,6 @@ function(p,b) {
   p2
 }
 
-## KKU: renamed c.rank -> cc.rank due to R generics warning (hidden now)
 `.cc.rank` <-
 function(input.list) {
 
