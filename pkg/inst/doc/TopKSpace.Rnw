@@ -3,7 +3,7 @@
 \usepackage{Sweave}
 
 %opening
-\title{TopKLists: Usage of Two-classes of TopKSpace-based Methods}
+\title{TopKLists: Usage of Three-classes of TopKSpace-based Methods}
 %\VignetteIndexEntry{Usage of TopKSpace} 
 \author{Shili Lin, Karl Kugler}
 
@@ -11,12 +11,44 @@
 
 \maketitle
 \section{Introduction and Background}
-See \cite{Lin2010} for details on methods.
+The idea of the TopKSpace module is to consolidate information from
+the $l$ top-k lists to arrive at an aggregate list ($AL$). 
+As shown in figure \ref{topkspace}, not only that the top-k lists
+($L_1, L_2, \cdots, L_l$)
+may be of different lengths, they may come from experiments that 
+consider different sets of elements (e.g. genes), hence the underlying spaces
+($S_1, S_2, \cdots, S_l$)
+from which the top-k lists were derived may be different. 
+The goal of the inference in TopKSpace is therefore to find the top-k
+list, $AL$, from the aggregate new space ($\cup_{i=1}^l L_i$),
+such that the weighted sum of distances between each of the input
+list and $AL$ will be the minimum among lists of the same length.
+Two distance measures, Kendall's and Spearman's, are available in the 
+package, and they take the differences in the underlying spaces into
+account \cite{lin2010}. 
+
+There classes of algorithms are implemented in TopLKSpace, namely
+Borda's method, Markov chain algorithms \cite{lin}, 
+and cross entropy Monte Carlo \cite{linding}.
+The first two are heuristic algorithms which do not directly optimize
+the objective function (i.e., minimizing the weighted distances), whereas
+the third class employs a Monte Carlo search algorithm for achieving
+the optimization. Borda and Markov chain algorithms run much 
+faster than cross entropy Monte Carlo, but the latter usually achieves
+a better optimization value. Nevertheless, simulation studies indicate
+that taking the underlying sapce into consideration has much greater 
+impact than using different algorithms.
+
+\begin{figure}
+\centering
+\includegraphics{TopKSpaceSchema.pdf}\\
+\caption{Concept of rank aggregation under TopKSpace
+\label{topkspace}}
+\end{figure}
 
 For running the examples in this vignette you have to load the functions first:
 <<>>=
 library(TopKLists)
-#data(TopKSpaceSampleInput)
 @
 
 \subsection{Generate three variable input list and common space}
@@ -56,7 +88,7 @@ legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
 @
 
 \subsection{Run three MC algorithms}
-\subsubsection{Call with Platform dependent assumption}
+\subsubsection{Call with platform dependent assumption}
 <<>>=
 mm=trans.matrix(input,space)
 MC1=MC.ranks(mm[[2]],mm[[4]])
@@ -98,16 +130,15 @@ legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 set.seed(1234)
 pd = CEMC(input, 30, space=space, N=2000)
 pd$topK
-pd$p 
+pd$p[1:5,1:5] 
 pd$input.par
 @
 
 \subsubsection{Call with top-k assumption}
 <<>>=
-set.seed(1234)
-pd = CEMC(input, 30, space=space, N=2000)
+pd = CEMC(input, 30, space=input, N=2000)
 pd$topK
-pd$p
+pd$p[1:5,1:5]
 @
 
 \section{Comparison the performances based on different algorithms}
@@ -130,8 +161,13 @@ p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 *
 
 \section*{References}
  \begin{thebibliography}{}
-    \bibitem{Lin2010}
-         Lin, S. (2010) Space oriented rank-based data integration. Statistical Applications in Genetics and Molecular Biolog, 20, Article 20. DOI: 10.2202/1544-6115.1534.		
+
+\bibitem[Lin (2010a)]{lin2010} Lin, S. 2010. Space oriented rank-based data integration. {\em Statistical Applications in Genetics and Molecular Biology.} {\bf 9}, Article 20.
+
+\bibitem[Lin (2010b)]{lin} Lin, S. 2010. Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}. {\bf 2}, 555–570.
+
+\bibitem[Lin and Ding (2009)]{linding} Lin, S., Ding, J. 2009. Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. \emph{Biometrics}, \textbf{65}, 9-18.
+
     \end{thebibliography}
 
 

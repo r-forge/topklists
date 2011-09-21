@@ -1,57 +1,47 @@
 \name{KendallCriterion}
 \alias{KendallCriterion}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Compute Kendall's criterion
 }
 \description{
-Compute Kenall's criterion
+Compute Kendall's criterion
 }
 \usage{
 KendallCriterion(input, space, aggregate, p, w)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
-%%     ~~Describe \code{input} here~~
+A list with each element being a top-K list to be aggregated. The top-K lists can be of variable lengths.
 }
   \item{space}{
-%%     ~~Describe \code{space} here~~
+A list with each element being the underlying space from which the corresponding top-K list is derived.
 }
   \item{aggregate}{
-%%     ~~Describe \code{aggregate} here~~
-}
+The aggregate list (result) from any of the three classes of algorithms.}
   \item{p}{
-%%     ~~Describe \code{p} here~~
+A parameter between 0-1 for setting the distance of a pair of elements between two lists  
+if at least one of the elements is not in the underlying space of one
+of the list or if both elements belong to one list but neither belong 
+to the other list. We recommend using p=0.5 for a "neutral approach".
 }
   \item{w}{
-%%     ~~Describe \code{w} here~~
+Weight vector assigning a weight to each list. 
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
 }
 \references{
-%% ~put references to the literature/web site here ~
 }
 \author{
 Jie Ding <ding@stat.osu.edu>
 }
 \note{
-%%  ~~further notes~~
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 L1=1:30
@@ -59,11 +49,8 @@ L2=c(1:10,31:40,11:15)
 L3=c(1:10,16:20,11:15)
 input=list(L1,L2,L3)
 space=list(1:40,1:40,1:40)
-bb1=Borda(input,space)
-kc.ARM=KendallCriterion(input, space, bb1[[1]][, 1], p = 0.5,
-w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 * (20 -+ 1))))
+bb1=Borda(input,space) 
+kc.ARM=KendallCriterion(input, space, bb1[[1]][, 1], 
+p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 * (20 -+ 1))))
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ univar }

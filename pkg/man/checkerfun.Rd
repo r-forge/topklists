@@ -20,7 +20,7 @@ An (integer) number
 TRUE or FALSE, depending on whether k is odd or even (depending on the called function)
 }
 \author{
-Karl Kugler <karl.kugler@donau-uni.ac.at>
+Karl Kugler <karl@eigenlab.net>
 }
 \examples{
 is.odd(1)
