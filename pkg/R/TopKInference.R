@@ -1,3 +1,7 @@
+                                                                     
+                                                                     
+                                                                     
+                                             
 # The first part of the module TopKInference provides exploratory nonparametric inference for the estimation of the top-k list length of paired rankings.
 
 # Implemented in function compute.stream() is the moderate deviation-based inference procedure for random degeneration in paired rankings due to Hall & Schimek (2010). This exploratory (because it depends on the choice of the pilot sample size nu) non-parametric procedure gives an estimate of the point of degeneration j0, where k=j0-1 denotes the estimated length of the top list. It allows for various (usually unknown) types of rank irregularities and list lengths in the magnitude of thousands of objects. Input to this procedure is a 0/1-vector of indicator variables Ij (a data stream) representing concordance between the two rankings of interest. Ij is a Bernoulli random variable for which either independence or weak m-dependence is assumend (from simulations we know that dependence is negligible). The function prepareIdata() allows to calculate the data stream from two ranked lists representing the same N objects.

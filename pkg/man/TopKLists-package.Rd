@@ -14,9 +14,9 @@ For multiple full ranked (input) lists representing the same set of $N$ objects,
 
 \details{
 The package consists of three modules:
-(1) \verb{"TopKInference"} provides exploratory nonparametric inference for the estimation of the top-$k$ list length of paired rankings;
-(2) \verb{"TopKSpace"} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists of different lengths (space) as well as missing rank information;
-(3) \verb{"TopKGraphics"} provides a collection of graphical tools for visualization of the inputs to respectively the outputs from the other modules.
+(1) \verb{TopKInference} provides exploratory nonparametric inference for the estimation of the top-$k$ list length of paired rankings;
+(2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists of different lengths (space) as well as missing rank information;
+(3) \verb{TopKGraphics} provides a collection of graphical tools for visualization of the inputs to respectively the outputs from the other modules.
 
 For more details and a bioscience application see Schimek et al. (2011).}
 
