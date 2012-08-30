@@ -5,7 +5,7 @@
 %opening
 \title{TopKLists: Usage of Three-classes of TopKSpace-based Methods}
 %\VignetteIndexEntry{Usage of TopKSpace} 
-\author{Shili Lin, Karl Kugler}
+\author{Shili Lin, Karl G. Kugler}
 
 \begin{document}
 

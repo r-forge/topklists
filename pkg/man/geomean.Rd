@@ -15,26 +15,22 @@ geomean(x, na.rm = TRUE)
 a vector of values
 }
   \item{na.rm}{
-Should missing values automatically be removed fro calculation
+Whether missing values should be automatically removed from calculation
 }
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
 the geometric mean
 }
 \references{
-%% ~put references to the literature/web site here ~
+Lin, S. (2010)
+Space oriented rank-based data integration.
+Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
 Shili Lin <shili@stat.osu.edu>
 }
-\note{
-%%  ~~further notes~~
-}
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+Borda
 }
 \examples{
 set.seed(122)

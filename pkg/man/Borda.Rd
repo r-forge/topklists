@@ -20,23 +20,27 @@ a list containing the underlying spaces
 }
 }
 \details{
+Compute Borda scores and ranks based on four aggregation functions in which the 
+underlying spaces where the individual ranked lists come from are taken into account.
+The four aggreage functions are mean, median, geometric mean, and l2 norm.
 }
 \value{
-\item{RankedObjects}{}
-\item{BordaScores }{}
+Output is a list with two components
+\item{Comp 1 (RankedObjects)}{a matrix with 4 columns each corresponding to the rankings
+by each of the 4 aggregation functions}
+\item{Comp 2 (BordaScores) }{a matix with 4 columns each corresponding to the Borda
+scores from each of the 4 aggregation functions}
 }
 \references{
-%% ~put references to the literature/web site here ~
+Lin, S. (2010)
+Space oriented rank-based data integration.
+Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
 Shili Lin <shili@stat.osu.edu>
 }
-\note{
-%%  ~~further notes~~
-}
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+geomean, l2norm}
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)

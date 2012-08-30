@@ -8,14 +8,14 @@ Function takes as an input two rankings of a gene list and creates a signal-nois
 function to prepare Idata from several rankings of several assessors
 }
 \usage{
-prepareIdata(x, delta)
+prepareIdata(x, d)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
 Data matrix, where columns represents rank order of genes from two different assessors, rows represents genes (clones)
 }
-  \item{delta}{
+  \item{d}{
 The maximal distance in ranking of the object between two lists }
 }
 \details{
@@ -27,16 +27,9 @@ about the distance used (delta).
 \item{Idata}{signal-noise vector of 1's and 0's}
 \item{delta}{the given delta}
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Eva Budinska <budinska@iba.muni.cz>
 }
-\note{
-%%  ~~further notes~~
-}
-
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
@@ -48,7 +41,7 @@ A <- sample(1:20, 20)
 B <- sample(1:20, 20)
 C <- sample(1:20, 20)
 mm <- data.frame(A, B, C, row.names=LETTERS[1:20])
-prepareIdata(mm, delta=10)
+prepareIdata(mm, d=10)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

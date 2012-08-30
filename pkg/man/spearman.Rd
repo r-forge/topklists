@@ -28,15 +28,8 @@ Value of \code{k} for \code{rank.b}
 Total number of objects, numbered from 1 to n
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 \value{
 returns modified spearman distance against a for each lists within b 
-}
-\references{
-%% ~put references to the literature/web site here ~
-%%TODO: ref
 }
 \author{
 Jie Ding <ding@stat.osu.edu>

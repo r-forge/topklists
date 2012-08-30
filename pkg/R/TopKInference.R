@@ -1,17 +1,8 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
-# The first part of the module TopKInference provides exploratory nonparametric inference for the estimation of the top-k list length of paired rankings.
+# method for j0 estimation
+# the algorithm consists of an ordered sequence of "test stages" s1, s2....
+# stage sk is associated with an integer Jsk, which when k is odd, is a potential lower bound to j0
+# Idata - input data is a vector of 0's and 1's
 
-# Implemented in function compute.stream() is the moderate deviation-based inference procedure for random degeneration in paired rankings due to Hall & Schimek (2010). This exploratory (because it depends on the choice of the pilot sample size nu) non-parametric procedure gives an estimate of the point of degeneration j0, where k=j0-1 denotes the estimated length of the top list. It allows for various (usually unknown) types of rank irregularities and list lengths in the magnitude of thousands of objects. Input to this procedure is a 0/1-vector of indicator variables Ij (a data stream) representing concordance between the two rankings of interest. Ij is a Bernoulli random variable for which either independence or weak m-dependence is assumend (from simulations we know that dependence is negligible). The function prepareIdata() allows to calculate the data stream from two ranked lists representing the same N objects.
-
-# Idata - data input is a vector of 0's and 1's.
-# const - constant C of the moderate deviation bound for testing (C>0.25 required, default value is 0.251).
-# v - pilot sample size nu (a smoothing parameter) depends on the data (integer values v>=1 required, see Hall & Schimek (2010) for hints on its choice).
-# r - technical constant r connected to the "test stages" of the iterative algorithm (r>1 required, default value is 1.2).
-
-# Output is the estimate j0 and otherwise the break condition (illegal input data or reason for non-convergence).
 
 compute.stream<-function(Idata, const=0.251, v, r=1.2)
 {
@@ -151,37 +142,35 @@ return(list(j0_est=j0_est, reason.break=reason.break, Js=Js, v=v))
 }# end if sum(Idata)==length(Idata)
 }
 
-#------------------------------------------------------------------------------------------
+#Method of M. G. Schimek extended to count K(j0_est) for each pair of several ranked lists. 
+#Lists have same length and have no missing values.
+#Inputs:
+#Data - input matrix, each coloum presents one list
+#delta - the maximal distance of the objects in ranking
+#v - parameter for estimating j0
+#outputs: maximal estimated J0 through all combinations of 2 lists
 
-# The second part of the module TopKInference provides a method that allows us to combine compute.stream() results when there are more than two rankings (multiple input lists) representing the same set of N objects (missing rank assignments cannot be handled in the current version but is an option in future ones). The method is described in Schimek et al. (2011). Function j0.multi() calculates an overall estimate of the index k based on all pairwise combinations of L input lists.
+#Data = lists
+#delta=10
+#v=10
 
-#Data - input matrix, each coloum presents one list.
-#delta - the tolerated (predefined) distance delta between rank positions of the individual objects in the input lists. The parameter delta takes the integer values 0, 1, 2,.... The Delta-plot of the module TopKGraphics is helping the user to select delta in practice (for details see Schimek & Budinska, 2010). 
-#v - pilot sample size nu (a smoothing parameter) depends on the data (integer values v>=1 required, see Hall & Schimek (2010) for hints on its choice).
-
-# Output is a combined estimate j0 for the L input lists as a function of the individual j0 (their maximum is default). 
-
-j0.multi<-function(Data,delta,v) {
+j0.multi<-function(Data,d,v) {
   maxK=0
   K = c()
   for (i in 1:ncol(Data)){
   for (j in 1:ncol(Data)){
     if (i!=j) {
-	ID=prepareIdata(Data[,c(i,j)],delta=delta)
+	ID=prepareIdata(Data[,c(i,j)],d=d)
 	J= compute.stream(ID$Idata,v=v)$j0_est
-	K = rbind(K, cbind(names(Data)[i], names(Data)[j], v,J,delta))
+	K = rbind(K, cbind(names(Data)[i], names(Data)[j], v,J,d))
 	}# end for if
       }# end for j
     }# end for i
 K = data.frame(K, stringsAsFactors=F)
 names(K) = c("list1", "list2", "v", "j0_est","delta")
-maxK = max(as.numeric(K$j0_est), na.rm=T)
+if(sum(is.na(K$j0_est))<nrow(K)){maxK = max(as.numeric(K$j0_est), na.rm=T)}else{maxK=NA}
 return(list(maxK=maxK,K=K))
 }
-
-#------------------------------------------------------------------------------------------
-
-#Below are various functions required by compute.stream() and j0.multi()
 
 # Zv moderate deviation
 
@@ -203,30 +192,19 @@ pj.plus = (1/v)*(sum(Idata[j:(j+v-1)], na.rm = TRUE))
 return(pj.plus)
 }
 
-#------------------------------------------------------------------------------------------
-
-# Calculation of the Idata input from the ranked lists of two or more assessors.
-# x - data matrix, where the columns represent the rankings of the objects and the rows the object names.
-# delta - the tolerated (predefined) distance delta between rank positions of the individual objects in the input lists. The parameter delta takes the integer values 0, 1, 2,.... The Delta-plot of the module TopKGraphics can help the user to select the parameter delta in practice (for details see Schimek & Budinska, 2010). We suggest to calculate data matrices x for a range of plausible delta values.
-# num.omit - the number phi of discarded objects in each test stage when such an adjustment is necessary (see Hall & Schimek, 2010). 
-
-# The output is an object of type "Idata", which is a list containing Idata and the information
-# about the distance delta.
-
-######################## QUESTION FOR EVA #############################
+# function to prepare Idata from several rankings of several assessors
+# x 	- data matrix, where columns represents rank order of genes from two different assessors, rows represents genes (clones)
+# delta - the maximal distance of the objects in ranking between assessors
+# num.omit - the maximal number of ommited genes from the analysis 
 #
-########### DOES prepareIdata NOW WORK FOR BOTH SIMPLE INPUT OF 2 RANKINGS AND FOR MULTIPLE 
-########### RANKINGS ???????????
-########### PLEASE REMEMBER MY EMAIL CONCERNING PROBLEMS WITH A 2 LISTS EXAMPLE AND KARLS 
-########### EXAMPLE IN THE DOCUMENTATION
-#
-##################################################################################
+# the result is a object of type "Idata", which is a list containing Idata and the information
+# about the distance (delta).
 
-prepareIdata <- function(x, delta)
+prepareIdata <- function(x, d)
 {
 rank.diff = c(1:nrow(x))-match(x[,1],x[,2])
-Idata = abs(rank.diff)<=delta
-return(list(Idata = Idata, delta = delta))
+Idata = abs(rank.diff)<=d
+return(list(Idata = Idata, d = d))
 }
 
 is.odd <- function(k){
@@ -237,37 +215,17 @@ is.even <- function(k){
   return(!is.odd(k))
 }
 
+## Heatmap solution to HS rank order graphics representation
+## By Eva Budinska, 3.12.2010
+## Input variables 
+#K- number of lists
+# N maximal number of genes
+# delta=10 maximal distance between genes used for j0 estimation
+# v - nu value used for j0 estimation
+# res.temp - data frame, result of HS algorithm for all pairs of lists, 4 columns, first and second column contain lists names that were compared, third column selected nu and fourth column estimated j0
+# lists data frame containing three orderesd lists of genes that were compared (the input to HS algorithm) - column names obligatory
 
-######################## COMMENT FOR EVA AND KARL #############################
-#
-########### delta SELECTION BEFORE RUNNING prepareIdata REQUIRES THE Delta-PLOT !!!!
-########### EVA, PLEASE INCLUDE HERE A FUNCTION PRODUCING THE DELTA-PLOT
-########### IN THE FUTURE THIS SHOULD BE PART OF TopKGraphics
-#
-##################################################################################
-
-#------------------------------------------------------------------------------------------
-
-# The function aggmap() belongs to the module TopKGraphics. For convenience of the user we provide it here because TopKGraphics is not released yet.
-
-# The aggregation map as implemented in the function aggmap() is a heatmap-like graphical representation of the combined result of several full or truncated (top k) input lists. It has was introduced in Schimek & Budinska (2010) for visual inspection of the aggregation outcome of L input lists.
-
-# N - maximal number of objects (for outcome to be viewed/plotted in one page, N should not exceed 100)
-# K - number of input lists
-######################## COMMENT FOR EVA AND KARL #############################
-#
-########### THE NUMBER OF LISTS SHOULD BE L THROUGHOUT AND NOT K BECAUSE K WOULD BE 
-########### CONFUSED WITH "TOP K". PLEASE REPLACE ALSO IN THE CODE !!!!!!!!!!
-#
-##################################################################################
-# delta - the tolerated (predefined) distance delta between rank positions of the individual objects in the input lists.
-# v - pilot sample size nu (a smoothing parameter) 
-# lists - data frame containing all ranked lists of the ordered objects subject to comparison (the column names are obligatory).
-# res.j0.temp - data frame of the results from the inference procedure for all combinations of input lists. It consists of four columns: the first and second column contain the input list names that were compared, the third column the applied nu, and the fourth column the resulting j0 estimate.
-
-# The output is a color plot.
-
-aggmap<-function(lists, res.j0.temp, N, K, delta, v) {
+aggmap<-function(lists, res.j0.temp, N, K, d, v) {
   require(grid)
   wid=1
   hei=1
@@ -295,11 +253,11 @@ aggmap<-function(lists, res.j0.temp, N, K, delta, v) {
   # defining basic layout with two rows and one column
   pushViewport(viewport(layout=grid.layout(2, 1, widths=c(1,1),heights=c(0.1,0.9))))
 
-  ##first row - defining the header (delta, nu and color key level) 
+  ##first row - defining header (delta, nu and color key level) 
 	  pushViewport(viewport(layout.pos.row=1, layout.pos.col=1))
   ### first column - delta and nu 
 		  pushViewport(viewport(layout=grid.layout(1, 1, widths=c(1,1),heights=rep(1,2))))
-		  grid.text(paste("delta = ",delta,",  v =",v,sep=""), x=0.2, y=0.5)
+		  grid.text(paste("delta = ",d,",  v =",v,sep=""), x=0.2, y=0.5)
 		  upViewport()		
 
   ### second column - color key
@@ -313,10 +271,10 @@ aggmap<-function(lists, res.j0.temp, N, K, delta, v) {
 		  upViewport()
 	  upViewport() #coming back to the basic level
 
-  ## second row - plotting of objects
+  ## second row - plotting genes
 	  pushViewport(viewport(layout.pos.row=2, layout.pos.col=1))
 
-  ### defining the layout in the second row
+  ### defining the layout in second row
 		  pushViewport(viewport(layout=grid.layout(max.j0.est+v+1, 1+factorial(K)/2+2, widths=rep(1,1+factorial(K)/2+2)*(max.j0.est+v+1),heights=rep(1,1+factorial(K)/2+2)*(max.j0.est+v+1))))
 
 			  for (g in c(1:(max.j0.est+v)))
@@ -331,7 +289,7 @@ aggmap<-function(lists, res.j0.temp, N, K, delta, v) {
 
 	  for (first.list.name in names(temp2))
 		  {
-		  # selecting the order of pairs of lists with respect to the first (reference) one
+		  # selecting the order of pairs of lists to the first one
 		  res.temp.selection = res.temp[which(res.temp[,1]==first.list.name),]
 		  res.temp.selection = res.temp.selection[which(is.na(match(res.temp.selection[,2],lists.to.remove))),]
 			  if(is.matrix(res.temp.selection)){
@@ -347,7 +305,7 @@ aggmap<-function(lists, res.j0.temp, N, K, delta, v) {
 		  gene.names.to.plot = lists[,first.list.name][1:(temp2[first.list.name]+v)]
 
 
-		  ### plotting of the object names ###
+		  ### plotting gene names ###
 		  pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+1,layout.pos.row=1))
 		  grid.text(ranked.list.names[1], gp=gpar(fontsize=8, col="black"))
 		  popViewport()
@@ -370,20 +328,20 @@ aggmap<-function(lists, res.j0.temp, N, K, delta, v) {
 			  {
 			  j = match(gene.names.to.plot[g],lists[,ranked.list.names[k]])
 			  distance = abs(g-j)
-				  if (!is.na(j) & j<(n.genes.to.plot+v)) # if the object is in the second list AND is among the top j0+v objects of the second list
+				  if (!is.na(j) & j<(n.genes.to.plot+v)) # if gene is in the second list AND is in the top j0+v genes of the second list
 					  {i="grey"}else{i="white"}
 				  
 				  pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+k, layout.pos.row=g+1))
 				  if (length(distance)>0)
 					  {
-					  grid.polygon(x=c(0,1,1),y=c(1,1,0), gp=gpar(col="black", fill=red.white.green[distance+1])) #upper right triangle
+					  grid.polygon(x=c(0,1,1),y=c(1,1,0), gp=gpar(col="black", fill=red.white.green[distance+1]))#upper right triangle
 					  grid.text(distance,x=0.8, y=0.6, gp=gpar(cex=0.7))
 					  }else
 					  {
 					  grid.polygon(x=c(0,1,1),y=c(1,1,0), gp=gpar(col="black", fill="white"))#upper right triangle
 					  grid.text("NA",x=0.8, y=0.6, gp=gpar(cex=0.7))
 					  }
-				  grid.polygon(x=c(0,0,1),y=c(1,0,0), gp=gpar(col="black", fill=i)) #bottom left triangle
+				  grid.polygon(x=c(0,0,1),y=c(1,0,0), gp=gpar(col="black", fill=i))#bottom left triangle
 				  popViewport()
 			  }# end for g
 		  }# end for k

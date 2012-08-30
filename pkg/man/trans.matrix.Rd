@@ -13,36 +13,37 @@ trans.matrix(input, space)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
-%%     ~~Describe \code{input} here~~
+a list containing individual ranked lists
 }
   \item{space}{
-%%     ~~Describe \code{space} here~~
+a list containing the underlying spaces
 }
 }
 \details{
 Both input and space are lists of the same length=nList
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+The output is a list 
+\item{comp1 }{a list with three components - each component is an extended top-k list
+of the same length as the corresponding space}
+\item{comp2 }{unique elements of the union of all input ranked lists}
+\item{comp3 }{The number of unique element, i.e., length of component 2}
+\item{Comp4-6 }{Each of the three components gives the transition matrix constructed
+from one of the three Markov chain algorithms
+}
 }
 \references{
-%% ~put references to the literature/web site here ~
+Lin, S. (2010)
+Space oriented rank-based data integration.
+Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Shili Lin <shili@stat.osu.edu>
 }
-\note{
-%%  ~~further notes~~
-}
-
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+MC.ranks
 }
 \examples{
 #get sample data

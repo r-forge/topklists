@@ -33,9 +33,6 @@ A named list containing:
  \item{js}{The sequence of estimated j0 in each round, shows also the convergence}
  \item{v}{Value of parameter v used for computation}
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
  Eva Budinska <budinska@iba.muni.cz>
 }

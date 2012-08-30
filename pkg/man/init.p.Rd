@@ -31,20 +31,13 @@ initialization weight
 A probability matrix
 }
 \references{
-%% ~put references to the literature/web site here ~
-%TODO: ref
+Lin, S., Ding, J. (2009)
+Integration of Ranked Lists  via
+Cross Entropy Monte Carlo with Applications to mRNA and microRNA
+Studies. Biometrics 65, 9-18.
 }
 \author{
 Jie Ding <ding@stat.osu.edu>
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 set.seed(1234)

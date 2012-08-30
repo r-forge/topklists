@@ -1,13 +1,14 @@
 Package: TopKLists
 Type: Package
 Title: Inference, aggregation and visualization for TopKLists
-Version: 0.9.7
-Date: 2011-09-21
-Author: Michael G. Schimek, Medical University of Graz, Austria (software development and algorithms); Eva Budinska, Swiss Institute of Bioinformatics, Switzerland (implementation); Jie Ding, Harvard University, USA (implementation and algorithms); Peter Hall, The University of Melbourne, Australia (algorithms); Karl G. Kugler, UMIT, Austria (implementation and R-Forge management); Shili Lin, Ohio State University, USA (algorithms and implementation)
+Version: 0.9.9
+Date: 2012-08-30
+Author: Michael G. Schimek, Medical University of Graz, Austria (software development and algorithms); Eva Budinska, Swiss Institute of Bioinformatics, Switzerland (implementation); Jie Ding, Harvard University, USA (implementation and algorithms); Peter Hall, The University of Melbourne, Australia (algorithms); Karl G. Kugler, HMGU, Germany (implementation and R-Forge management); Shili Lin, Ohio State University, USA (algorithms and implementation)
 Maintainer: Michael G. Schimek <michael.schimek@medunigraz.at>
 Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
-Depends: grid
+Imports: 
+Depends: grid, RGtk2, gWidgets, gWidgetsRGtk2, gplots
 URL: http://topklists.r-forge.r-project.org
 LazyLoad: yes
 

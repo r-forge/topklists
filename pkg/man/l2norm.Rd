@@ -13,36 +13,17 @@ l2norm(x, na.rm = TRUE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+ Objects for which the l2 norm is to be calculated
 }
   \item{na.rm}{
-%%     ~~Describe \code{na.rm} here~~
+Whether or not to remove NA values from the calculation
 }
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
+The l2 norm of \code{x}
 }
 \author{
 Shili Lin <shili@stat.ohio-state.edu>
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
 set.seed(122)

@@ -13,42 +13,43 @@ MC.ranks(elements, trans, a = 0.15, delta = 10^-15)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{elements}{
-%%     ~~Describe \code{elements} here~~
+Unique elemenets of the union of all input lists - second element of the output list
+from function trans.matrix
 }
   \item{trans}{
-%%     ~~Describe \code{trans} here~~
+One of the three transition matrices build by function trans.matrix - 4 (5 or 6)
+elements of the output list from function trans.matrix
 }
   \item{a}{
-%%     ~~Describe \code{a} here~~
+Tuning parameter to make sure Markov chain with the transition matrix is ergodic;
+default set to be 0.15 
 }
   \item{delta}{
-%%     ~~Describe \code{delta} here~~
+Convergence criterion for stationary distribution; default set to be 10^-15
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Compute stationary distribution based on a Markov chain transition matrix built with
+function trans.matrix.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Output is a list with 3 components
+\item{comp1 }{Number of iteration to reach the stationary distribution}
+\item{comp2 }{The stationary distribution}
+\item{comp3 }{The rankings based on the stationary distribution}
 }
 \references{
-%% ~put references to the literature/web site here ~
+Lin, S. (2010)
+Space oriented rank-based data integration.
+Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
-Shili Lin <shili@stat.ohio-state.edu>
+Shili Lin <shili@stat.osu.edu>
 }
-\note{
-%%  ~~further notes~~
-}
-
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+trans.matrix
 }
 \examples{
 #get sample data

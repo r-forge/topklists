@@ -19,9 +19,6 @@ The number of samples
 }
 \value{
 N TopKlists}
-\references{
-%% ~put references to the literature/web site here ~
-}
 \author{
 Jie Ding <ding@stat.osu.edu>
 }

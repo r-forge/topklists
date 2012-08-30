@@ -1,0 +1,57 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{Sweave}
+
+%opening
+\title{TopKLists: Usage of TopKGUI}
+%\VignetteIndexEntry{Usage of TopKGUI} 
+\author{Eva Budinska, Karl G. Kugler, Michael G. Schimek}
+
+\begin{document}
+
+\maketitle
+\section{Introduction and Background}
+
+For running the examples in this vignette you have to load the functions first:
+<<>>=
+library(TopKLists)
+@
+
+\subsection{Loading of Sample Input}
+The package provides a set of sample input for calling the GUI.
+<<>>=
+data(TopKGUISampleInput)
+str(lists)
+@
+
+\section{Opening the GUI}
+To open the GUI with our sample input call:
+<<eval=FALSE>>=
+TopKListsGUI(lists)
+@ 
+
+Now a window (see Fig. \ref{topkgui}) opens that will allow running the analysis.
+
+
+\begin{figure}
+\centering
+\includegraphics{TopKListsGUI-1.png}\\
+\caption{Main windows for TopKListsGUI
+\label{topkgui}}
+\end{figure}
+
+
+
+\section*{References}
+ \begin{thebibliography}{}
+
+    \end{thebibliography}
+
+
+\section*{Session info}
+<<>>=
+sessionInfo()
+@
+
+\end{document}
+

@@ -30,13 +30,14 @@ Total number of objects, numbered from 1 to n
 Distance added for tied pair (potential problem when p != 0)
 }
 }
-\details{
-}
 \value{
 Returns modified Kendall's Tau distance against a for each lists within b 
 }
 \references{
-%% ~put references to the literature/web site here ~
+Lin, S., Ding, J. (2009)
+Integration of Ranked Lists  via
+Cross Entropy Monte Carlo with Applications to mRNA and microRNA
+Studies. Biometrics 65, 9-18.
 }
 \author{
 Jie Ding <ding@stat.osu.edu>

@@ -28,20 +28,20 @@ to the other list. We recommend using p=0.5 for a "neutral approach".
 Weight vector assigning a weight to each list. 
 }
 }
-\details{
-}
 \value{
+A real number containing the Kendall's distance value.
 }
 \references{
+Lin, S., Ding, J. (2009)
+Integration of Ranked Lists  via
+Cross Entropy Monte Carlo with Applications to mRNA and microRNA
+Studies. Biometrics 65, 9-18. <p>
+Lin, S. (2010)
+Space oriented rank-based data integration.
+Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
-Jie Ding <ding@stat.osu.edu>
-}
-\note{
-}
-
-
-\seealso{
+Shili Lin <shili@stat.osu.edu> 
 }
 \examples{
 L1=1:30
