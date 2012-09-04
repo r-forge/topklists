@@ -39,10 +39,10 @@ Eva Budinska <budinska@iba.muni.cz>
 }
 \examples{
 set.seed(1234)
-lists <- data.frame(L1=c("A","B","C","D","E","F","G","H","J","I","K","L","M","N"))
-lists$L2 <- c("B","C","A","E","G","F","D","J","K","L","M","N","I","H")
-lists$L3 <- sample(LETTERS[1:14])
+data(TopKGUISampleInput)
 res.j0.temp = j0.multi(lists, d=2, v=4)
+\dontrun{
 aggmap(lists, res.j0.temp, N=4, K=3, d=5, v=3)
+}
 }
 \keyword{ hplot }

@@ -4,17 +4,17 @@
 \alias{topklists}
 \docType{package}
 \title{
-Inference, aggregation and visualization for top-$k$ ranked lists
+Inference, aggregation and visualization for top-k ranked lists
 }
-\description{Web search engines or microarray laboratory devices, among other new technologies, produce very long lists of distinct items or objects in rank order. The statistical task is to identify common top-ranking objects from two or more lists and to form sublists of consolidated items. In each list, the rank position might be due to a measure of strength of evidence, to a preference, or to an assessment either based on expert knowledge or a technical device. For each object, it is assumed that its rank assignment in one list is independent of its rank assignments in the other lists. The ranking is from 1 to $N$ throughout without ties. 
+\description{Web search engines or microarray laboratory devices, among other new technologies, produce very long lists of distinct items or objects in rank order. The statistical task is to identify common top-ranking objects from two or more lists and to form sublists of consolidated items. In each list, the rank position might be due to a measure of strength of evidence, to a preference, or to an assessment either based on expert knowledge or a technical device. For each object, it is assumed that its rank assignment in one list is independent of its rank assignments in the other lists. The ranking is from 1 to \emph{N} throughout without ties. 
 
-Starting with the work of Mallows (1957), there is a substantial model-based literature on problems in combining rankings where the number of items $N$ is relatively small, and significantly less than the number $L$ of assessment mechanisms. These well-known parametric approaches cannot handle data of the type described above with $N>>L$ and $N$ huge. Moreover, here we have problems in mind where the reliability of rankings breaks down after the first (top) $k$ objects due to error or lack of discriminatory information. In response to these requirements, we have implemented distribution-free, and at the same time computationally highly efficient, stochastic approaches because list aggregation by means of brute force is limited to the situation where both $N$ and $L$ are impractically small.
+Starting with the work of Mallows (1957), there is a substantial model-based literature on problems in combining rankings where the number of items \emph{N} is relatively small, and significantly less than the number \emph{L} of assessment mechanisms. These well-known parametric approaches cannot handle data of the type described above with \emph{N>>L} and \emph{N} huge. Moreover, here we have problems in mind where the reliability of rankings breaks down after the first (top) \emph{k} objects due to error or lack of discriminatory information. In response to these requirements, we have implemented distribution-free, and at the same time computationally highly efficient, stochastic approaches because list aggregation by means of brute force is limited to the situation where both \emph{N} and \emph{L} are impractically small.
 
-For multiple full ranked (input) lists representing the same set of $N$ objects, the package TopKLists offers (1) statistical inference on the lengths of informative (top-$k$) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization.}
+For multiple full ranked (input) lists representing the same set of \emph{N} objects, the package TopKLists offers (1) statistical inference on the lengths of informative (top-\emph{k}) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization.}
 
 \details{
 The package consists of three modules:
-(1) \verb{TopKInference} provides exploratory nonparametric inference for the estimation of the top-$k$ list length of paired rankings;
+(1) \verb{TopKInference} provides exploratory nonparametric inference for the estimation of the top-\emph{k} list length of paired rankings;
 (2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists of different lengths (space) as well as missing rank information;
 (3) \verb{TopKGraphics} provides a collection of graphical tools for visualization of the inputs to respectively the outputs from the other modules.
 
