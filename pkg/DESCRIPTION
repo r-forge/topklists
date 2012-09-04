@@ -1,8 +1,8 @@
 Package: TopKLists
 Type: Package
 Title: Inference, aggregation and visualization for TopKLists
-Version: 0.9.9
-Date: 2012-08-30
+Version: 0.9.10
+Date: 2012-09-04
 Author: Michael G. Schimek, Medical University of Graz, Austria (software development and algorithms); Eva Budinska, Swiss Institute of Bioinformatics, Switzerland (implementation); Jie Ding, Harvard University, USA (implementation and algorithms); Peter Hall, The University of Melbourne, Australia (algorithms); Karl G. Kugler, HMGU, Germany (implementation and R-Forge management); Shili Lin, Ohio State University, USA (algorithms and implementation)
 Maintainer: Michael G. Schimek <michael.schimek@medunigraz.at>
 Description: More about what it does (maybe more than one line)
