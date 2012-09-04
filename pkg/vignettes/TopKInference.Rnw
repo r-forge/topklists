@@ -16,7 +16,7 @@
 
 First load the TopKLists package
 
-<<eval=FALSE>>=
+<<eval=TRUE>>=
 library(TopKLists)
 @
 

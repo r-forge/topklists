@@ -13,7 +13,7 @@
 \section{Introduction and Background}
 
 For running the examples in this vignette you have to load the functions first:
-<<eval=FALSE>>=
+<<eval=TRUE>>=
 library(TopKLists)
 @
 
