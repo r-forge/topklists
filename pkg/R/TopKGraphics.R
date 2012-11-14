@@ -271,8 +271,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 	grayshaded.lists <- list() #contains information which element in the list has to be gray-shaded
 	grayshaded.genes <- c() #contains all gray-shaded gene-symbols
 	temp.sumtrunclists <- list() #contains the summarized truncated lists (number of lists = K)
-	summary.table <- matrix(nrow = 0, ncol = (5 + K)) #contains the summary-table
+	summary.table <- matrix(nrow = 0, ncol = (4 + K)) #contains the summary-table
 	venn.values <- list() #contains the venn-lists (to view in the venn-diagram) and the venn-table (a venn-diagram as a table)
+	current.genesymbol_temp = c()
 	
 	
 	
@@ -397,7 +398,8 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
 
 			#having all the necessary information, calculate the summary-table
-			colnames(summary.table) <- c("Object", names(lists), "Rank sum", "Object order", "Freq in input lists", "Freq in truncated lists")
+			colnames(summary.table) <- c(names(lists), "Rank sum", "Object order", "Freq in input lists", "Freq in truncated lists")
+		
 		for (j in 1:length(grayshaded.genes)) {
 		current.genesymbol <- grayshaded.genes[j]
 		
@@ -444,25 +446,32 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 			}		
 		
 			#add the calculated row (of current object) to the summary-table
-			summary.table <- rbind(summary.table, c(current.genesymbol, temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
+			current.genesymbol_temp = c(current.genesymbol_temp, current.genesymbol)
+			summary.table <- rbind(summary.table, c(temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
 			}# end for j
+		
+		#converting the summary table into data frame so that the rankings are as numbers not as char, otherwise the ordering is wrong
+		
+		summary.table.final = data.frame(Object=current.genesymbol_temp,summary.table, stringsAsFactors=FALSE)
+				
+		
 		#the last task for creating the summary-table is to order the gene-symbols according to their rank-sum
 		temp.counter <- 0
-		for (curr.genepos in order(summary.table[,(2 + K)])) {
+		for (curr.genepos in order(summary.table.final[,(2 + K)])) {
 			temp.counter <- temp.counter + 1
-			summary.table[temp.counter,(3+K)] <- summary.table[curr.genepos,1]
+			summary.table.final[temp.counter,(3+K)] <- summary.table.final[curr.genepos,1]
 		}
 	
 		#calculate the venn-lists (to view the venn-diagram) and the venn-table
 		#the calculation takes place only fo K between 2 and 4 (a venn-diagram for K > 4 is not clearly arranged)
-		venn.values <- .calculateVennValues(summary.table[,1:(K + 1)], K)
+		venn.values <- calculateVennValues(summary.table.final[,1:(K + 1)], K)
 	
 		#combine all necessary objects into one single list
 		truncated.lists <- list()
 		truncated.lists$comparedLists <- compared.lists
 		truncated.lists$info <- info
 		truncated.lists$grayshadedLists <- grayshaded.lists
-		truncated.lists$summarytable <- summary.table
+		truncated.lists$summarytable <- summary.table.final
 		truncated.lists$vennlists <- venn.values$vennlists
 		truncated.lists$venntable <- venn.values$venntable
 		truncated.lists$v <- v####EBcorr
@@ -476,7 +485,6 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 		return(truncated.lists=NULL)
 } # end if if (max.j0.est)	#####EBcorr
 }
-
 
 .calculateVennValues <- function(genetable, K) {
 	#check if K is between 2 and 4 (only in this range a venn-table will be calculated)
