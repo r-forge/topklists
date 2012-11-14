@@ -264,226 +264,226 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
 
 .calculateDataSet <- function(lists, K, d, v, threshold) {
-	print("StartCalculate")
-	compared.lists <- list() #contains all pairwise compared lists (structure for aggmap)
-	info <- matrix(ncol = 0, nrow = 3) #contains information about list names
-	rownames(info) <- c("listname", "original listname", "ref-list or trunc-list")
-	grayshaded.lists <- list() #contains information which element in the list has to be gray-shaded
-	grayshaded.genes <- c() #contains all gray-shaded gene-symbols
-	temp.sumtrunclists <- list() #contains the summarized truncated lists (number of lists = K)
-	summary.table <- matrix(nrow = 0, ncol = (4 + K)) #contains the summary-table
-	venn.values <- list() #contains the venn-lists (to view in the venn-diagram) and the venn-table (a venn-diagram as a table)
-	current.genesymbol_temp = c()
-	
-	
-	
-	#first step: calculate res.j0.temp
-	res.j0.temp <- j0.multi(lists, d, v)
-	res.temp <- as.matrix(res.j0.temp$K)
-	#print(res.temp)
-	max.j0.est <- res.j0.temp$maxK
+  print("StartCalculate")
+  compared.lists <- list() #contains all pairwise compared lists (structure for aggmap)
+  info <- matrix(ncol = 0, nrow = 3) #contains information about list names
+  rownames(info) <- c("listname", "original listname", "ref-list or trunc-list")
+  grayshaded.lists <- list() #contains information which element in the list has to be gray-shaded
+  grayshaded.genes <- c() #contains all gray-shaded gene-symbols
+  temp.sumtrunclists <- list() #contains the summarized truncated lists (number of lists = K)
+  summary.table <- matrix(nrow = 0, ncol = (4 + K)) #contains the summary-table
+  venn.values <- list() #contains the venn-lists (to view in the venn-diagram) and the venn-table (a venn-diagram as a table)
+  current.genesymbol_temp = c()
+  
+  
+  
+                                        #first step: calculate res.j0.temp
+  res.j0.temp <- j0.multi(lists, d, v)
+  res.temp <- as.matrix(res.j0.temp$K)
+                                        #print(res.temp)
+  max.j0.est <- res.j0.temp$maxK
 
-	##### adjusting v - in case the estimated max.j0.est is larger than nrow(lists)-v #####EBcorr
-	#v_adj = min(nrow(lists)-max.j0.est, v, na.rm=T)
+##### adjusting v - in case the estimated max.j0.est is larger than nrow(lists)-v #####EBcorr
+                                        #v_adj = min(nrow(lists)-max.j0.est, v, na.rm=T)
 
-	temp = tapply(as.numeric(res.temp[,4]), res.temp[,1], function(x) max(x, na.rm = TRUE))
- 
-        if(sum(is.na(res.temp[,4]))<nrow(res.temp))
-	{
-		if (sum(temp!="-Inf")>1)
-		{
-			if (sum(is.na(res.temp[,4]))>0)
-			{
-			res.temp2 = res.temp[-which(is.na(res.temp[,4])),]
-			} else {res.temp2 = res.temp}
-		}else{
-			if (sum(is.na(res.temp[,4]))>0)
-			{res.temp2 = t(as.matrix(res.temp[-which(is.na(res.temp[,4])),]))
-			} else {res.temp2 = t(as.matrix(res.temp))}
-	
-		}
-	
-		
-		list_t = list()
-		for (i in unique(res.temp2[,1]))
-		{
-		res.temp.temp = res.temp2[res.temp2[,1]==i,]
-		if(!is.matrix(res.temp.temp)){res.temp.temp = t(as.matrix(res.temp.temp))}
-	list_t[[i]] = cbind(res.temp.temp[,2][order(res.temp.temp[,4], decreasing=T)], res.temp.temp[,4][order(res.temp.temp[,4],decreasing=T)])
-		}
-		block_order = names(sort(unlist(lapply(list_t, FUN=function(x) max(as.numeric(x[,2]), na.rm=T))), decreasing=T))
-		#print(block_order)
-		inblock_list_order = lapply(list_t, FUN=function(x) x[,1][order(as.numeric(x[,2]), decreasing=T)])
+  temp = tapply(as.numeric(res.temp[,4]), res.temp[,1], function(x) max(x, na.rm = TRUE))
+  
+  if(sum(is.na(res.temp[,4]))<nrow(res.temp))
+    {
+      if (sum(temp!="-Inf")>1)
+        {
+          if (sum(is.na(res.temp[,4]))>0)
+            {
+              res.temp2 = res.temp[-which(is.na(res.temp[,4])),]
+            } else {res.temp2 = res.temp}
+        }else{
+          if (sum(is.na(res.temp[,4]))>0)
+            {res.temp2 = t(as.matrix(res.temp[-which(is.na(res.temp[,4])),]))
+           } else {res.temp2 = t(as.matrix(res.temp))}
+          
+        }
+      
+      
+      list_t = list()
+      for (i in unique(res.temp2[,1]))
+        {
+          res.temp.temp = res.temp2[res.temp2[,1]==i,]
+          if(!is.matrix(res.temp.temp)){res.temp.temp = t(as.matrix(res.temp.temp))}
+          list_t[[i]] = cbind(res.temp.temp[,2][order(res.temp.temp[,4], decreasing=T)], res.temp.temp[,4][order(res.temp.temp[,4],decreasing=T)])
+        }
+      block_order = names(sort(unlist(lapply(list_t, FUN=function(x) max(as.numeric(x[,2]), na.rm=T))), decreasing=T))
+                                        #print(block_order)
+      inblock_list_order = lapply(list_t, FUN=function(x) x[,1][order(as.numeric(x[,2]), decreasing=T)])
 
-		if (length(block_order)>1)
-		{
-		inblock_list_order_final = list()
-		inblock_list_order_final[[block_order[1]]] = inblock_list_order[[block_order[1]]]
-		block_order_temp = c()
-	
-			for (i in c(2:length(block_order)))
-			{
-			block_order_temp = c(block_order_temp, block_order[[i-1]]);
-			inblock_list_order_final[[block_order[i]]] = setdiff(inblock_list_order[[block_order[i]]], block_order_temp)
-			}
-		}else{inblock_list_order_final = inblock_list_order}
-	
-	
-		block_order_final = names(inblock_list_order_final)[which(lapply(inblock_list_order_final, length)!=0)]
-	
-		##### adding condition if maximal estimated j0 is NA, then return warning #####
+      if (length(block_order)>1)
+        {
+          inblock_list_order_final = list()
+          inblock_list_order_final[[block_order[1]]] = inblock_list_order[[block_order[1]]]
+          block_order_temp = c()
+          
+          for (i in c(2:length(block_order)))
+            {
+              block_order_temp = c(block_order_temp, block_order[[i-1]]);
+              inblock_list_order_final[[block_order[i]]] = setdiff(inblock_list_order[[block_order[i]]], block_order_temp)
+            }
+        }else{inblock_list_order_final = inblock_list_order}
+      
+      
+      block_order_final = names(inblock_list_order_final)[which(lapply(inblock_list_order_final, length)!=0)]
+      
+##### adding condition if maximal estimated j0 is NA, then return warning #####
 
-	   if (max.j0.est!="-Inf")#####EBcorr
-	   {	
-	
-		###### building plotflow#####
-		
-		current.referencelist <- 0
-		#iterate over all blocks (a block is a reference list with the corresponding truncation lists)
-	
-		for (first.list.name in block_order_final) {
- 
-	 	# selecting block
-	 	temp2 = list_t[[first.list.name]]
-	 	rownames(temp2) = list_t[[first.list.name]][,1]
+      if (max.j0.est!="-Inf")#####EBcorr
+        {	
+          
+###### building plotflow#####
+          
+          current.referencelist <- 0
+                                        #iterate over all blocks (a block is a reference list with the corresponding truncation lists)
+          
+          for (first.list.name in block_order_final) {
+            
+                                        # selecting block
+            temp2 = list_t[[first.list.name]]
+            rownames(temp2) = list_t[[first.list.name]][,1]
 
-		#get the gene-symbols of the current reference list
-		#gene.names.to.plot <- lists[, first.list.name][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
-		gene.names.to.plot <- lists[, first.list.name][1:max.j0.est]
-		gene.names.to.plot <- as.vector(gene.names.to.plot)
-		
-		current.referencelist <- current.referencelist + 1
-		compared.lists[[paste("R", current.referencelist, sep = "")]] <- gene.names.to.plot
-#		temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][1]]] <- lists[, inblock_list_order_final[[first.list.name]][1]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
-#		info <- cbind(info, c(paste("R", current.referencelist, sep = ""), inblock_list_order_final[[1]][1], "R"))
-		temp.sumtrunclists[[first.list.name]] <- gene.names.to.plot
-		info <- cbind(info, c(paste("R", current.referencelist, sep = ""), first.list.name, "R"))
-		print(temp.sumtrunclists)
+                                        #get the gene-symbols of the current reference list
+                                        #gene.names.to.plot <- lists[, first.list.name][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
+            gene.names.to.plot <- lists[, first.list.name][1:max.j0.est]
+            gene.names.to.plot <- as.vector(gene.names.to.plot)
+            
+            current.referencelist <- current.referencelist + 1
+            compared.lists[[paste("R", current.referencelist, sep = "")]] <- gene.names.to.plot
+                                        #		temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][1]]] <- lists[, inblock_list_order_final[[first.list.name]][1]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
+                                        #		info <- cbind(info, c(paste("R", current.referencelist, sep = ""), inblock_list_order_final[[1]][1], "R"))
+            temp.sumtrunclists[[first.list.name]] <- gene.names.to.plot
+            info <- cbind(info, c(paste("R", current.referencelist, sep = ""), first.list.name, "R"))
+            print(temp.sumtrunclists)
 
-		current.trunclist <- 0
-		grayshaded.lists[[paste("R", current.referencelist, sep = "")]] <- rep(FALSE, length(gene.names.to.plot))		
-		temp.countgray <- matrix(ncol = 2, nrow = length(gene.names.to.plot), data = 0)
-		
-		#iterate over the truncated lists of the current block
-#		if (length(inblock_list_order_final[[1]])>1){
-		for (k in c(1:length(inblock_list_order_final[[first.list.name]]))) {
-		cat(paste(k, "\n"))
-			n.genes.to.plot <- as.numeric(temp2[inblock_list_order_final[[first.list.name]][k],2])
-			
-			temp.distances = abs(c(1:length(gene.names.to.plot)) - match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][k]])))
-			temp.countgray[,2] = temp.countgray[,2]+c(temp.distances<=d)
+            current.trunclist <- 0
+            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] <- rep(FALSE, length(gene.names.to.plot))		
+            temp.countgray <- matrix(ncol = 2, nrow = length(gene.names.to.plot), data = 0)
+            
+                                        #iterate over the truncated lists of the current block
+                                        #		if (length(inblock_list_order_final[[1]])>1){
+            for (k in c(1:length(inblock_list_order_final[[first.list.name]]))) {
+              cat(paste(k, "\n"))
+              n.genes.to.plot <- as.numeric(temp2[inblock_list_order_final[[first.list.name]][k],2])
+              
+              temp.distances = abs(c(1:length(gene.names.to.plot)) - match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][k]])))
+              temp.countgray[,2] = temp.countgray[,2]+c(temp.distances<=d)
 
-			temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][k]]] <- lists[, inblock_list_order_final[[first.list.name]][k]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][k],2]))]
+              temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][k]]] <- lists[, inblock_list_order_final[[first.list.name]][k]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][k],2]))]
 
-#			#check if to gray-shade the element in the truncated list
-			#temp.grayshade = match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][k]]))<(n.genes.to.plot)
-			temp.grayshade = temp.distances<=d
-			#add the truncated list
-			current.trunclist <- current.trunclist + 1
-			compared.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.distances
-			grayshaded.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.grayshade
-			info <- cbind(info, c(paste("R", current.referencelist, "_T", current.trunclist, sep = ""), inblock_list_order_final[[first.list.name]][k], "T"))
-	
-			}# end for k
-	
-			#calculate if respective gene-symbol of the reference list has to be gray-shaded
-			temp.percentage = apply(as.matrix(temp.countgray[,-1]),1,sum)/c(length(inblock_list_order_final[[first.list.name]]))*100
-			grayshaded.lists[[paste("R", current.referencelist, sep = "")]] = temp.percentage >= threshold
+                                        #			#check if to gray-shade the element in the truncated list
+                                        #temp.grayshade = match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][k]]))<(n.genes.to.plot)
+              temp.grayshade = temp.distances<=d
+                                        #add the truncated list
+              current.trunclist <- current.trunclist + 1
+              compared.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.distances
+              grayshaded.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.grayshade
+              info <- cbind(info, c(paste("R", current.referencelist, "_T", current.trunclist, sep = ""), inblock_list_order_final[[first.list.name]][k], "T"))
+              
+            }# end for k
+            
+                                        #calculate if respective gene-symbol of the reference list has to be gray-shaded
+            temp.percentage = apply(as.matrix(temp.countgray[,-1]),1,sum)/c(length(inblock_list_order_final[[first.list.name]]))*100
+            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] = temp.percentage >= threshold
 
-			#add gene-symbol to a new list which contains all gray-shaded gene-symbols (add only if it is not already in the list)
-			#print(lists[, first.list.name][which(temp.percentage >= threshold)])
-			grayshaded.genes = union(grayshaded.genes, lists[, first.list.name][which(temp.percentage >= threshold)])
-		}# end for first.list.name
-	
+                                        #add gene-symbol to a new list which contains all gray-shaded gene-symbols (add only if it is not already in the list)
+                                        #print(lists[, first.list.name][which(temp.percentage >= threshold)])
+            grayshaded.genes = union(grayshaded.genes, lists[, first.list.name][which(temp.percentage >= threshold)])
+          }# end for first.list.name
+          
 
 
-			#having all the necessary information, calculate the summary-table
-			colnames(summary.table) <- c(names(lists), "Rank sum", "Object order", "Freq in input lists", "Freq in truncated lists")
-		
-		for (j in 1:length(grayshaded.genes)) {
-		current.genesymbol <- grayshaded.genes[j]
-		
-		#get the positions of the current gene-symbol in the input lists
-			temp.positions <- rep(NA,K)
-			for (q in 1:K) {
-				temp.positions[q] <- match(current.genesymbol, lists[,names(lists)[q]])
-			}
-		
-			#calculate the rank sum
-			temp.ranksum <- 0
-			temp.missingvalues <- 0
-			for (q in 1:K) {
-				if (is.na(temp.positions[q])) {
-					temp.missingvalues <- temp.missingvalues + 1
-				}
-			}
-			#if one or more rank-positions are not avaliable (e.g. a gene-symbol does not exist in a list), interpolate the rank sum
-			if (temp.missingvalues > 0) {
-				temp.meanrank <- 0
-				temp.partialranksum <- 0
-				#get the rank sum of the valid rank-positions
-				for (q in 1:K) {
-					if (!is.na(temp.positions[q])) {
-						temp.partialranksum <- temp.partialranksum + temp.positions[q]
-					}
-				}
-				#calculate the mean rank-position for the not available rank-positions
-				temp.meanrank <- round(temp.partialranksum / (K - temp.missingvalues))
-				temp.ranksum <- temp.partialranksum + (temp.meanrank * temp.missingvalues)
-			} else {
-				temp.ranksum <- sum(temp.positions)
-			}
-		
-			#calculate the frequency in the input lists
-			temp.freqinput <- K - temp.missingvalues
-		
-			#calculate the frequency in the summarized truncated lists
-			temp.freqtrunc <- 0	
-			for (curr.listname in names(temp.sumtrunclists)) {
-				if (current.genesymbol %in% temp.sumtrunclists[[curr.listname]]) {
-					temp.freqtrunc <- temp.freqtrunc + 1
-				}
-			}		
-		
-			#add the calculated row (of current object) to the summary-table
-			current.genesymbol_temp = c(current.genesymbol_temp, current.genesymbol)
-			summary.table <- rbind(summary.table, c(temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
-			}# end for j
-		
-		#converting the summary table into data frame so that the rankings are as numbers not as char, otherwise the ordering is wrong
-		
-		summary.table.final = data.frame(Object=current.genesymbol_temp,summary.table, stringsAsFactors=FALSE)
-				
-		
-		#the last task for creating the summary-table is to order the gene-symbols according to their rank-sum
-		temp.counter <- 0
-		for (curr.genepos in order(summary.table.final[,(2 + K)])) {
-			temp.counter <- temp.counter + 1
-			summary.table.final[temp.counter,(3+K)] <- summary.table.final[curr.genepos,1]
-		}
-	
-		#calculate the venn-lists (to view the venn-diagram) and the venn-table
-		#the calculation takes place only fo K between 2 and 4 (a venn-diagram for K > 4 is not clearly arranged)
-		venn.values <- calculateVennValues(summary.table.final[,1:(K + 1)], K)
-	
-		#combine all necessary objects into one single list
-		truncated.lists <- list()
-		truncated.lists$comparedLists <- compared.lists
-		truncated.lists$info <- info
-		truncated.lists$grayshadedLists <- grayshaded.lists
-		truncated.lists$summarytable <- summary.table.final
-		truncated.lists$vennlists <- venn.values$vennlists
-		truncated.lists$venntable <- venn.values$venntable
-		truncated.lists$v <- v####EBcorr
-		truncated.lists$Ntoplot<-sum(unlist(lapply(inblock_list_order_final,length)))+sum(unlist(lapply(inblock_list_order_final,length))>0)####EBcorr
-	
-		return(truncated.lists)
-        	print(truncated.lists)
-		}
-	   } else {
-		cat(paste("!!!...For selected delta, the top K list cannot be estimated (little or no overlap)!!!", "\n"))
-		return(truncated.lists=NULL)
-} # end if if (max.j0.est)	#####EBcorr
+                                        #having all the necessary information, calculate the summary-table
+          colnames(summary.table) <- c(names(lists), "Rank sum", "Object order", "Freq in input lists", "Freq in truncated lists")
+          
+          for (j in 1:length(grayshaded.genes)) {
+            current.genesymbol <- grayshaded.genes[j]
+            
+                                        #get the positions of the current gene-symbol in the input lists
+            temp.positions <- rep(NA,K)
+            for (q in 1:K) {
+              temp.positions[q] <- match(current.genesymbol, lists[,names(lists)[q]])
+            }
+            
+                                        #calculate the rank sum
+            temp.ranksum <- 0
+            temp.missingvalues <- 0
+            for (q in 1:K) {
+              if (is.na(temp.positions[q])) {
+                temp.missingvalues <- temp.missingvalues + 1
+              }
+            }
+                                        #if one or more rank-positions are not avaliable (e.g. a gene-symbol does not exist in a list), interpolate the rank sum
+            if (temp.missingvalues > 0) {
+              temp.meanrank <- 0
+              temp.partialranksum <- 0
+                                        #get the rank sum of the valid rank-positions
+              for (q in 1:K) {
+                if (!is.na(temp.positions[q])) {
+                  temp.partialranksum <- temp.partialranksum + temp.positions[q]
+                }
+              }
+                                        #calculate the mean rank-position for the not available rank-positions
+              temp.meanrank <- round(temp.partialranksum / (K - temp.missingvalues))
+              temp.ranksum <- temp.partialranksum + (temp.meanrank * temp.missingvalues)
+            } else {
+              temp.ranksum <- sum(temp.positions)
+            }
+            
+                                        #calculate the frequency in the input lists
+            temp.freqinput <- K - temp.missingvalues
+            
+                                        #calculate the frequency in the summarized truncated lists
+            temp.freqtrunc <- 0	
+            for (curr.listname in names(temp.sumtrunclists)) {
+              if (current.genesymbol %in% temp.sumtrunclists[[curr.listname]]) {
+                temp.freqtrunc <- temp.freqtrunc + 1
+              }
+            }		
+            
+                                        #add the calculated row (of current object) to the summary-table
+            current.genesymbol_temp = c(current.genesymbol_temp, current.genesymbol)
+            summary.table <- rbind(summary.table, c(temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
+          }# end for j
+          
+                                        #converting the summary table into data frame so that the rankings are as numbers not as char, otherwise the ordering is wrong
+          
+          summary.table.final = data.frame(Object=current.genesymbol_temp,summary.table, stringsAsFactors=FALSE)
+          
+          
+                                        #the last task for creating the summary-table is to order the gene-symbols according to their rank-sum
+          temp.counter <- 0
+          for (curr.genepos in order(summary.table.final[,(2 + K)])) {
+            temp.counter <- temp.counter + 1
+            summary.table.final[temp.counter,(3+K)] <- summary.table.final[curr.genepos,1]
+          }
+          
+                                        #calculate the venn-lists (to view the venn-diagram) and the venn-table
+                                        #the calculation takes place only fo K between 2 and 4 (a venn-diagram for K > 4 is not clearly arranged)
+          venn.values <- calculateVennValues(summary.table.final[,1:(K + 1)], K)
+          
+                                        #combine all necessary objects into one single list
+          truncated.lists <- list()
+          truncated.lists$comparedLists <- compared.lists
+          truncated.lists$info <- info
+          truncated.lists$grayshadedLists <- grayshaded.lists
+          truncated.lists$summarytable <- summary.table.final
+          truncated.lists$vennlists <- venn.values$vennlists
+          truncated.lists$venntable <- venn.values$venntable
+          truncated.lists$v <- v####EBcorr
+          truncated.lists$Ntoplot<-sum(unlist(lapply(inblock_list_order_final,length)))+sum(unlist(lapply(inblock_list_order_final,length))>0)####EBcorr
+          
+          return(truncated.lists)
+          print(truncated.lists)
+        }
+    } else {
+      cat(paste("!!!...For selected delta, the top K list cannot be estimated (little or no overlap)!!!", "\n"))
+      return(truncated.lists=NULL)
+    } # end if if (max.j0.est)	#####EBcorr
 }
 
 .calculateVennValues <- function(genetable, K) {
