@@ -1,9 +1,9 @@
 Package: TopKLists
 Type: Package
 Title: Inference, aggregation and visualization for TopKLists
-Date: 2012-11-14
+Date: 2012-11-16
 Version: 0.9.11
-Author: Michael G. Schimek, Medical University of Graz, Austria (software development and algorithms); Eva Budinska, Swiss Institute of Bioinformatics, Switzerland (implementation); Jie Ding, Harvard University, USA (implementation and algorithms); Peter Hall, The University of Melbourne, Australia (algorithms); Karl G. Kugler, HMGU, Germany (implementation and R-Forge management); Shili Lin, Ohio State University, USA (algorithms and implementation)
+Author: Michael G. Schimek, Medical University of Graz, Austria (software development and algorithms); Eva Budinska, Swiss Institute of Bioinformatics, Switzerland (algorithms and implementation); Jie Ding, Harvard University, USA (implementation and algorithms); Peter Hall, The University of Melbourne, Australia (algorithms); Karl G. Kugler, HMGU, Germany (implementation and package  management); Shili Lin, Ohio State University, USA (algorithms and implementation)
 Maintainer: Michael G. Schimek <michael.schimek@medunigraz.at>
 Description: For multiple full ranked (input) lists representing the same set of N objects, the package TopKLists offers (1) statistical inference on the lengths of informative (top-k) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization.
 License: GPL (>= 2)

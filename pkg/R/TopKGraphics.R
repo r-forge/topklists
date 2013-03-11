@@ -1,5 +1,6 @@
 TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.size = c(870, 440), aggmap.res = 100, venndiag.size = c(380, 420), venndiag.res = 70, gui.size = c(900, 810), directory = "TopKListsGUI_temp") {
   options("guiToolkit"="RGtk2")
+ 
   
                                         #delta_symbol = substitute(delta)
                                         #nu_symbol = expression(nu)
@@ -260,7 +261,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
 
 .calculateDataSet <- function(lists, K, d, v, threshold) {
-  print("StartCalculate")
+  message("StartCalculate")
   compared.lists <- list() #contains all pairwise compared lists (structure for aggmap)
   info <- matrix(ncol = 0, nrow = 3) #contains information about list names
   rownames(info) <- c("listname", "original listname", "ref-list or trunc-list")
@@ -354,7 +355,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
                                         #		info <- cbind(info, c(paste("R", current.referencelist, sep = ""), inblock_list_order_final[[1]][1], "R"))
             temp.sumtrunclists[[first.list.name]] <- gene.names.to.plot
             info <- cbind(info, c(paste("R", current.referencelist, sep = ""), first.list.name, "R"))
-            print(temp.sumtrunclists)
+            message(temp.sumtrunclists)
 
             current.trunclist <- 0
             grayshaded.lists[[paste("R", current.referencelist, sep = "")]] <- rep(FALSE, length(gene.names.to.plot))		
@@ -363,7 +364,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
                                         #iterate over the truncated lists of the current block
                                         #		if (length(inblock_list_order_final[[1]])>1){
             for (k in c(1:length(inblock_list_order_final[[first.list.name]]))) {
-              cat(paste(k, "\n"))
+              message(paste(k, "\n"))
               n.genes.to.plot <- as.numeric(temp2[inblock_list_order_final[[first.list.name]][k],2])
               
               temp.distances = abs(c(1:length(gene.names.to.plot)) - match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][k]])))
@@ -463,7 +464,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
           venn.values <- .calculateVennValues(summary.table.final[,1:(K + 1)], K)
           
                                         #combine all necessary objects into one single list
-          truncated.lists <- list()
+          truncated.lists <<- list()
           truncated.lists$comparedLists <- compared.lists
           truncated.lists$info <- info
           truncated.lists$grayshadedLists <- grayshaded.lists
@@ -474,10 +475,10 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
           truncated.lists$Ntoplot<-sum(unlist(lapply(inblock_list_order_final,length)))+sum(unlist(lapply(inblock_list_order_final,length))>0)####EBcorr
           
           return(truncated.lists)
-          print(truncated.lists)
+          #message(truncated.lists)
         }
     } else {
-      cat(paste("!!!...For selected delta, the top K list cannot be estimated (little or no overlap)!!!", "\n"))
+      message(paste("!!!...For selected delta, the top K list cannot be estimated (little or no overlap)!!!", "\n"))
       return(truncated.lists=NULL)
     } # end if if (max.j0.est)	#####EBcorr
 }

@@ -21,8 +21,7 @@ The package consists of three modules:
 For more details and a bioscience application see Schimek et al. (2011).}
 
 \author{
-Michael G. Schimek, Medical University of Graz, Austria (software project management, algorithms and implementation); Eva Budinska, Swiss Institute of Bioinformatics, Switzerland (implementation); Jie Ding, Harvard School of Public Health, USA (algorithms and implementation); Peter Hall, The University of Melbourne, Australia (algorithms); Karl G. Kugler, HMGU, Germany (implementation and R-Forge management); Shili Lin, Ohio State University, USA (algorithms and implementation)
-
+Michael G. Schimek, Eva Budinska, Jie Ding, Peter Hall, Karl G. Kugler, Shili Lin
 Maintainers: Michael G. Schimek <michael.schimek@medunigraz.at> and Karl G. Kugler <karl@eigenlab.net>
 }
 \seealso{
