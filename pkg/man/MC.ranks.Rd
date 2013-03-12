@@ -34,14 +34,13 @@ function trans.matrix.
 }
 \value{
 Output is a list with 3 components
-\item{comp1 }{Number of iteration to reach the stationary distribution}
+\item{comp1 }{Number of iterations to reach the stationary distribution}
 \item{comp2 }{The stationary distribution}
 \item{comp3 }{The rankings based on the stationary distribution}
 }
 \references{
 Lin, S. (2010)
-Space oriented rank-based data integration.
-Statistical Applications in Genetics and Molecular Biology 9, Article 20.
+Space oriented rank-based data integration. Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
 Shili Lin <shili@stat.osu.edu>
@@ -65,7 +64,4 @@ MC11=MC.ranks(mm1[[2]],mm1[[4]])
 MC21=MC.ranks(mm1[[2]],mm1[[5]])
 MC31=MC.ranks(mm1[[2]],mm1[[6]])
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

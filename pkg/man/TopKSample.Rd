@@ -1,7 +1,7 @@
 \name{TopKSample}
 \alias{TopKSample}
 \title{
-Sampler to generate N top K lists according to p (implemented in native C)
+Sampler to generate N top-K lists according to p
 }
 \description{
 Sampler to generate N top K lists according to p. A function wrapping to a native C implementation is available as well.
@@ -21,7 +21,7 @@ The number of samples
 N TopKlists
 }
 \author{
-Jie Ding <ding@stat.osu.edu>
+Jie Ding <jding@jimmy.harvard.edu>
 }
 \note{
 By default the C implementation is used due to the better performance.

@@ -19,7 +19,7 @@ Whether missing values should be automatically removed from calculation
 }
 }
 \value{
-the geometric mean
+The geometric mean
 }
 \references{
 Lin, S. (2010)

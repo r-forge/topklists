@@ -2,11 +2,10 @@
 \alias{CEMC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-CEMC combination of TopKLists
+CEMC combination of (top-\emph{k}) ranked lists
 }
 \description{
-Perform cross-entropy Monte Carlo simluations for generating combined ranked list using CEMC
-taking into account difference spaces of input ranked lists
+Performs cross-entropy Monte Carlo simluations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists
 }
 \usage{
 CEMC(topK, k, space = NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL, rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0, d.w = NULL, input.par = NULL, extra=0)
@@ -35,7 +34,7 @@ Number of samples generated in each iterate
 Number of samples retained after each iterate 
 }
   \item{rho}{
-Proportion of samples used to estimate new probability matrix
+Proportion of samples used to estimate a new probability matrix
 }
   \item{e1}{
 Stop criteria w.r.t. p
@@ -73,13 +72,10 @@ init.w: probability matrix initialization:
 A list containing the resulting object and the parameters
 }
 \references{
-Lin, S., Ding, J. (2009)
-Integration of Ranked Lists  via
-Cross Entropy Monte Carlo with Applications to mRNA and microRNA
-Studies. Biometrics 65, 9-18.
+Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. Biometrics, 65, 9-18.
 }
 \author{
-Jie Ding <ding@stat.osu.edu>
+Jie Ding <jding@jimmy.harvard.edu>, Shili Lin <shili@stat.osu.edu>
 }
 \examples{
 set.seed(1234)
@@ -91,7 +87,4 @@ myin <- list(a, b, c)
 
 CEMC(myin, 10, init.m= "p")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

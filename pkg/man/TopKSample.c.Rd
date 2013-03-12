@@ -1,10 +1,10 @@
 \name{TopKSample.c}
 \alias{TopKSample.c}
 \title{
-Sampler to generate N top K lists according to p (implemented in native C)
+Sampler to generate N top-K lists according to p (implemented in native C)
 }
 \description{
-Sampler to generate N top K lists according to p. This function is implemented using C. A pure R version is available as well.
+Sampler to generate N top-K lists according to p. This function is implemented using C. A pure R version is available as well.
 }
 \usage{
 TopKSample.c(p, N)
@@ -18,9 +18,9 @@ The number of samples
 }
 }
 \value{
-N TopKlists}
+N top-K lists}
 \author{
-Jie Ding <ding@stat.osu.edu>
+Jie Ding <jding@jimmy.harvard.edu>
 }
 \note{
 By default the C implementation is used due to the better performance.
@@ -39,7 +39,4 @@ M <- cbind(a, b, c)
 TopKSample.c(M, 4)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

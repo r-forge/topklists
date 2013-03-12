@@ -2,10 +2,10 @@
 \alias{is.odd}
 \alias{is.even}
 \title{
-Check for numbers for being either odd or even
+Checks a number for being either odd or even
 }
 \description{
-Small helper functions to check number for either being odd or even.
+Help function to check a number for either being odd or even.
 }
 \usage{
 is.odd(k)

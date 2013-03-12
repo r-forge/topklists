@@ -1,0 +1,57 @@
+\name{calculateDataSet}
+\alias{calculateDataSet}
+\title{
+The main function for TopKInference
+}
+\description{
+Returns a complex object named truncated.lists containing the Idata vector (see \code{prepareIdata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-k estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}. 
+}
+\usage{
+calculateDataSet(lists, L, d, v, threshold) 
+}
+\arguments{
+  \item{lists}{
+Data frame cotaining two or more columns that represent input lists of ordered objects subject to comparison
+}
+  \item{L}{
+Number of input lists that are compared
+}
+  \item{d}{
+The maximal distance delta between object ranks required for the estimation of j0
+}
+  \item{v}{
+The pilot sample size (tuning parameter) nu required for the estimation of j0
+}
+  \item{threshold}{
+The percentage of occurencies of an object in the top-k selection among all comparisons in order to be gray-shaded in the aggmap as a consolidated object.
+}
+}
+\value{
+A named list of the following content:
+ \item{comparedLists}{Contains information about the overlap of all pairwise compared lists (structure for the \code{aggmap})}
+ \item{info}{Contains information about the list names}
+ \item{grayshadedLists}{Contains information which objects in a list are consolidated (gray-shaded in the \code{aggmap})}
+ \item{summarytable}{Table of top-k list overlaps containing rank information, the rank sum, the order of objects as a function of the rank sum, the frequency of an object in the input lists and the frequency of an object in the truncated lists (for plotting in the \code{aggmap})}
+ \item{vennlists}{Contains the top-k objects for each of the input lists (for display in the Venn-diagram)}
+ \item{venntable}{Contains the overlap information (for display in the Venn-table)}
+ \item{v}{Selected pilot sample size (tuning parameter) nu}
+ \item{Ntoplot}{Number of columns to be plotted in the \code{aggmap}}
+ \item{Idata}{Data frame of Idata vectors (see \code{compute.stream}) for each pair of input lists and the associated delta's}
+}
+\author{
+ Eva Budinska <budinska@iba.muni.cz>, Michael G. Schimek <michael.schimek@medunigraz.at>
+}
+
+\references{
+Hall, P. and Schimek, M. G. (2012). Moderate deviation-based inference for random degeneration in paired rank lists. J. Amer. Statist. Assoc., 107, 661-672.
+}
+\examples{
+set.seed(1234)
+data(TopKGUISampleInput)
+truncated.lists = calculateDataSet(lists, d=10, v=10, L=3, threshold=50)
+\dontrun{
+aggmap(truncated.lists, N=80, L=3, d=10, v=10, lists=lists, threshold=50)
+}
+}
+\keyword{ list}
+

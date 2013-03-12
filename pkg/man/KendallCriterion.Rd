@@ -33,12 +33,10 @@ A real number containing the Kendall's distance value.
 }
 \references{
 Lin, S., Ding, J. (2009)
-Integration of Ranked Lists  via
-Cross Entropy Monte Carlo with Applications to mRNA and microRNA
-Studies. Biometrics 65, 9-18. <p>
+Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. Biometrics 65, 9-18.
+
 Lin, S. (2010)
-Space oriented rank-based data integration.
-Statistical Applications in Genetics and Molecular Biology 9, Article 20.
+Space oriented rank-based data integration. Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
 Shili Lin <shili@stat.osu.edu> 

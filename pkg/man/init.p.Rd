@@ -12,16 +12,16 @@ init.p(topK, n, k, init.m = "p", init.w = 0)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{topK}{
-a list of input lists, with items coded from 1 to n
+A list of input lists, with items coded from 1 to n
 }
   \item{n}{
-total number of items
+Total number of items
 }
   \item{k}{
-length of target list
+Length of target list
 }
   \item{init.m}{
-initialization method, "p" point mass, "s" smooth, "cp" point mass using composite ranks, "cs" smooth using composite ranks
+Initialization method, "p" point mass, "s" smooth, "cp" point mass using composite ranks, "cs" smooth using composite ranks
 }
   \item{init.w}{
 initialization weight
@@ -37,7 +37,7 @@ Cross Entropy Monte Carlo with Applications to mRNA and microRNA
 Studies. Biometrics 65, 9-18.
 }
 \author{
-Jie Ding <ding@stat.osu.edu>
+Jie Ding <jding@jimmy.harvard.edu>
 }
 \examples{
 set.seed(1234)

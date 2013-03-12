@@ -11,7 +11,7 @@ Sample input for TopKSpace functions
 }
 \usage{data(TopKSpaceSampleInput)}
 \format{
-Two sets of lists for demonastrating the usage of TopKSpace related functions
+Two sets of lists for demonstrating the usage of TopKSpace related functions
 }
 \examples{
 data(TopKSpaceSampleInput)

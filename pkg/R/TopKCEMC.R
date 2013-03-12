@@ -1,16 +1,12 @@
-###New set of functions for generate combined ranked list using CEMC
-###taking into account difference spaces of input ranked lists
-###Last modified: 04/28/10
+###A set of functions for the generation of combined ranked list using CEMC,
+###taking into account different spaces of input ranked lists
 
 `CEMC` <-
 function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  
 
-  ##I'd like to remove most of the input parameters since it is not apparent
-  ##how to specify values for many of them for end users
-  ##Parameters probably can be removed: b,init.m,init.w,e1,e2,one of N1 and rho
-  
+   
   ##topK: a list of several top K lists, may have different length
   ##space: underlying spaces for the lists
   ##k: desired length of combined list

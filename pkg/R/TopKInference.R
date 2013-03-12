@@ -1,14 +1,236 @@
-# method for j0 estimation
-# the algorithm consists of an ordered sequence of "test stages" s1, s2....
-# stage sk is associated with an integer Jsk, which when k is odd, is a potential lower bound to j0
+# Algorithm for j0 estimation based on the method of Hall and Schimek (2012)
+# The algorithm consists of an ordered sequence of "test stages" s1, s2, ....
+# Stage sk is associated with an integer Jsk, which when k is odd, is a potential lower bound to j0
 # Idata - input data is a vector of 0's and 1's
 
+calculateDataSet <- function(lists, L, d, v, threshold) {
+  message("StartCalculate")
+  compared.lists <- list() #contains all pairwise compared lists (structure for aggmap)
+  info <- matrix(ncol = 0, nrow = 3) #contains information about list names
+  rownames(info) <- c("listname", "original listname", "ref-list or trunc-list")
+  grayshaded.lists <- list() #contains information which element in the list has to be gray-shaded
+  grayshaded.genes <- c() #contains all gray-shaded object-symbols or names
+  temp.sumtrunclists <- list() #contains the summarized truncated lists (number of lists = L)
+  summary.table <- matrix(nrow = 0, ncol = (4 + L)) #contains the summary-table
+  venn.values <- list() #contains the Venn-lists (for viewing in the Venn-diagram) and the Venn-table (a Venn-diagram in table form)
+  current.genesymbol_temp = c()
+  
+  
+  
+                                        #first step: calculate res.j0.temp
+  res.j0.temp <- j0.multi(lists, d, v)
+  res.temp <- as.matrix(res.j0.temp$L)
+                                        #print(res.temp)
+  max.j0.est <- res.j0.temp$maxK
+
+##### adjusts v - in case the estimated max.j0.est is larger than nrow(lists)-v 
+                                        #v_adj = min(nrow(lists)-max.j0.est, v, na.rm=T)
+
+  temp = tapply(as.numeric(res.temp[,4]), res.temp[,1], function(x) max(x, na.rm = TRUE))
+  
+  if(sum(is.na(res.temp[,4]))<nrow(res.temp))
+    {
+      if (sum(temp!="-Inf")>1)
+        {
+          if (sum(is.na(res.temp[,4]))>0)
+            {
+              res.temp2 = res.temp[-which(is.na(res.temp[,4])),]
+            } else {res.temp2 = res.temp}
+        }else{
+          if (sum(is.na(res.temp[,4]))>0)
+            {res.temp2 = t(as.matrix(res.temp[-which(is.na(res.temp[,4])),]))
+           } else {res.temp2 = t(as.matrix(res.temp))}
+          
+        }
+      
+      
+      list_t = list()
+      for (i in unique(res.temp2[,1]))
+        {
+          res.temp.temp = res.temp2[res.temp2[,1]==i,]
+          if(!is.matrix(res.temp.temp)){res.temp.temp = t(as.matrix(res.temp.temp))}
+          list_t[[i]] = cbind(res.temp.temp[,2][order(res.temp.temp[,4], decreasing=T)], res.temp.temp[,4][order(res.temp.temp[,4],decreasing=T)])
+        }
+      block_order = names(sort(unlist(lapply(list_t, FUN=function(x) max(as.numeric(x[,2]), na.rm=T))), decreasing=T))
+                                        #print(block_order)
+      inblock_list_order = lapply(list_t, FUN=function(x) x[,1][order(as.numeric(x[,2]), decreasing=T)])
+
+      if (length(block_order)>1)
+        {
+          inblock_list_order_final = list()
+          inblock_list_order_final[[block_order[1]]] = inblock_list_order[[block_order[1]]]
+          block_order_temp = c()
+          
+          for (i in c(2:length(block_order)))
+            {
+              block_order_temp = c(block_order_temp, block_order[[i-1]]);
+              inblock_list_order_final[[block_order[i]]] = setdiff(inblock_list_order[[block_order[i]]], block_order_temp)
+            }
+        }else{inblock_list_order_final = inblock_list_order}
+      
+      
+      block_order_final = names(inblock_list_order_final)[which(lapply(inblock_list_order_final, length)!=0)]
+      
+##### condition if maximal estimated j0 is NA, then warning is returned #####
+
+      if (max.j0.est!="-Inf")
+        {	
+          
+###### building plotflow#####
+          
+          current.referencelist <- 0
+                                        #iterate over all blocks (a block is a reference list with the corresponding truncation lists)
+          
+          for (first.list.name in block_order_final) {
+            
+                                        # selecting block
+            temp2 = list_t[[first.list.name]]
+            rownames(temp2) = list_t[[first.list.name]][,1]
+
+                                        #get the object-symbols of the current reference list
+                                        #gene.names.to.plot <- lists[, first.list.name][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
+            gene.names.to.plot <- lists[, first.list.name][1:max.j0.est]
+            gene.names.to.plot <- as.vector(gene.names.to.plot)
+            
+            current.referencelist <- current.referencelist + 1
+            compared.lists[[paste("R", current.referencelist, sep = "")]] <- gene.names.to.plot
+                                        #		temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][1]]] <- lists[, inblock_list_order_final[[first.list.name]][1]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
+                                        #		info <- cbind(info, c(paste("R", current.referencelist, sep = ""), inblock_list_order_final[[1]][1], "R"))
+            temp.sumtrunclists[[first.list.name]] <- gene.names.to.plot
+            info <- cbind(info, c(paste("R", current.referencelist, sep = ""), first.list.name, "R"))
+            message(temp.sumtrunclists)
+
+            current.trunclist <- 0
+            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] <- rep(FALSE, length(gene.names.to.plot))		
+            temp.countgray <- matrix(ncol = 2, nrow = length(gene.names.to.plot), data = 0)
+            
+                                        #iterate over the truncated lists of the current block
+                                        #		if (length(inblock_list_order_final[[1]])>1){
+            for (l in c(1:length(inblock_list_order_final[[first.list.name]]))) {
+              message(paste(l, "\n"))
+              n.genes.to.plot <- as.numeric(temp2[inblock_list_order_final[[first.list.name]][l],2])
+              
+              temp.distances = abs(c(1:length(gene.names.to.plot)) - match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][l]])))
+              temp.countgray[,2] = temp.countgray[,2]+c(temp.distances<=d)
+
+              temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][l]]] <- lists[, inblock_list_order_final[[first.list.name]][l]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][l],2]))]
+
+                                        #check for gray-shade of an element in the truncated list
+                                        #temp.grayshade = match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][l]]))<(n.genes.to.plot)
+              temp.grayshade = temp.distances<=d
+                                        #add the truncated list
+              current.trunclist <- current.trunclist + 1
+              compared.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.distances
+              grayshaded.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.grayshade
+              info <- cbind(info, c(paste("R", current.referencelist, "_T", current.trunclist, sep = ""), inblock_list_order_final[[first.list.name]][l], "T"))
+              
+            }# end for l
+            
+                                        #calculate if respective object-symbol of the reference list has to be gray-shaded
+            temp.percentage = apply(as.matrix(temp.countgray[,-1]),1,sum)/c(length(inblock_list_order_final[[first.list.name]]))*100
+            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] = temp.percentage >= threshold
+
+                                        #add object-symbol to a new list which contains all gray-shaded object-symbols (add only if it is not already in the list)
+                                        #print(lists[, first.list.name][which(temp.percentage >= threshold)])
+            grayshaded.genes = union(grayshaded.genes, lists[, first.list.name][which(temp.percentage >= threshold)])
+          }# end for first.list.name
+          
+
+
+                                        #having all the necessary information, calculate the summary-table
+          colnames(summary.table) <- c(names(lists), "Rank sum", "Object order", "Freq in input lists", "Freq in truncated lists")
+          
+          for (j in 1:length(grayshaded.genes)) {
+            current.genesymbol <- grayshaded.genes[j]
+            
+                                        #get the positions of the current object-symbol in the input lists
+            temp.positions <- rep(NA,L)
+            for (q in 1:L) {
+              temp.positions[q] <- match(current.genesymbol, lists[,names(lists)[q]])
+            }
+            
+                                        #calculate the rank sum
+            temp.ranksum <- 0
+            temp.missingvalues <- 0
+            for (q in 1:L) {
+              if (is.na(temp.positions[q])) {
+                temp.missingvalues <- temp.missingvalues + 1
+              }
+            }
+                                        #if one or more rank positions are unavaliable (e.g. an object-symbol does not exist in a list), interpolate the rank sum
+            if (temp.missingvalues > 0) {
+              temp.meanrank <- 0
+              temp.partialranksum <- 0
+                                        #get the rank sum of the valid rank-positions
+              for (q in 1:L) {
+                if (!is.na(temp.positions[q])) {
+                  temp.partialranksum <- temp.partialranksum + temp.positions[q]
+                }
+              }
+                                        #calculate the mean rank-position for the unavailable rank-positions
+              temp.meanrank <- round(temp.partialranksum / (L - temp.missingvalues))
+              temp.ranksum <- temp.partialranksum + (temp.meanrank * temp.missingvalues)
+            } else {
+              temp.ranksum <- sum(temp.positions)
+            }
+            
+                                        #calculate the frequency in the input lists
+            temp.freqinput <- L - temp.missingvalues
+            
+                                        #calculate the frequency in the summarized truncated lists
+            temp.freqtrunc <- 0	
+            for (curr.listname in names(temp.sumtrunclists)) {
+              if (current.genesymbol %in% temp.sumtrunclists[[curr.listname]]) {
+                temp.freqtrunc <- temp.freqtrunc + 1
+              }
+            }		
+            
+                                        #add the calculated row (of the current object) to the summary-table
+            current.genesymbol_temp = c(current.genesymbol_temp, current.genesymbol)
+            summary.table <- rbind(summary.table, c(temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
+          }# end for j
+          
+                                        #conversion of the summary table into a data frame so that the rankings are given as numbers not as char, otherwise the ordering is wrong
+          
+          summary.table.final = data.frame(Object=current.genesymbol_temp,summary.table, stringsAsFactors=FALSE)
+          
+          
+                                        #the last task for creation of the summary-table is to order the object-symbols according to their rank-sum
+          temp.counter <- 0
+          for (curr.genepos in order(summary.table.final[,(2 + L)])) {
+            temp.counter <- temp.counter + 1
+            summary.table.final[temp.counter,(3+L)] <- summary.table.final[curr.genepos,1]
+          }
+          
+                                        #calculate the Venn-lists (to view the Venn-diagram) and the Venn-table
+                                        #the calculation takes place only for L between 2 and 4 (a Venn-diagram for L > 4 cannot be properly arranged)
+          venn.values <- .calculateVennValues(summary.table.final[,1:(L + 1)], L)
+          
+                                        #combine all necessary objects into one single list
+          truncated.lists <- list()
+          truncated.lists$comparedLists <- compared.lists
+          truncated.lists$info <- info
+          truncated.lists$grayshadedLists <- grayshaded.lists
+          truncated.lists$summarytable <- summary.table.final
+          truncated.lists$vennlists <- venn.values$vennlists
+          truncated.lists$venntable <- venn.values$venntable
+          truncated.lists$v <- v
+          truncated.lists$Ntoplot<-sum(unlist(lapply(inblock_list_order_final,length)))+sum(unlist(lapply(inblock_list_order_final,length))>0)
+          truncated.lists$Idata <- res.j0.temp$Idata
+          return(truncated.lists)
+          #message(truncated.lists)
+        }
+    } else {
+      message(paste("!!!...For selected delta, the top L list cannot be estimated (little or no overlap)!!!", "\n"))
+      return(truncated.lists=NULL)
+    } # end if if (max.j0.est)
+}# end of function calculateDataSet
 
 compute.stream<-function(Idata, const=0.251, v, r=1.2)
 {
 if(sum(Idata, na.rm=T)==length(Idata)) 
 {
-return(list(j0_est=length(Idata), reason.break="Idata is identity", Js=NA, v=v))
+return(list(j0_est=length( ), reason.break="Idata is identity", Js=NA, v=v))
 
 }else
 {
@@ -114,8 +336,7 @@ if ((floor(k/2)==(k/2)))
 	Js[k] = j
 	
 	# breaking the repeat loop condition 3
-	#if (Js[k]-trunc(r*v)+1<=1) {reason.break="Js[k]-r*v<=1"; break}
-	 if (Js[k]-trunc(r*v.last)+1<=1) {  v.temp=v.last; 
+		 if (Js[k]-trunc(r*v.last)+1<=1) {  v.temp=v.last; 
 							while((Js[k]-r*v.temp<=1) & v.temp>0){v.temp=v.temp-1}
 							v.last=v.temp}
 	 if (v.last==1){reason.break = "v converged to 1"; v[k+1]=v.last ;break; #print("selected v too small")
@@ -142,34 +363,39 @@ return(list(j0_est=j0_est, reason.break=reason.break, Js=Js, v=v))
 }# end if sum(Idata)==length(Idata)
 }
 
-#Method of M. G. Schimek extended to count K(j0_est) for each pair of several ranked lists. 
-#Lists have same length and have no missing values.
+#Method of Hall and Schimek (2012) adapted to the situation of multiple ranked lists 
+#Lists have the same length and comprise no missing values
 #Inputs:
-#Data - input matrix, each coloum presents one list
-#delta - the maximal distance of the objects in ranking
-#v - parameter for estimating j0
-#outputs: maximal estimated J0 through all combinations of 2 lists
+#Data - input matrix, each column represents one list
+#delta - the maximal distance between the rank positions of an object in a pair of lists
+#v - value of tuning parameter nu used for j0 estimation
+#Outputs: maximal estimated j0 based on all combinations of 2 lists
 
 #Data = lists
 #delta=10
 #v=10
 
-j0.multi<-function(Data,d,v) {
+j0.multi<-function(lists,d,v) {
   maxK=0
-  K = c()
-  for (i in 1:ncol(Data)){
-  for (j in 1:ncol(Data)){
+  L = c()
+  Idata_ID = c()
+  names_idata = c()
+  for (i in 1:ncol(lists)){
+  for (j in 1:ncol(lists)){
     if (i!=j) {
-	ID=prepareIdata(Data[,c(i,j)],d=d)
-	J= compute.stream(ID$Idata,v=v)$j0_est
-	K = rbind(K, cbind(names(Data)[i], names(Data)[j], v,J,d))
+	ID = prepareIdata(lists[,c(i,j)],d=d)
+        Idata_ID=cbind(Idata_ID, ID$Idata)
+	names_idata = c(names_idata, paste("L",i,"_","L",j,sep=""))
+	J = compute.stream(ID$Idata,v=v)$j0_est
+	L = rbind(L, cbind(names(lists)[i], names(lists)[j], v,J,d))
 	}# end for if
       }# end for j
     }# end for i
-K = data.frame(K, stringsAsFactors=F)
-names(K) = c("list1", "list2", "v", "j0_est","delta")
-if(sum(is.na(K$j0_est))<nrow(K)){maxK = max(as.numeric(K$j0_est), na.rm=T)}else{maxK=NA}
-return(list(maxK=maxK,K=K))
+colnames(Idata_ID) = names_idata
+L = data.frame(L, stringsAsFactors=F)
+names(L) = c("list1", "list2", "v", "j0_est","delta")
+if(sum(is.na(L$j0_est))<nrow(L)){maxK = max(as.numeric(L$j0_est), na.rm=T)}else{maxK=NA}
+return(list(maxK=maxK,L=L, Idata=Idata_ID))
 }
 
 # Zv moderate deviation
@@ -192,13 +418,12 @@ pj.plus = (1/v)*(sum(Idata[j:(j+v-1)], na.rm = TRUE))
 return(pj.plus)
 }
 
-# function to prepare Idata from several rankings of several assessors
-# x 	- data matrix, where columns represents rank order of genes from two different assessors, rows represents genes (clones)
-# delta - the maximal distance of the objects in ranking between assessors
-# num.omit - the maximal number of ommited genes from the analysis 
+# Function to prepare Idata from several rankings of several assessors
+# x - data matrix, where columns represent the rank order of objects from two different assessors and the rows represent object names (symbols)
+# delta - the maximal distance between the rank positions of an object in a pair of lists
+# num.omit - the maximal number of ommited objects from the analysis 
 #
-# the result is a object of type "Idata", which is a list containing Idata and the information
-# about the distance (delta).
+# The result is an object of type "Idata", which is a list containing Idata and the information on the distance delta.
 
 prepareIdata <- function(x, d)
 {
@@ -214,146 +439,3 @@ is.odd <- function(k){
 is.even <- function(k){
   return(!is.odd(k))
 }
-
-## Heatmap solution to HS rank order graphics representation
-## By Eva Budinska, 3.12.2010
-## Input variables 
-#K- number of lists
-# N maximal number of genes
-# delta=10 maximal distance between genes used for j0 estimation
-# v - nu value used for j0 estimation
-# res.temp - data frame, result of HS algorithm for all pairs of lists, 4 columns, first and second column contain lists names that were compared, third column selected nu and fourth column estimated j0
-# lists data frame containing three orderesd lists of genes that were compared (the input to HS algorithm) - column names obligatory
-
-aggmap<-function(lists, res.j0.temp, N, K, d, v) {
-  require(grid)
-  wid=1
-  hei=1
-  res.temp =  as.matrix(res.j0.temp$K)
-  max.j0.est = res.j0.temp$maxK
-
-  local.max.j0.est = rep(K, K)
-  names(local.max.j0.est) = names(lists)
-  temp2=c()
-
-  for (i in c(1:K))
-  {
-  if(i>1){res.temp.temp = res.temp[-c(which(!is.na(match(res.temp[,1],names(temp2)))),which(!is.na(match(res.temp[,2],names(temp2))))),]}else{res.temp.temp=res.temp}
-  temp = tapply(as.numeric(res.temp.temp[,4]), res.temp.temp[,1], function(x) max(x, na.rm=TRUE))
-  which.max.temp = which.max(temp)
-  temp2 = c(temp2, temp[which.max.temp])
-  }
-
-  local.max.j0.est[names(temp2)]=order(temp2, decreasing=T)
-  first.order.local.max.j0.est = order(local.max.j0.est)
-
-  red.white.green = colorRampPalette(c("red", "orange","yellow","white"))(N+1)
-  grid.newpage()
-
-  # defining basic layout with two rows and one column
-  pushViewport(viewport(layout=grid.layout(2, 1, widths=c(1,1),heights=c(0.1,0.9))))
-
-  ##first row - defining header (delta, nu and color key level) 
-	  pushViewport(viewport(layout.pos.row=1, layout.pos.col=1))
-  ### first column - delta and nu 
-		  pushViewport(viewport(layout=grid.layout(1, 1, widths=c(1,1),heights=rep(1,2))))
-		  grid.text(paste("delta = ",d,",  v =",v,sep=""), x=0.2, y=0.5)
-		  upViewport()		
-
-  ### second column - color key
-		  pushViewport(viewport(layout=grid.layout(1, 2, widths=c(1,1),heights=rep(1,2)))) # defines two columns in the second column
-			  pushViewport(viewport(layout.pos.row=1, layout.pos.col=2)) # fills the second column with the key
-				  pushViewport(plotViewport(margins=c(1.5,1,1,1)))
-				  grid.xaxis(at=seq(0, 1, length=11), gp=gpar(cex=0.5,tck=0.1, line=0.1))
-				  grid.points(seq(0, 1, length=N), rep(1, N), pch=15, gp=gpar(col=red.white.green))
-				  popViewport()
-			  popViewport()
-		  upViewport()
-	  upViewport() #coming back to the basic level
-
-  ## second row - plotting genes
-	  pushViewport(viewport(layout.pos.row=2, layout.pos.col=1))
-
-  ### defining the layout in second row
-		  pushViewport(viewport(layout=grid.layout(max.j0.est+v+1, 1+factorial(K)/2+2, widths=rep(1,1+factorial(K)/2+2)*(max.j0.est+v+1),heights=rep(1,1+factorial(K)/2+2)*(max.j0.est+v+1))))
-
-			  for (g in c(1:(max.j0.est+v)))
-				  {
-				  pushViewport(viewport(width=wid, height=hei, layout.pos.col=1, layout.pos.row=g+1))
-				  grid.text(g, gp=gpar(fontsize=8, col="black"))
-				  popViewport()
-				  }# end for g
-		  h.sizes=c(K:2)
-		  l=1
-		  lists.to.remove = ""
-
-	  for (first.list.name in names(temp2))
-		  {
-		  # selecting the order of pairs of lists to the first one
-		  res.temp.selection = res.temp[which(res.temp[,1]==first.list.name),]
-		  res.temp.selection = res.temp.selection[which(is.na(match(res.temp.selection[,2],lists.to.remove))),]
-			  if(is.matrix(res.temp.selection)){
-			  ranked.list.names = c(first.list.name, res.temp.selection[order(res.temp.selection[,4], decreasing=TRUE),2])
-			  lists.rank = rank(ranked.list.names)
-			  order.local.max.j0.est = order(as.numeric(res.temp.selection[,4]), decreasing=TRUE)
-			  }else{
-			  ranked.list.names = c(first.list.name,res.temp.selection[2])
-			  lists.rank = rank(ranked.list.names)
-			  order.local.max.j0.est = 1
-			  }
-
-		  gene.names.to.plot = lists[,first.list.name][1:(temp2[first.list.name]+v)]
-
-
-		  ### plotting gene names ###
-		  pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+1,layout.pos.row=1))
-		  grid.text(ranked.list.names[1], gp=gpar(fontsize=8, col="black"))
-		  popViewport()
-
-		  for (g in c(1:(length(gene.names.to.plot))))
-				  {
-				  pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+1, layout.pos.row=g+1))
-				  grid.rect(gp=gpar(col="black"))
-				  grid.text(gene.names.to.plot[g], gp=gpar(fontsize=8, col="black"))
-				  popViewport()
-				  }# end for g
-		  
-		  for (k in c(2:K))
-		  {
-		  pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+k, layout.pos.row=1))
-		  grid.text(ranked.list.names[k], gp=gpar(fontsize=8, col="black"))
-		  popViewport()
-		  n.genes.to.plot = as.numeric(res.temp[res.temp[,1]==first.list.name & res.temp[,2]==ranked.list.names[k],4])+v
-			  for (g in c(1:n.genes.to.plot))
-			  {
-			  j = match(gene.names.to.plot[g],lists[,ranked.list.names[k]])
-			  distance = abs(g-j)
-				  if (!is.na(j) & j<(n.genes.to.plot+v)) # if gene is in the second list AND is in the top j0+v genes of the second list
-					  {i="grey"}else{i="white"}
-				  
-				  pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+k, layout.pos.row=g+1))
-				  if (length(distance)>0)
-					  {
-					  grid.polygon(x=c(0,1,1),y=c(1,1,0), gp=gpar(col="black", fill=red.white.green[distance+1]))#upper right triangle
-					  grid.text(distance,x=0.8, y=0.6, gp=gpar(cex=0.7))
-					  }else
-					  {
-					  grid.polygon(x=c(0,1,1),y=c(1,1,0), gp=gpar(col="black", fill="white"))#upper right triangle
-					  grid.text("NA",x=0.8, y=0.6, gp=gpar(cex=0.7))
-					  }
-				  grid.polygon(x=c(0,0,1),y=c(1,0,0), gp=gpar(col="black", fill=i))#bottom left triangle
-				  popViewport()
-			  }# end for g
-		  }# end for k
-	  
-			  l=l+K
-			  K=K-1
-			  lists.to.remove = c(lists.to.remove, first.list.name)
-
-		  }# end for first list name
-
-
-			  upViewport()
-		  
-	  upViewport()
-} # end of the function

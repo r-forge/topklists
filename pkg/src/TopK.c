@@ -79,7 +79,7 @@ int randomsamp(int n, double *p)
 
 void kendallc(int *rank_a, int *rank_b, int *n, int *nb, double *p, double *dist) 
 {
-  //calculate kendall's tau distances between a list rank_a and several lists
+  //calculate Kendall's tau distances between a list rank_a and several lists
   //in rank_b  
   int i,j,k;
   int tn=*n; //number of items in each list
@@ -102,7 +102,7 @@ void kendallc(int *rank_a, int *rank_b, int *n, int *nb, double *p, double *dist
 void kendall2c(int *rank_a, int *rank_b, int *n, int *nb, int *la, int *lb,
 	      double *p,  double *dist)
 {
-  //calculate kendall's tau distances between a list rank_a and several lists 
+  //calculate Kendall's tau distances between a list rank_a and several lists 
   //in rank_b with consideration for different underlying spaces    
 
   //la: length of list rank_a

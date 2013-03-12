@@ -1,27 +1,41 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8x]{inputenc}
+\usepackage{Sweave}
 
 %opening
-\title{Using TopKInference}
-%\VignetteIndexEntry{Using TopKInference} 
-\author{Michael Schimek}
+\title{TopKLists: Usage of the module \texttt{TopKInference}}
+%\VignetteIndexEntry{Usage of TopKInference} 
+\author{Michael G. Schimek, Eva Budinsk\'{a}}
 
 \begin{document}
 
 \maketitle
 
-\begin{abstract}
+\section{Introduction and background}
 
-\end{abstract}
+The nonparametric inference method of \cite{haschi} for the truncation of paired ranked lists forms the core part of the module \texttt{TopKInference}. The associated iterative algorithm, as implemented here, allows the estimation of the length, $k$, of a top-$k$ list in the presence of irregular and missing assignments. Overlap of rank positions in two input lists is represented by a sequence of indicators, where $I_j=1$ if the ranking, given by the second assessor to the object ranked $j$ by the first assessor, is not more than $\delta$ index positions distant from $j$, and otherwise $I_j=0$. The variables $I_j$ are assumed to follow a Bernoulli random distribution. This implies independence, which is motivated by $k\ll N$ and a strong random contribution due to irregular assignments in real data. However, \cite{haschi} could prove that their theoretical results obtained under the assumption of complete independence also apply to the situation of moderate $m$-dependence. Simulation study evidence (unpublished material) is in full support of these theoretical findings, more than that, even under substantial list dependence, stable truncation results can be obtained from \texttt{TopKInference}. 
 
-First load the TopKLists package
+A cautionary note: For making inference on pairs of ranked lists, tuning parameters have to be specified. This is for the following reason: For a given set of $N$ objects, arbitrary ranked lists can be constructed by successive permutations. However, this fact does not help in practice when we have to analyze realizations of such lists because they comprise irregularities in terms of position shifts, inverted orderings, missing assignments, etc. As a consequence, a unique top-$k$ list or a complete set of top-conforming objects does not exist. This is the reason why the truncation algorithm (and any other algorithm) in \texttt{TopKLists} needs to be controlled by tuning parameters.
 
+The choice of the distance parameter $\delta$ is essential when the \texttt{Idata} are prepared. The $\delta$-plot of the module \texttt{TopKGraphics} was designed to help the user with the selection of $\delta$. There are two more tuning parameters: the constant $C$ which allows us to compensate for poor separability between the informative top parts and the remaining random parts of the input lists (the suggested interval is $0.25<C<0.6$), and the pilot sample size $\nu$ (a smoothing parameter) which controls the degree of irregularity of the rankings.
+
+The algorithmic solution of \texttt{TopKInference} for the case of more than two ranked lists is outlined in Figure \ref{topkinference}. There, the principle for the calculation of an overall index $k^\ast$ (a function of the individual $k$'s from the $\ell$ lists $L_i$; the maximum \texttt{maxK} is the default) based on all pairwise comparisons is outlined. Having obtained such an overall index, we arrive at truncated lists $T_i$. They can either be aggregated by graphical means (\texttt{aggmap} of module \texttt{TopKGraphics}) or by stochastic rank aggregation (module \texttt{TopKSpace}). Details of the approach taken for multiple lists can be found in \cite{schimybu}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.43\textwidth]{TopKInferenceFlowmap.pdf}\\
+\caption{The inference concept to obtain $\ell$ truncated consensual lists $T_i$ from $\ell$ full ranked lists $L_i$}
+\label{topkinference}
+\end{figure}
+
+\section{Construction of a dataset and execution of the inference procedure}
+
+For running the examples in this vignette you have to load the package first:
 <<eval=TRUE>>=
 library(TopKLists)
 @
 
-\section{Prepare data}
-Estimate the point of degeneration of signal (begginning of the noise), under parameter settings (const = C, v=ni)
+The truncation point $j_0$ where noise takes over for a pair of ranked lists (i.e., the first index position after the end of the top-$k$ list), can be estimated for any prespecified distance ($\delta$=d) and the selected tuning parameter values ($C$=const and $\nu$=v). For this example we simulate a dataset with an assumed truncation point $j_0=30$.
 
 <<>>=
 
@@ -63,10 +77,12 @@ for (v in v.vect)
 }
 
 colnames(res.j0.10)=c("v", "j0_est", "reason.break", "Js", "v.vector")
-res.j0.10
+str(res.j0.10)
 @
 
-\section{Visualize the result}
+\section{Visualization of the truncation results}
+
+The below plot summarizes the obtained estimation results $\hat{j}_0$ for the specified range of sample sizes $\nu$ and the assumed $j_0=30$. 
 
 <<fig=T>>=
 plot(res.j0.10[,1], res.j0.10[,2], pch=19, ylim=c(0, length(x)))
@@ -74,10 +90,38 @@ abline(a=k.to.estimate, b=0, col="green")
 lines(res.j0.10[,1], res.j0.10[,2])
 @
 
+\section{Specification of $\delta$ and calculation of maxK for multiple ranked lists}
+
+Two overlapping ranked lists, L1 and L2, and a third one, L3, as random sample are constructed.
+<<>>=
+lists <- data.frame(L1=c("A","B","C","D","E","F","G","H","J","I","K","L","M","N"))
+lists$L2 <- c("B","C","A","E","G","F","G","J","K","L","M","N","I","H")
+lists$L3 <- sample(LETTERS[1:14])
+@
+
+Specification of the $\delta$-values from the three lists by means of \texttt{deltaplot} (belongs to the module \texttt{TopKGraphics}).
+
+<<fig=T>>=
+a=deltaplot(lists, maxd=nrow(lists))
+@
+
+Calculation of the overall truncation index \texttt{maxK} for prespecified  values of $\delta$ and $\nu$.
+
+<<>>=
+res = j0.multi(lists, d=2, v=4)
+@
+
+\begin{thebibliography}{}
+
+\bibitem[Hall and Schimek, 2012]{haschi} Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. \emph{J. Amer. Statist. Assoc.}, \textbf{107}, 661-672.
+
+\bibitem[Schimek, My\v{s}i\v{c}kov\'{a} and Budinsk\'{a}, 2012]{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166. 
+
+\end{thebibliography}
+
 \section{Session info}
 <<>>=
 sessionInfo()
 @
-
 
 \end{document}

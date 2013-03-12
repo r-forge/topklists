@@ -12,10 +12,10 @@ kendall(rank.a, rank.b, k.a, k.b, n, p = 0)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{rank.a}{
-A single TopKList
+A single top-K list
 }
   \item{rank.b}{
-A vector of matrix form of TopKList(s) to be compared to list \code{a}
+A vector of matrix form of top-K list(s) to be compared to list \code{a}
 }
   \item{k.a}{
 Value of \code{k} for \code{rank.a}
@@ -31,16 +31,14 @@ Distance added for tied pair (potential problem when p != 0)
 }
 }
 \value{
-Returns modified Kendall's Tau distance against a for each lists within b 
+Returns modified Kendall's Tau distance against \code{a} for each lists within \code{b} 
 }
 \references{
 Lin, S., Ding, J. (2009)
-Integration of Ranked Lists  via
-Cross Entropy Monte Carlo with Applications to mRNA and microRNA
-Studies. Biometrics 65, 9-18.
+Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. Biometrics 65, 9-18.
 }
 \author{
-Jie Ding <ding@stat.osu.edu>
+Jie Ding <jding@jimmy.harvard.edu>
 }
 \note{
 A faster implementation using native C code is given as \code{\link{kendall.c}}
@@ -57,7 +55,3 @@ a <- sample(1:10, 10)
 b <- sample(1:10, 10)
 kendall(a, b, 6, 6, 10)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

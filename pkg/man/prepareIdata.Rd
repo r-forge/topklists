@@ -2,10 +2,10 @@
 \alias{prepareIdata}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Function takes as an input two rankings of a gene list and creates a signal-noise vector of 1's and 0's based on the selected distance delta between rankings. This vector is further used as an input for compute.stream  - a function that estimates the position of signal degeneration
+Function that reads in two different rankings of a set of objects and creates a data stream vector of zeros and ones based on the preselected distance delta of the paired ranked lists. The obtained vector is further used as an input for compute.stream, a function that estimates the index position of information degradation
 }
 \description{
-function to prepare Idata from several rankings of several assessors
+Function preparing Idata from several rankings (of several assessors)
 }
 \usage{
 prepareIdata(x, d)
@@ -13,22 +13,21 @@ prepareIdata(x, d)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-Data matrix, where columns represents rank order of genes from two different assessors, rows represents genes (clones)
+Data matrix, where columns represents the rank order of the objects based on two different assessments, and the rows represent all ranked objects
 }
   \item{d}{
-The maximal distance in ranking of the object between two lists }
+The maximal distance between two lists for a ranked object}
 }
 \details{
-The signal-noise vector is created as follows: if diff(rank1, rank2) of the object (gene) g is smaller or equal delta, than 1; 0 otherwise. The smaller the delta, the stronger the assumptions on the ressemblence of the two rankings. If delta=0, the condition returns 1 for an object if and only if its rankings in two lists are identical.
+The data stream vector is created as follows: if diff(rank1, rank2) of the object g is less or equal delta, then 1 is assigned; otherwise 0. The smaller the delta, the stronger the assumption of concordance for the paired ranked lists. When delta=0, the condition returns 1 for an object if and only if its rankings in the two lists are identical.
 }
 \value{
-The result is a object of type "Idata", which is a list containing the signal-noise vector of 1's and 0's (Idata) and the information
-about the distance used (delta).
-\item{Idata}{signal-noise vector of 1's and 0's}
-\item{delta}{the given delta}
+The result is a object of type "Idata", which is a list containing the data stream vector of zeros and ones (Idata) and the information about the applied distance (delta).
+\item{Idata}{data stream vector of zeros and ones}
+\item{delta}{The used delta}
 }
 \author{
-Eva Budinska <budinska@iba.muni.cz>
+Eva Budinska <budinska@iba.muni.cz>, Michael G. Schimek <michael.schimek@medunigraz.at>
 }
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

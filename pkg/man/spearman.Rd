@@ -5,7 +5,7 @@
 Calculate modified Spearman's footrule distance between two top K lists
 }
 \description{
-Spearman's footrule is a measure for distance between ranked lists. It given as the sum of absolute differences between ranks of two lists. This modificated version allows for comparing partial lists.
+Spearman's footrule is a measure for distance between ranked lists. It is given as the sum of absolute differences between ranks of two lists. This modificated version allows for comparing partial lists.
 }
 \usage{
 spearman(rank.a, rank.b, k.a, k.b, n)
@@ -13,10 +13,10 @@ spearman(rank.a, rank.b, k.a, k.b, n)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{rank.a}{
-A single TopKList
+A single top-K list
 }
   \item{rank.b}{
-A vector of matrix form of TopKList(s) to be compared to list \code{a}
+A vector of matrix form of top-K list(s) to be compared to list \code{a}
 }
   \item{k.a}{
 Value of \code{k} for \code{rank.a}
@@ -29,10 +29,10 @@ Total number of objects, numbered from 1 to n
 }
 }
 \value{
-returns modified spearman distance against a for each lists within b 
+Returns modified spearman distance against \code{a} for each lists within \code{b} 
 }
 \author{
-Jie Ding <ding@stat.osu.edu>
+Jie Ding <jding@jimmy.harvard.edu>
 }
 \note{
 Implemented using native C code. For the R version see \code{\link{kendall}}.

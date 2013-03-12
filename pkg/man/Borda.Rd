@@ -5,7 +5,7 @@
 Compute Borda scores and ranks
 }
 \description{
-Compute Borda scores and ranks based on four aggregation function
+Computes Borda scores and ranks based on four different aggregation functions
 }
 \usage{
 Borda(input, space)
@@ -20,9 +20,7 @@ a list containing the underlying spaces
 }
 }
 \details{
-Compute Borda scores and ranks based on four aggregation functions in which the 
-underlying spaces where the individual ranked lists come from are taken into account.
-The four aggreage functions are mean, median, geometric mean, and l2 norm.
+Computes Borda scores and ranks based on four different aggregation functions, in which the underlying spaces where the individual ranked lists come from, are taken into account. The four aggregation functions are mean, median, geometric mean, and l2 norm.
 }
 \value{
 Output is a list with two components
@@ -32,8 +30,7 @@ by each of the 4 aggregation functions}
 scores from each of the 4 aggregation functions}
 }
 \references{
-Lin, S. (2010)
-Space oriented rank-based data integration.
+Lin, S. (2010). Space oriented rank-based data integration.
 Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{

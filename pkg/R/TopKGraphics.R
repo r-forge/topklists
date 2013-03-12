@@ -1,11 +1,15 @@
-TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.size = c(870, 440), aggmap.res = 100, venndiag.size = c(380, 420), venndiag.res = 70, gui.size = c(900, 810), directory = "TopKListsGUI_temp") {
+TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = tempdir(), venndiag.res = 70, aggmap.res = 100, maxd = 500) {
   options("guiToolkit"="RGtk2")
- 
-  
-                                        #delta_symbol = substitute(delta)
-                                        #nu_symbol = expression(nu)
 
-                                        #check if given lists are of type 'data.frame' and contains data
+ 					#setting up the directory
+   if(is.null(directory)) {directory <- tempdir()}
+    message(paste("Writing files to", directory))
+
+  
+                              #delta_symbol = substitute(delta)
+                              #nu_symbol = expression(nu)
+
+                              #check if given lists are of type 'data.frame' and contains data
   if (!is.data.frame(lists)) {
     gmessage("ERROR:\nGiven list-object is not of type data.frame!\nProgram will exit.", title = "Incorrect input", icon = "error")
     return("TopKLists GUI Error: Given list-object is not of type data.frame!")
@@ -17,29 +21,29 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   win <- gwindow("TopKLists GUI", visible = FALSE, width = gui.size[1], height = gui.size[2]) #main window
   maingroup <- ggroup(horizontal = FALSE, container = win, expand = TRUE) #main container
   wid <- environment() #contains all the widgets
-  current.arguments <- environment() #contains all the arguments (N,K,v etc) of the current calculation
+  current.arguments <- environment() #contains all the arguments (N,L,v,....) of the current calculation
 
-                                        #create input-area for arguments
+                                        #create input area for arguments
   calcframe <- gframe("ARGUMENTS", pos = 0.5, container = maingroup)
   calcgroup <- ggroup(horizontal = FALSE, container = calcframe, expand = TRUE)
   agroup <- ggroup(horizontal = TRUE, container = calcgroup, expand = TRUE)
   a1frame <- gframe("Calculated from given list", container = agroup, expand = TRUE)
-  a2frame <- gframe("Choose range for delta (depends on v)", container = agroup, expand = TRUE)
+  a2frame <- gframe("Choose range for delta (depends on nu)", container = agroup, expand = TRUE)
   a3frame <- gframe("Threshold", container = agroup, expand = TRUE)
 
   wid$calculate <- gbutton("Calculate", container = calcgroup, handler = function(h,...) { calculate.all.truncationlists() })	
   svalue(calcgroup) <- 10
 
-                                        #layout of the first argument-input-area
+                                        #layout of the first argument input area
   tbl1 <- glayout(spacing = 10,container = a1frame)
   tbl1[2,2, anchor = c(1,0)] <- glabel("N", container = tbl1)
   tbl1[2,3] <- wid$N <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = dim(lists)[1], container = tbl1)
-  tbl1[2,4, anchor = c(-1,0)] <- glabel("maximal number of features" ,container = tbl1)
+  tbl1[2,4, anchor = c(-1,0)] <- glabel("maximal number of objects" ,container = tbl1)
   tbl1[3,2, anchor = c(1,0)] <- glabel("L", container = tbl1)
-  tbl1[3,3] <- wid$K <- gspinbutton(from = 0, to = dim(lists)[2], by = 1, value = dim(lists)[2], container = tbl1)
+  tbl1[3,3] <- wid$L <- gspinbutton(from = 0, to = dim(lists)[2], by = 1, value = dim(lists)[2], container = tbl1)
   tbl1[3,4, anchor = c(-1,0)] <- glabel("number of lists", container = tbl1)
 
-                                        #layout of the second argument-input-area
+                                        #layout of the second argument input area
   tbl2 <- glayout(spacing = 10, container = a2frame)
   tbl2[2,2, anchor = c(1,0)] <- glabel(expression(nu), container = tbl2)
   tbl2[2,3] <- wid$v <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2, handler = function(h,...) { update.deltarange() })
@@ -55,33 +59,33 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
     enabled(wid$delta.stop) <- FALSE
   }
 
-                                        #layout of the third argument-input-area
+                                        #layout of the third argument input area
   tbl3 <- glayout(spacing = 10, container = a3frame)
   tbl3[2,2, anchor = c(1,0)] <- glabel("min", container = tbl3)
   tbl3[2,3] <- wid$threshold <- gedit(text = "50", width = 3, container = tbl3)
   tbl3[2,4, anchor = c(-1,0)] <- glabel("%" ,container = tbl3)
   tbl3[3,2:4, anchor = c(1,0)] <- glabel("to gray-shade gene symbol", container = tbl3)
 
-                                        #create the delta-slider for choosing the desired delta-value (and to show the calculated data for the selected delta-value)
+                                        #create the delta slider for choosing the desired delta value (and to show the calculated data for the selected delta value)
   sldrframe <- gframe("DELTA-SLIDER", pos = 0.5, container = maingroup)
-                                        #the parameters 'from' and 'to' are dummy-values because the slider will be updated after the calculation
+                                        #the parameters 'from' and 'to' are dummy values because the slider will be updated after the calculation
   wid$delta.slider <- gslider(from = 1, to = 2, by = 1, container = sldrframe, expand = TRUE, handler = function(h,...) { load.data() })
   enabled(wid$delta.slider) <- FALSE
 
-                                        #create three three tabs for presenting the results of the calculation
+                                        #create four tabs for presenting the results of the calculation
   nb <- gnotebook(container = maingroup, expand = TRUE)
   aggmapg <- ggroup(horizontal = FALSE, container = nb, label = "Aggregation map")
   summtblg <- ggroup(horizontal = FALSE, container = nb, label = "Summary table")
   venng <- ggroup(horizontal = TRUE, container = nb, label = "Venn-diagram & Venn-table")
   svalue(nb) <- 1 #set the first tab as the selected tab
 
-                                        #create a status-bar to inform the user of current events
+                                        #create a status bar to inform the user of the current status
   wid$status <- gtkStatusbar()
   add(maingroup, wid$status)
   info <- wid$status$getContextId("info")
   wid$status$push(info, "GUI started")
 
-                                        #create a progress-bar to show the progress of the calculation
+                                        #create a progress bar to show the progress of the calculation
   wid$progress <- gtkProgressBar(show = TRUE)
   add(maingroup, wid$progress)	
 
@@ -89,7 +93,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   update.deltarange <- function() {
                                         #check if allowed range for delta should be updated
     if (autorange.delta) {
-      deltarange <- .determineDeltaRange(lists, as.numeric(svalue(wid$N)), as.numeric(svalue(wid$K)), as.numeric(svalue(wid$v)))
+      deltarange <- .determineDeltaRange(lists, as.numeric(svalue(wid$N)), as.numeric(svalue(wid$L)), as.numeric(svalue(wid$v)))
       svalue(wid$delta.start) <- deltarange[1]
       svalue(wid$delta.stop) <- deltarange[2]
       enabled(wid$delta.start) <- TRUE
@@ -98,33 +102,34 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
     }
   }
 
-                                        #update the calculated data set (aggmap, summary-table and venn) in the three tabs
+                                        #update the calculated data set (aggmap, summary-table and Venn) in the three tabs
   load.data <- function() {		
-                                        #update is only performed when delta-slider is enabled
+                                        #update is only performed when delta slider is enabled
     if (enabled(wid$delta.slider)) {
                                         #check if calculated data set can be shown in the GUI (no file = error in the calculation for this delta-value)
-      if (file.exists(paste(directory, "/N" , current.arguments$val.N, "_L", current.arguments$val.K, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))) {
+      if (file.exists(paste(directory, "/N" , current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))) {
                                         #load the calculated data set
-        load(paste(directory, "/N", current.arguments$val.N, "_L", current.arguments$val.K, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))
+        load(paste(directory, "/N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))
 
                                         #first tab: show aggmap
         if (!is.null(wid$aggmap)) {
-					#delete current aggmap-image
+					#delete current aggmap image
           delete(aggmapg, wid$aggmap)
         }
-        wid$aggmap <- gimage(paste(directory, "/aggmap_N", current.arguments$val.N, "_L", current.arguments$val.K, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = aggmapg)
+        wid$aggmap <- gimage(paste(directory, "/aggmap_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = aggmapg)
 
-                                        #second tab: show summary-table
+
+                                       #second tab: show summary-table
         if (!is.null(wid$sumtable)) {
 					#delete current summary-table
           delete(summtblg, wid$sumtable)
         }
         wid$sumtable <- gtable(truncated.lists$summarytable, container = summtblg, expand = TRUE)
 
-                                        #third tab: show venn-diagram and venn-table (only if K <= 4)
-        if (current.arguments$val.K <= 4) {			
+                                        #third tab: show Venn-diagram and Venn-table (only if L <= 4)
+        if (current.arguments$val.L <= 4) {			
           if (!is.null(wid$venndiag) & !is.null(wid$venntbl)) {
-                                        #delete current venn-diagram and venn-table
+                                        #delete current Venn-diagram and Venn-table
             delete(venng, wid$venndiag)
             delete(venng, wid$venntbl)
           }
@@ -133,22 +138,24 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
             delete(venng, wid$nodrawimage)
             delete(venng, wid$nodraw)
           }
-          wid$venndiag <- gimage(paste(directory, "/venn_N", current.arguments$val.N, "_L", current.arguments$val.K, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = venng)
+          wid$venndiag <- gimage(paste(directory, "/venn_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = venng)
           wid$venntbl <- gtable(truncated.lists$venntable, container = venng, expand = TRUE)
+
         } else {
-					#output message that venn-diagram and venn-table are not shown for K > 4
+					#output message that Venn-diagram and Venn-table are not shown for L > 4
           if (is.null(wid$nodrawimage) & is.null(wid$nodraw)) {
             wid$nodrawimage <- gimage("info", dirname = "stock", container = venng)
             wid$nodraw <- glabel("There are more than four input lists.\nVenn-diagram and Venn-table are only drawn to a maximum of four input lists.", container = venng)
           }
-        }
+        }# end for third tab if
+  
       } else {
         gmessage("There is no data to show in the GUI!\nThis is caused by an error in the calculation.\nYou may have to adjust the arguments!", title = "Loading data failed", icon = "error")
       }
     }
   }
   
-                                        #calculates a data set (aggmap, summary-table and venn) for each delta in the given range for delta
+                                        #calculates aggmap, summary-table and Venn for each delta in the given range for delta
   calculate.all.truncationlists <- function() {
                                         #check if entered values are valid
     if ((as.numeric(svalue(wid$delta.start)) < 0) || (as.numeric(svalue(wid$delta.stop)) < 0) || (svalue(wid$delta.start) > svalue(wid$delta.stop))) {
@@ -168,10 +175,6 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
                                         #disable delta-slider to prevent sliding while calculating
     enabled(wid$delta.slider) <- FALSE
 
-                                        #delete old files in destination directory
-    unlink(directory, recursive = TRUE)
-    dir.create(directory)	
-
                                         #calculate data set for each delta in the given range for delta
     temp.tocalc <- (as.numeric(svalue(wid$delta.stop)) - as.numeric(svalue(wid$delta.start))) + 1
     temp.loopcounter <- 0
@@ -180,24 +183,52 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
       gtkMainIterationDo(FALSE)
                                         #try to calculate data set for current delta
       tryCatch({
-        truncated.lists <- .calculateDataSet(lists, as.numeric(svalue(wid$K)), i, as.numeric(svalue(wid$v)), as.numeric(svalue(wid$threshold)))
+        truncated.lists <- calculateDataSet(lists, as.numeric(svalue(wid$L)), i, as.numeric(svalue(wid$v)), as.numeric(svalue(wid$threshold)))
                                         #save calculated truncated lists for current delta in the destination directory
-        save(truncated.lists, file = paste(directory, "/N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$K)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".Rdata", sep = ""))
-                                        #draw the aggmap and save it as png-image in the destination directory
-        png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$K)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = aggmap.size[1], height = aggmap.size[2], res = aggmap.res)
-        .drawAggmap(truncated.lists, N=as.numeric(svalue(wid$N)), K=as.numeric(svalue(wid$K)), d=i, v=as.numeric(svalue(wid$v)), threshold=as.numeric(svalue(wid$threshold)), lists)
+        save(truncated.lists, file = paste(directory, "/N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".Rdata", sep = ""))
+                                        #draw the aggmap and save it as pdf-image in the destination directory
+        pdf(file = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = aggmap.pdf.size[1], height = aggmap.pdf.size[2])
+        aggmap(truncated.lists, N=as.numeric(svalue(wid$N)), L=as.numeric(svalue(wid$L)), d=i, v=as.numeric(svalue(wid$v)), threshold=as.numeric(svalue(wid$threshold)), lists)
         dev.off()
-                                        #draw the venn-diagram and save it as png-image in the destination directory (only if K is between 2 and 4) & if there is a j0 estimated
-        if((as.numeric(svalue(wid$K)) >= 2) & (as.numeric(svalue(wid$K)) <= 4) & !is.null(truncated.lists)) {
-          png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$K)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res = venndiag.res)
+
+ 	  png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = aggmap.size[1], height = aggmap.size[2], res=aggmap.res)
+        aggmap(truncated.lists, N=as.numeric(svalue(wid$N)), L=as.numeric(svalue(wid$L)), d=i, v=as.numeric(svalue(wid$v)), threshold=as.numeric(svalue(wid$threshold)), lists)
+        dev.off()
+
+                                      #draw the Delta-plot and save it as pdf-image in the destination directory
+        pdf(file = paste(directory, "/deltaplot_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), ".pdf", sep = ""), width = aggmap.pdf.size[1], height = aggmap.pdf.size[2])
+        Mdelta=deltaplot(lists)
+        dev.off()
+
+        save(Mdelta, file=paste(directory, "/Mdelta.rdata", sep=""))
+        for (aname in names(Mdelta))
+        {
+	write.table(Mdelta[[aname]], file=paste(directory, "/Mdelta",aname,".txt", sep=""), sep="\t", row.names=FALSE)
+        }
+
+ 	png(filename = paste(directory, "/deltaplot_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), ".png", sep = ""), width = aggmap.size[1], height = aggmap.size[2], res=aggmap.res)
+        Mdelta=deltaplot(lists)
+        dev.off()
+        rm(Mdelta)
+
+                                        #draw the Venn-diagram and save it as pdf-image in the destination directory (only if L is between 2 and 4 & if there is a j0 estimated)
+        if((as.numeric(svalue(wid$L)) >= 2) & (as.numeric(svalue(wid$L)) <= 4) & !is.null(truncated.lists)) {
+          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
+          venn(truncated.lists$vennlists)
+          dev.off()
+          png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
           venn(truncated.lists$vennlists)
           dev.off()
         }else{
-          png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$K)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res = venndiag.res)
+          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
           plot(1,1, type="n", axes=FALSE)
           text(1,1,"No overlap on selected parameters")
           dev.off()
 
+ 	 png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
+          plot(1,1, type="n", axes=FALSE)
+          text(1,1,"No overlap on selected parameters")
+          dev.off()
         }
       }, error = function(e) {
                                         #catch errors while calculating the data set
@@ -212,7 +243,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
         break()
       }
 
-                                        #update progress-bar
+                                        #update progress bar
       temp.loopcounter <- temp.loopcounter + 1
       temp.fraction <- (1 / temp.tocalc) * temp.loopcounter
       gtkProgressBarSetFraction(wid$progress, temp.fraction)
@@ -244,9 +275,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
     enabled(wid$delta.slider) <- TRUE
 
                                         #save the current arguments
-                                        #(this prevents errors when sliding through the delta values - otherwise changing the arguments in the GUI could cause errors when showing the calculated data)
+                                        #(this prevents errors when sliding through the delta-values - otherwise changing the arguments in the GUI could cause errors when showing the calculated data)
     current.arguments$val.N <- as.numeric(svalue(wid$N))
-    current.arguments$val.K <- as.numeric(svalue(wid$K))
+    current.arguments$val.L <- as.numeric(svalue(wid$L))
     current.arguments$val.v <- as.numeric(svalue(wid$v))
     current.arguments$val.threshold <- as.numeric(svalue(wid$threshold))
     
@@ -260,238 +291,16 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
 
 
-.calculateDataSet <- function(lists, K, d, v, threshold) {
-  message("StartCalculate")
-  compared.lists <- list() #contains all pairwise compared lists (structure for aggmap)
-  info <- matrix(ncol = 0, nrow = 3) #contains information about list names
-  rownames(info) <- c("listname", "original listname", "ref-list or trunc-list")
-  grayshaded.lists <- list() #contains information which element in the list has to be gray-shaded
-  grayshaded.genes <- c() #contains all gray-shaded gene-symbols
-  temp.sumtrunclists <- list() #contains the summarized truncated lists (number of lists = K)
-  summary.table <- matrix(nrow = 0, ncol = (4 + K)) #contains the summary-table
-  venn.values <- list() #contains the venn-lists (to view in the venn-diagram) and the venn-table (a venn-diagram as a table)
-  current.genesymbol_temp = c()
-  
-  
-  
-                                        #first step: calculate res.j0.temp
-  res.j0.temp <- j0.multi(lists, d, v)
-  res.temp <- as.matrix(res.j0.temp$K)
-                                        #print(res.temp)
-  max.j0.est <- res.j0.temp$maxK
 
-##### adjusting v - in case the estimated max.j0.est is larger than nrow(lists)-v #####EBcorr
-                                        #v_adj = min(nrow(lists)-max.j0.est, v, na.rm=T)
-
-  temp = tapply(as.numeric(res.temp[,4]), res.temp[,1], function(x) max(x, na.rm = TRUE))
-  
-  if(sum(is.na(res.temp[,4]))<nrow(res.temp))
-    {
-      if (sum(temp!="-Inf")>1)
-        {
-          if (sum(is.na(res.temp[,4]))>0)
-            {
-              res.temp2 = res.temp[-which(is.na(res.temp[,4])),]
-            } else {res.temp2 = res.temp}
-        }else{
-          if (sum(is.na(res.temp[,4]))>0)
-            {res.temp2 = t(as.matrix(res.temp[-which(is.na(res.temp[,4])),]))
-           } else {res.temp2 = t(as.matrix(res.temp))}
-          
-        }
-      
-      
-      list_t = list()
-      for (i in unique(res.temp2[,1]))
-        {
-          res.temp.temp = res.temp2[res.temp2[,1]==i,]
-          if(!is.matrix(res.temp.temp)){res.temp.temp = t(as.matrix(res.temp.temp))}
-          list_t[[i]] = cbind(res.temp.temp[,2][order(res.temp.temp[,4], decreasing=T)], res.temp.temp[,4][order(res.temp.temp[,4],decreasing=T)])
-        }
-      block_order = names(sort(unlist(lapply(list_t, FUN=function(x) max(as.numeric(x[,2]), na.rm=T))), decreasing=T))
-                                        #print(block_order)
-      inblock_list_order = lapply(list_t, FUN=function(x) x[,1][order(as.numeric(x[,2]), decreasing=T)])
-
-      if (length(block_order)>1)
-        {
-          inblock_list_order_final = list()
-          inblock_list_order_final[[block_order[1]]] = inblock_list_order[[block_order[1]]]
-          block_order_temp = c()
-          
-          for (i in c(2:length(block_order)))
-            {
-              block_order_temp = c(block_order_temp, block_order[[i-1]]);
-              inblock_list_order_final[[block_order[i]]] = setdiff(inblock_list_order[[block_order[i]]], block_order_temp)
-            }
-        }else{inblock_list_order_final = inblock_list_order}
-      
-      
-      block_order_final = names(inblock_list_order_final)[which(lapply(inblock_list_order_final, length)!=0)]
-      
-##### adding condition if maximal estimated j0 is NA, then return warning #####
-
-      if (max.j0.est!="-Inf")#####EBcorr
-        {	
-          
-###### building plotflow#####
-          
-          current.referencelist <- 0
-                                        #iterate over all blocks (a block is a reference list with the corresponding truncation lists)
-          
-          for (first.list.name in block_order_final) {
-            
-                                        # selecting block
-            temp2 = list_t[[first.list.name]]
-            rownames(temp2) = list_t[[first.list.name]][,1]
-
-                                        #get the gene-symbols of the current reference list
-                                        #gene.names.to.plot <- lists[, first.list.name][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
-            gene.names.to.plot <- lists[, first.list.name][1:max.j0.est]
-            gene.names.to.plot <- as.vector(gene.names.to.plot)
-            
-            current.referencelist <- current.referencelist + 1
-            compared.lists[[paste("R", current.referencelist, sep = "")]] <- gene.names.to.plot
-                                        #		temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][1]]] <- lists[, inblock_list_order_final[[first.list.name]][1]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][1],2]))]
-                                        #		info <- cbind(info, c(paste("R", current.referencelist, sep = ""), inblock_list_order_final[[1]][1], "R"))
-            temp.sumtrunclists[[first.list.name]] <- gene.names.to.plot
-            info <- cbind(info, c(paste("R", current.referencelist, sep = ""), first.list.name, "R"))
-            message(temp.sumtrunclists)
-
-            current.trunclist <- 0
-            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] <- rep(FALSE, length(gene.names.to.plot))		
-            temp.countgray <- matrix(ncol = 2, nrow = length(gene.names.to.plot), data = 0)
-            
-                                        #iterate over the truncated lists of the current block
-                                        #		if (length(inblock_list_order_final[[1]])>1){
-            for (k in c(1:length(inblock_list_order_final[[first.list.name]]))) {
-              message(paste(k, "\n"))
-              n.genes.to.plot <- as.numeric(temp2[inblock_list_order_final[[first.list.name]][k],2])
-              
-              temp.distances = abs(c(1:length(gene.names.to.plot)) - match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][k]])))
-              temp.countgray[,2] = temp.countgray[,2]+c(temp.distances<=d)
-
-              temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][k]]] <- lists[, inblock_list_order_final[[first.list.name]][k]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][k],2]))]
-
-                                        #			#check if to gray-shade the element in the truncated list
-                                        #temp.grayshade = match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][k]]))<(n.genes.to.plot)
-              temp.grayshade = temp.distances<=d
-                                        #add the truncated list
-              current.trunclist <- current.trunclist + 1
-              compared.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.distances
-              grayshaded.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.grayshade
-              info <- cbind(info, c(paste("R", current.referencelist, "_T", current.trunclist, sep = ""), inblock_list_order_final[[first.list.name]][k], "T"))
-              
-            }# end for k
-            
-                                        #calculate if respective gene-symbol of the reference list has to be gray-shaded
-            temp.percentage = apply(as.matrix(temp.countgray[,-1]),1,sum)/c(length(inblock_list_order_final[[first.list.name]]))*100
-            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] = temp.percentage >= threshold
-
-                                        #add gene-symbol to a new list which contains all gray-shaded gene-symbols (add only if it is not already in the list)
-                                        #print(lists[, first.list.name][which(temp.percentage >= threshold)])
-            grayshaded.genes = union(grayshaded.genes, lists[, first.list.name][which(temp.percentage >= threshold)])
-          }# end for first.list.name
-          
-
-
-                                        #having all the necessary information, calculate the summary-table
-          colnames(summary.table) <- c(names(lists), "Rank sum", "Object order", "Freq in input lists", "Freq in truncated lists")
-          
-          for (j in 1:length(grayshaded.genes)) {
-            current.genesymbol <- grayshaded.genes[j]
-            
-                                        #get the positions of the current gene-symbol in the input lists
-            temp.positions <- rep(NA,K)
-            for (q in 1:K) {
-              temp.positions[q] <- match(current.genesymbol, lists[,names(lists)[q]])
-            }
-            
-                                        #calculate the rank sum
-            temp.ranksum <- 0
-            temp.missingvalues <- 0
-            for (q in 1:K) {
-              if (is.na(temp.positions[q])) {
-                temp.missingvalues <- temp.missingvalues + 1
-              }
-            }
-                                        #if one or more rank-positions are not avaliable (e.g. a gene-symbol does not exist in a list), interpolate the rank sum
-            if (temp.missingvalues > 0) {
-              temp.meanrank <- 0
-              temp.partialranksum <- 0
-                                        #get the rank sum of the valid rank-positions
-              for (q in 1:K) {
-                if (!is.na(temp.positions[q])) {
-                  temp.partialranksum <- temp.partialranksum + temp.positions[q]
-                }
-              }
-                                        #calculate the mean rank-position for the not available rank-positions
-              temp.meanrank <- round(temp.partialranksum / (K - temp.missingvalues))
-              temp.ranksum <- temp.partialranksum + (temp.meanrank * temp.missingvalues)
-            } else {
-              temp.ranksum <- sum(temp.positions)
-            }
-            
-                                        #calculate the frequency in the input lists
-            temp.freqinput <- K - temp.missingvalues
-            
-                                        #calculate the frequency in the summarized truncated lists
-            temp.freqtrunc <- 0	
-            for (curr.listname in names(temp.sumtrunclists)) {
-              if (current.genesymbol %in% temp.sumtrunclists[[curr.listname]]) {
-                temp.freqtrunc <- temp.freqtrunc + 1
-              }
-            }		
-            
-                                        #add the calculated row (of current object) to the summary-table
-            current.genesymbol_temp = c(current.genesymbol_temp, current.genesymbol)
-            summary.table <- rbind(summary.table, c(temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
-          }# end for j
-          
-                                        #converting the summary table into data frame so that the rankings are as numbers not as char, otherwise the ordering is wrong
-          
-          summary.table.final = data.frame(Object=current.genesymbol_temp,summary.table, stringsAsFactors=FALSE)
-          
-          
-                                        #the last task for creating the summary-table is to order the gene-symbols according to their rank-sum
-          temp.counter <- 0
-          for (curr.genepos in order(summary.table.final[,(2 + K)])) {
-            temp.counter <- temp.counter + 1
-            summary.table.final[temp.counter,(3+K)] <- summary.table.final[curr.genepos,1]
-          }
-          
-                                        #calculate the venn-lists (to view the venn-diagram) and the venn-table
-                                        #the calculation takes place only fo K between 2 and 4 (a venn-diagram for K > 4 is not clearly arranged)
-          venn.values <- .calculateVennValues(summary.table.final[,1:(K + 1)], K)
-          
-                                        #combine all necessary objects into one single list
-          truncated.lists <<- list()
-          truncated.lists$comparedLists <- compared.lists
-          truncated.lists$info <- info
-          truncated.lists$grayshadedLists <- grayshaded.lists
-          truncated.lists$summarytable <- summary.table.final
-          truncated.lists$vennlists <- venn.values$vennlists
-          truncated.lists$venntable <- venn.values$venntable
-          truncated.lists$v <- v####EBcorr
-          truncated.lists$Ntoplot<-sum(unlist(lapply(inblock_list_order_final,length)))+sum(unlist(lapply(inblock_list_order_final,length))>0)####EBcorr
-          
-          return(truncated.lists)
-          #message(truncated.lists)
-        }
-    } else {
-      message(paste("!!!...For selected delta, the top K list cannot be estimated (little or no overlap)!!!", "\n"))
-      return(truncated.lists=NULL)
-    } # end if if (max.j0.est)	#####EBcorr
-}
-
-.calculateVennValues <- function(genetable, K) {
-                                        #check if K is between 2 and 4 (only in this range a venn-table will be calculated)
-  if ((K >= 2) & (K <= 4)) {
-                                        #create new lists with the gene-names as list-entries (currently only the distances are in the columns because the summary-table is used)
+.calculateVennValues <- function(genetable, L) {
+                                        #check if L is between 2 and 4 (only in this range a Venn-table will be calculated)
+  if ((L >= 2) & (L <= 4)) {
+                                        #create new lists with the object-symbols or names as list-entries (currently only the distances are in the columns because the summary-table is used)
     newlists <- list()
-    for (x in 2:(K + 1)) {
+    for (x in 2:(L + 1)) {
       currentlist <- c()
       for (y in 1:length(genetable[,1])) {
-                                        #check if gene-symbol is in the current list (if the distance is NA, the gene is not in the current list)
+                                        #check if object-symbol is in the current list (if the distance is NA, the object is not in the current list)
         if (!is.na(genetable[,x][y])) {
           currentlist <- append(currentlist, genetable[,1][y], after = y)
         }
@@ -499,15 +308,15 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
       newlists[[colnames(genetable)[x]]] <- currentlist
     }
     
-    if(K == 2) {
-                                        #create venn-table for two input lists
+    if(L == 2) {
+                                        #create Venn-table for two input lists
       venntable <- matrix(ncol = 2, nrow = 1)
       colnames(venntable) <- c("intersection", "objects")
       venntable[1,1] <- paste(names(newlists)[1], names(newlists)[2], sep = "_")
       venntable[1,2] <- toString(intersect(newlists[[names(newlists)[1]]], newlists[[names(newlists)[2]]])) #L1_L2
       return(list("vennlists" = newlists, "venntable" = venntable))
-    }else if(K == 3) {
-                                        #create venn-table for three input lists
+    }else if(L == 3) {
+                                        #create Venn-table for three input lists
       venntable <- matrix(ncol = 2, nrow = 4)
       temp.L1_L2 <- intersect(newlists[[names(newlists)[1]]], newlists[[names(newlists)[2]]]) #to calculate L1_L2_L3
       temp.rownames <- c(paste(names(newlists)[1], names(newlists)[2], names(newlists)[3], sep = "_"),
@@ -521,8 +330,8 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
       venntable[3,2] <- toString(intersect(newlists[[names(newlists)[1]]], newlists[[names(newlists)[3]]])) #L1_L3
       venntable[4,2] <- toString(intersect(newlists[[names(newlists)[2]]], newlists[[names(newlists)[3]]])) #L2_L3
       return(list("vennlists" = newlists, "venntable" = venntable))
-    }else if(K == 4) {
-                                        #create venn-table for four input lists
+    }else if(L == 4) {
+                                        #create Venn-table for four input lists
       venntable <- matrix(ncol = 2, nrow = 9)
       temp.L1_L2 <- intersect(newlists[[names(newlists)[1]]], newlists[[names(newlists)[2]]])
       temp.L3_L4 <- intersect(newlists[[names(newlists)[3]]], newlists[[names(newlists)[4]]])
@@ -557,7 +366,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
 
 
-.determineDeltaRange <- function(lists, N, K, v) {
+.determineDeltaRange <- function(lists, N, L, v) {
   start.delta <- 0
   stop.delta <- 0
   start.delta.found <- FALSE
@@ -566,7 +375,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   for (d in 1:N) {
                                         #check if truncated lists are calculatable with current delta
                                         #if not calculatable, then the current delta value cannot be applied on the lists (aggmap cannot be drawn)
-    if (!.isCalculatable(lists, d, K, v)) {
+    if (!.isCalculatable(lists, d, L, v)) {
       if (start.delta.found) {
         return(c(start.delta, d-1))
       }
@@ -583,49 +392,92 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   return(c(start.delta, stop.delta))
 }
 
+#function that generates Delta-plot and Delta-matrix 
+deltaplot<-function(lists, mind=0, maxd=NULL)
+{
+if (is.null(maxd)) {
+cat(paste("The maximum for delta not specified, using",nrow(lists)/2), "\n")
+maxd=c(nrow(lists)/2)
+}
+if (maxd>nrow(lists)) {
+cat(paste("The maximum for delta you specified is larger than the number of objects in your lists. Maxd changed to",nrow(lists)/2), "\n")
+maxd=c(nrow(lists)/2)
+ }
 
+deltas = c(mind:maxd)
+Mdelta = list()
+n=ncol(lists)
+a = n*(n-1)
+aa = round(a/2,0)
+aaa = 2
+par(mfrow=c(aa,aaa))
+	for (i in 1:ncol(lists))
+	{
+          for (j in 1:ncol(lists))
+		{
+		 if (i!=j)
+		  {
+   		   Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
+   		   names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
+   		   xx = c()
+		   for (d in deltas)
+		   {	
+ 		   a = prepareIdata(lists[,c(i,j)],d=d)
+		   x = table(as.numeric(a$Idata))['0']
+		   xx = c(xx,x)
+   		   Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
+		   }# end for d
+		   Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
+		   par(mar=c(5,5,1,1))
+	           plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+	        }# end for if
+            }# end for j
+	}# end for i
+	return(Mdelta)
+}#end deltaplot
 
+## Aggregation map (aggmap) for the graphical representation of more than two top-k lists obtained from the method by Hall and Schimek (2012) - it applies Paul Murrell's grid package
+## Input variables 
+# L - number of lists
+# N - maximal number of objects
+# v - value of tuning parameter nu used for j0 estimation
+# res.temp - data frame, result from the Hall and Schimek (2012) algorithm for all pairings of lists, 4 columns, the first and second column contain the list names that were compared, the third column contains the selected nu, and the fourth column the estimated j0
+# The lists data frame contains the complete set of L ordered input lists - column names are obligatory
 
-
-##### added variable lists  - the nontruncated matrix of gene lists, in order to be able to derive the length for color range
-
-.drawAggmap <- function(truncated.lists, N, K, d, v, threshold, lists) {
+aggmap <- function(truncated.lists, N, L, d, v, threshold, lists) {
 
                                         #delta_symbol = substitute(delta)
                                         #nu_symbol = expression(nu)
 
-
-  if (!is.null(truncated.lists)) #####EBcorr
+  if (!is.null(truncated.lists)) 
     {
       require(grid)
       wid <- 1
       hei <- 1
-                                        #create list of background coulours to shade the distant-polygons
+                                        #create list of background colours to shade the distance-polygons  
 
-      
-
-##### EBcorrection: The color range should represent complete range of the non-truncated list, to give an idea on whether the genes are present on TOP of the whole list, or not. Therefore the range must be the maximal length of non truncated lists:###
-      red.white.green <- colorRampPalette(c("red", "orange", "yellow", "white"))(nrow(lists) + 1) #####EBcorr
+      red.white.green <- colorRampPalette(c("red", "orange", "yellow", "white"))(nrow(lists) + 1) 
       
                                         #get the necessary data
       compared.lists <- truncated.lists$comparedLists
       info <- truncated.lists$info
       grayshaded.lists <- truncated.lists$grayshadedLists
-      max.length <- min(length(compared.lists[[1]]), N) #####EBcorr
-      
+      max.length <- min(length(compared.lists[[1]]), N) 
+
+   #  
       grid.newpage()
       
-                                        #output the header (the parameters and the colour-gradient)
+                                        #output the header (the parameters and the colour gradient)
       pushViewport(viewport(layout = grid.layout(2, 1, widths = c(1, 1), heights = c(0.1, 0.9))))
       pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
       pushViewport(viewport(layout = grid.layout(1, 1, widths = c(1, 1), heights = rep(1, 2))))
-      grid.text(substitute(paste(hat(k)[max],"= ", kmax,", N = ", N, ", L = ", K, sep = ""), list(N=N, K=K, kmax=length(compared.lists[[1]]))), x = 0.2, y = 0.65)#####EBcorr
+      grid.text(substitute(paste(hat(k)[max],"= ", kmax,", N = ", N, ", L = ", L, sep = ""), list(N=N, L=L, kmax=length(compared.lists[[1]]))), x = 0.2, y = 0.65)
       grid.text(substitute(paste(delta, "= ", a, ", ",nu," = ", b, ", threshold = ", f, "%", sep = ""), list(a=d, b=v, f=threshold)), x = 0.2, y = 0.25)
       upViewport()
       pushViewport(viewport(layout = grid.layout(2, 2, widths = c(1, 1), heights = rep(1, 2))))
       pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
       pushViewport(plotViewport(margins = c(1.5, 1, 1, 1)))
-      grid.points(seq(0, 1, length =  nrow(lists)), rep(1, nrow(lists)), pch = 15, gp = gpar(col = red.white.green))#####EBcorr
+      grid.points(seq(0, 1, length =  nrow(lists)), rep(1, nrow(lists)), pch = 15, gp = gpar(col = red.white.green))
       pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2))	
       grid.text("close", x = 0, y = 0.5, gp = gpar(fontsize = 8, col = "black"))
       grid.text("RANK POSITION", x = 0.5, y = 0.5, gp = gpar(fontsize = 7, col = "black"))
@@ -638,7 +490,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
       
                                         #set the layout of the 
       pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1))	
-      pushViewport(viewport(layout = grid.layout(max.length + 1, 1+truncated.lists$Ntoplot, widths = rep(1, 1+truncated.lists$Ntoplot) * (max.length), heights = rep(1, 1 + truncated.lists$Ntoplot) * (max.length))))#####EBcorr
+      pushViewport(viewport(layout = grid.layout(max.length + 1, 1+truncated.lists$Ntoplot, widths = rep(1, 1+truncated.lists$Ntoplot) * (max.length), heights = rep(1, 1 + truncated.lists$Ntoplot) * (max.length))))
       
                                         #output row-numbers
       for (g in c(1:max.length)) {
@@ -647,22 +499,22 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
         popViewport()
       }
       
-      h.sizes <- c(K:2)
+      h.sizes <- c(L:2)
       
                                         #output the lists
       for (i in 1:length(compared.lists)) {
-                                        #get the name of the list and output it
+                                        #get the name of the list and output the list name
         listname <- info[2, i]
         pushViewport(viewport(width = wid, height = hei, layout.pos.col = i + 1, layout.pos.row = 1))
         grid.text(listname, gp = gpar(fontsize = 8, col = "black"))
         popViewport()
         
-                                        #output the list (check if to output a reference or truncated list)
+                                        #output the list (check output for reference or truncated list)
         if (info[3,i] == "R") {
                                         #output reference list
           for (y in 1:min(length(compared.lists[[i]]), max.length)) {
             pushViewport(viewport(width = wid, height = hei, layout.pos.col = i + 1, layout.pos.row = y + 1))				
-                                        #check if the gene-symbol has tho be gray-shaded
+                                        #check if the object-symbol or name has to be gray-shaded
             bg <- "white"
             if (!is.na(grayshaded.lists[[i]][y])) { if(grayshaded.lists[[i]][y]==1) {
               bg <- "grey"
@@ -672,7 +524,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
             popViewport()
           }
         } else if (info[3,i] == "T") {
-                                        #output truncated list
+            #output truncated list                            
           for (y in 1:min(length(compared.lists[[i]]), max.length)) {
             distance <- compared.lists[[i]][y]
             pushViewport(viewport(width = wid, height = hei, layout.pos.col = i + 1, layout.pos.row = y + 1))
@@ -695,18 +547,19 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
       upViewport()
       upViewport()
     } else {grid.newpage()
-            red.white.green <- colorRampPalette(c("red", "orange", "yellow", "white"))(nrow(lists) + 1) #####EBcorr
-                                        #output the header (the parameters and the colour-gradient)
+            red.white.green <- colorRampPalette(c("red", "orange", "yellow", "white"))(nrow(lists) + 1) 
+                                        #output the header (the parameters and the colour gradient)
             pushViewport(viewport(layout = grid.layout(2, 1, widths = c(1, 1), heights = c(0.1, 0.9))))
             pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
             pushViewport(viewport(layout = grid.layout(1, 1, widths = c(1, 1), heights = rep(1, 2))))
-            grid.text(substitute(paste(k[max],"= NA, N = ", N, ", L = ", K, sep = ""), list(N=N, K=K)), x = 0.2, y = 0.65)#####EBcorr
+            grid.text(substitute(paste(k[max],"= NA, N = ", N, ", L = ", L, sep = ""), list(N=N, L=L)), x = 0.2, y = 0.65)
             grid.text(substitute(paste(delta, "= ", a, ", ",nu," = ", b, ", threshold = ", f, "%", sep = ""), list(a=d, b=v, f=threshold)), x = 0.2, y = 0.3)
             upViewport()
             pushViewport(viewport(layout = grid.layout(2, 2, widths = c(1, 1), heights = rep(1, 2))))
+
             pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
             pushViewport(plotViewport(margins = c(1.5, 1, 1, 1)))
-            grid.points(seq(0, 1, length =  nrow(lists)), rep(1, nrow(lists)), pch = 15, gp = gpar(col = red.white.green))#####EBcorr
+            grid.points(seq(0, 1, length =  nrow(lists)), rep(1, nrow(lists)), pch = 15, gp = gpar(col = red.white.green))
             pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2))	
             grid.text("close", x = 0, y = 0.5, gp = gpar(fontsize = 8, col = "black"))
             grid.text("RANK POSITION", x = 0.5, y = 0.5, gp = gpar(fontsize = 7, col = "black"))
@@ -716,23 +569,23 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
             popViewport()
             upViewport()
             upViewport()
-                                        #set the layout of the 
+                                        #set the layout 
             pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1))	
-            pushViewport(viewport(layout = grid.layout(1, 2, widths = c(1), heights = c(1,1))))#####EBcorr
+            pushViewport(viewport(layout = grid.layout(1, 2, widths = c(1), heights = c(1,1))))
             grid.text(substitute(paste("On selected ", delta ,", no overlap found", sep="")))
             upViewport()
             upViewport()
-            upViewport()  } #end for is.null #####EBcorr
-}
+            upViewport()  } #end for is.null 
+}#end for aggmap
 
 
-.isCalculatable <- function(lists, d, K, v) {
+.isCalculatable <- function(lists, d, L, v) {
   res.j0.temp <- j0.multi(lists, d, v)
-  res.temp <- as.matrix(res.j0.temp$K)
+  res.temp <- as.matrix(res.j0.temp$L)
   
   temp2 = c()
-                                        #calculate the reference-lists
-  for (i in c(1:K)) {
+                                        #calculate the reference lists
+  for (i in c(1:L)) {
     if (i > 1) {
       res.temp.temp <- res.temp[-c(which(!is.na(match(res.temp[,1], names(temp2)))), which(!is.na(match(res.temp[,2], names(temp2))))),]
     } else {
@@ -746,7 +599,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   lists.to.remove <- ""
   truncation.points <- c()
   
-                                        #calculate the truncated-lists for each block (for each reference-list)
+                                        #calculate the truncated lists for each block (for each reference list)
   for (first.list.name in names(temp2)) {
     res.temp.selection <- res.temp[which(res.temp[,1] == first.list.name), ]
     res.temp.selection <- res.temp.selection[which(is.na(match(res.temp.selection[,2], lists.to.remove))),]
@@ -758,7 +611,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
       lists.rank <- rank(ranked.list.names)
     }
     
-                                        #get the truncation-points for the truncated lists in the current block
+                                        #get the truncation points for the truncated lists in the current block
     for(currennt.truncated.list in ranked.list.names[2:length(ranked.list.names)]) {
       truncation.points <- c(truncation.points, as.numeric(res.temp[res.temp[,1] == first.list.name & res.temp[,2] == currennt.truncated.list,4]))
     }
@@ -766,7 +619,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
     lists.to.remove <- c(lists.to.remove, first.list.name)
   }
   
-                                        #check if a truncation-point is missing - if true, the delta value cannot be applied on the lists (aggmap cannot be drawn)
+                                        #check if a truncation point is missing - if true, then the delta-value cannot be applied on the lists (aggmap is not drawn)
   if(NA %in% truncation.points) {
     return(FALSE)
   }else {
@@ -776,143 +629,3 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
 
 
-
-
-
-## OLD DATA
-
-
-## aggmap<-function(lists, res.j0.temp, N, K, delta, v)
-## {
-
-## wid=1
-## hei=1
-## res.temp =  as.matrix(res.j0.temp$K)
-## max.j0.est = res.j0.temp$maxK
-
-## local.max.j0.est = rep(K, K)
-## names(local.max.j0.est) = names(lists)
-## temp2=c()
-
-## for (i in c(1:K))
-## {
-## if(i>1){res.temp.temp = res.temp[-c(which(!is.na(match(res.temp[,1],names(temp2)))),which(!is.na(match(res.temp[,2],names(temp2))))),]}else{res.temp.temp=res.temp}
-## temp = tapply(as.numeric(res.temp.temp[,4]), res.temp.temp[,1], function(x) max(x, na.rm=TRUE))
-## which.max.temp = which.max(temp)
-## temp2 = c(temp2, temp[which.max.temp])
-## }
-
-## local.max.j0.est[names(temp2)]=order(temp2, decreasing=T)
-## first.order.local.max.j0.est = order(local.max.j0.est)
-
-## red.white.green = colorRampPalette(c("red", "orange","yellow","white"))(N+1)
-## library(grid)
-## grid.newpage()
-
-## # defining basic layout with two rows and one column
-## pushViewport(viewport(layout=grid.layout(2, 1, widths=c(1,1),heights=c(0.1,0.9))))
-
-## ##first row - defining header (delta, nu and color key level) 
-## 	pushViewport(viewport(layout.pos.row=1, layout.pos.col=1))
-## ### first column - delta and nu 
-## 		pushViewport(viewport(layout=grid.layout(1, 1, widths=c(1,1),heights=rep(1,2))))
-## 		grid.text(paste("delta = ",delta,",  v =",v,sep=""), x=0.2, y=0.5)
-## 		upViewport()		
-
-## ### second column - color key
-## 		pushViewport(viewport(layout=grid.layout(1, 2, widths=c(1,1),heights=rep(1,2)))) # defines two columns in the second column
-## 			pushViewport(viewport(layout.pos.row=1, layout.pos.col=2)) # fills the second column with the key
-## 				pushViewport(plotViewport(margins=c(1.5,1,1,1)))
-## 				grid.xaxis(at=seq(0, 1, length=11), gp=gpar(cex=0.5,tck=0.1, line=0.1))
-## 				grid.points(seq(0, 1, length=N), rep(1, N), pch=15, gp=gpar(col=red.white.green))
-## 				popViewport()
-## 			popViewport()
-## 		upViewport()
-## 	upViewport() #coming back to the basic level
-
-## ## second row - plotting genes
-## 	pushViewport(viewport(layout.pos.row=2, layout.pos.col=1))
-
-## ### defining the layout in second row
-## 		pushViewport(viewport(layout=grid.layout(max.j0.est+v+1, 1+factorial(K)/2+2, widths=rep(1,1+factorial(K)/2+2)*(max.j0.est+v+1),heights=rep(1,1+factorial(K)/2+2)*(max.j0.est+v+1))))
-
-## 			for (g in c(1:(max.j0.est+v)))
-## 				{
-## 				pushViewport(viewport(width=wid, height=hei, layout.pos.col=1, layout.pos.row=g+1))
-## 				grid.text(g, gp=gpar(fontsize=8, col="black"))
-## 				popViewport()
-## 				}# end for g
-## 		h.sizes=c(K:2)
-## 		l=1
-## 		lists.to.remove = ""
-
-## 	for (first.list.name in names(temp2))
-## 		{
-## 		# selecting the order of pairs of lists to the first one
-## 		res.temp.selection = res.temp[which(res.temp[,1]==first.list.name),]
-## 		res.temp.selection = res.temp.selection[which(is.na(match(res.temp.selection[,2],lists.to.remove))),]
-## 			if(is.matrix(res.temp.selection)){
-## 			ranked.list.names = c(first.list.name, res.temp.selection[order(res.temp.selection[,4], decreasing=TRUE),2])
-## 			lists.rank = rank(ranked.list.names)
-## 			order.local.max.j0.est = order(as.numeric(res.temp.selection[,4]), decreasing=TRUE)
-## 			}else{
-## 			ranked.list.names = c(first.list.name,res.temp.selection[2])
-## 			lists.rank = rank(ranked.list.names)
-## 			order.local.max.j0.est = 1
-## 			}
-
-## 		gene.names.to.plot = lists[,first.list.name][1:(temp2[first.list.name]+v)]
-
-
-## 		### plotting gene names ###
-## 		pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+1,layout.pos.row=1))
-## 		grid.text(ranked.list.names[1], gp=gpar(fontsize=8, col="black"))
-## 		popViewport()
-
-## 		for (g in c(1:(length(gene.names.to.plot))))
-## 				{
-## 				pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+1, layout.pos.row=g+1))
-## 				grid.rect(gp=gpar(col="black"))
-## 				grid.text(gene.names.to.plot[g], gp=gpar(fontsize=8, col="black"))
-## 				popViewport()
-## 				}# end for g
-
-## 		for (k in c(2:K))
-## 		{
-## 		pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+k, layout.pos.row=1))
-## 		grid.text(ranked.list.names[k], gp=gpar(fontsize=8, col="black"))
-## 		popViewport()
-## 		n.genes.to.plot = as.numeric(res.temp[res.temp[,1]==first.list.name & res.temp[,2]==ranked.list.names[k],4])+v
-## 			for (g in c(1:n.genes.to.plot))
-## 			{
-## 			j = match(gene.names.to.plot[g],lists[,ranked.list.names[k]])
-## 			distance = abs(g-j)
-## 				if (!is.na(j) & j<(n.genes.to.plot+v)) # if gene is in the second list AND is in the top j0+v genes of the second list
-## 					{i="grey"}else{i="white"}
-
-## 				pushViewport(viewport(width=wid, height=hei, layout.pos.col=l+k, layout.pos.row=g+1))
-## 				if (length(distance)>0)
-## 					{
-## 					grid.polygon(x=c(0,1,1),y=c(1,1,0), gp=gpar(col="black", fill=red.white.green[distance+1]))#upper right triangle
-## 					grid.text(distance,x=0.8, y=0.6, gp=gpar(cex=0.7))
-## 					}else
-## 					{
-## 					grid.polygon(x=c(0,1,1),y=c(1,1,0), gp=gpar(col="black", fill="white"))#upper right triangle
-## 					grid.text("NA",x=0.8, y=0.6, gp=gpar(cex=0.7))
-## 					}
-## 				grid.polygon(x=c(0,0,1),y=c(1,0,0), gp=gpar(col="black", fill=i))#bottom left triangle
-## 				popViewport()
-## 			}# end for g
-## 		}# end for k
-
-## 			l=l+K
-## 			K=K-1
-## 			lists.to.remove = c(lists.to.remove, first.list.name)
-
-## 		}# end for first list name
-
-
-## 			upViewport()
-
-## 	upViewport()
-## } # end of the function
