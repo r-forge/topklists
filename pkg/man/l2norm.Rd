@@ -20,7 +20,7 @@ Whether or not to remove NA values from the calculation
 }
 }
 \value{
-The l2 norm of \code{x}
+The L2 norm of \code{x}
 }
 \author{
 Shili Lin <shili@stat.ohio-state.edu>

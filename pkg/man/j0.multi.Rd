@@ -1,10 +1,10 @@
 \name{j0.multi}
 \alias{j0.multi}
 \title{
-Function returning an overall point j0 of degeneration into noise for multiple ranked lists, combining functions compute.stream and prepare.Idata
+Function returning an overall point j0 of degeneration into noise for multiple ranked lists
 }
 \description{
-Moderate deviation-based calculation of an overall point j0 of degeneration into noise for multiple ranked lists. The function takes a matrix of ordered lists and estimates a j0 for each pair of the lists (columns), with repect to the preselected distance parameter delta.
+Moderate deviation-based calculation of an overall point j0 of degeneration into noise for multiple ranked lists. The function takes a matrix of ordered lists and estimates a j0 for each pair of the input lists (columns), with repect to the preselected distance parameter \eqn{\delta}. This function combines the functions \code{compute.stream} and \code{prepare.Idata}.
 }
 \usage{
 j0.multi(lists, d, v)
@@ -12,22 +12,22 @@ j0.multi(lists, d, v)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{lists}{
-Input matrix, where each column represents one list of ordered items (e.g. gene names ordered according to some measure of effect size) 
+Input matrix, where each column represents one list of ordered items
 }
   \item{d}{
-The maximal distance of an object's rank positions when two lists are compared. When the distance between the respective rank positions of the object is smaller or equal d, then the object is assigned the value 1, otherwise 0.
+The maximal distance of an object's rank positions when two lists are compared. When the distance between the respective rank positions of the object is smaller or equal \code{d}, then the object is assigned the value 1, otherwise 0
 }
   \item{v}{
 Parameter for estimating j0
 }
 }
 \details{
-The smaller the delta, the stronger assumption on the concordance of any two lists, with delta=0 representing the identity of two rankings of the same object.
+The smaller \code{d}, the stronger the assumption about the concordance of any two lists (\code{d=0} is assuming identical rankings of an object)
 }
 \value{
-A list containing the maximal estimated indices of information degradation j0 through all combinations of L lists:
-\item{maxK}{maximal estimated j0 through all combinations of 2 lists}
-\item{K}{matrix with estimated j0 for each pair-wise comparison}
+A list containing the maximal estimated indices of information degradation j0 through all combinations of \emph{L} lists:
+\item{maxK}{Maximal estimated j0 through all combinations of two lists}
+\item{K}{Matrix of estimated j0 for each pairwise comparison}
 }
 \author{
 Eva Budinska <budinska@iba.muni.cz>, Michael G. Schimek <michael.schimek@medunigraz.at>

@@ -4,11 +4,11 @@
 TopKListsGUI for inference and visualization
 }
 \description{
-This function opens a RGUI window and allows the user to select the parameters for the distance delta, for the pilot sample size nu, and the threshold in the aggmap presentation. Based on the selected parameters, a pairwise estimation of the top-K lists overlap is performed with switching reference lists (e.g. L1 with L2 and L2 with L1). Based on these estimates, all involved lists are truncated at a the maximum k_hat estimate and then combined. The result for each combination of variables is displayed automatically in the RGUI window and saved in the selected folder. 
+This function opens a RGUI window and allows the user to select the parameters for the distance \eqn{\delta}, for the pilot sample size \eqn{\nu}, and the threshold for the \code{aggmap} presentation. Based on the selected parameters, a pairwise estimation of the top-\emph{k} lists overlap is performed with switching reference lists (e.g. L1 with L2 and L2 with L1). Based on these estimates, all involved lists are truncated and the maximum of the \eqn{\hat{k}_i} estimates is selected by default. The individual results of each combination of ranked lists are displayed automatically in the RGUI window and saved to a prespecified folder. 
 
-The consolidated top-K list results can be displayed in three different formats: 
+The consolidated top-\emph{k} list results can be displayed in three different formats controlled by tabs: 
 (1) 'Aggregation map': It is a special type of heatmap, where the truncated lists are ordered from left to right, from the one with the largest overlap with all the others to the one with the lowest overlap. For details see the description of the \code{aggmap}.
-(2) 'Summary table': An interactive table that displays the set of overlapping objects depending on the selected parameters. 
+(2) 'Summary table': An interactive table that displays the set of overlapping objects in dependence of the selected parameters. 
 (3) 'Venn-diagram & Venn-table': A Venn-diagram and a Venn-table of the overlapping objects based on all truncated input lists. 
 }
 \usage{
@@ -17,27 +17,27 @@ TopKListsGUI(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf
 \arguments{
   \item{lists}{A data frame of ordered lists of objects - rows represent the objects, columns represent the individual input lists
 }
-\item{autorange.delta}{If TRUE, results for all delta values leading to an k_max estimate (as a function of the parameters specified by the user) will be displayed (note, for a large list length N this can take quite long time, because the delta range examined is from 0 to nrow(lists) by 1) if FALSE, the user is defining the delta range (min and max) in the RGUI window. 
+\item{autorange.delta}{If TRUE, results for all \eqn{\delta} values leading to the  \eqn{\hat{k}_i} estimates (as function of the parameters specified by the user) will be displayed (note, for a large list length \emph{N} this can take quite some time, because the \eqn{\delta} range examined is from 0 to \code{nrow(lists)} by steps of 1) if FALSE, then the user defines the \eqn{\delta} range (min and max) in the RGUI window 
 }
-\item{override.errors}{If TRUE, errors due to inappropriate value selection are overridden and the calculation continues for all delta values, but there is no data to view in the GUI displayed for the combination of values causing the error. Defaults to FALSE. 
+\item{override.errors}{If TRUE, errors due to an inappropriate value selection are overridden and the calculation continues for all other \eqn{\delta} values, but there is no output for viewing in the GUI corresponding to that combination of values which has caused the error; defaults to FALSE 
 }
-\item{aggmap.pdf.size}{A numeric vector defining the width and height of the aggmap plot - it is passed to the pdf() function that saves the plot. Defaults to c(9, 8).
+\item{aggmap.pdf.size}{A numeric vector defining the width and height of the \code{aggmap} plot - it is passed to the \code{pdf()} function that saves the plot; defaults to c(9, 8)
 }
-\item{venndiag.pdf.size}{A numeric vector defining the width and height of the Venn-diagram plot - it is passed to the pdf() function that saves the plot. Defaults to c(7, 7).
+\item{venndiag.pdf.size}{A numeric vector defining the width and height of the Venn-diagram plot - it is passed to the \code{pdf()} function that saves the plot; defaults to c(7, 7)
 }
-\item{venndiag.size}{A numeric vector defining the width and height of the Venn-diagram plot - it is passed to the png() function that saves the plot. Defaults to c(380, 420).
+\item{venndiag.size}{A numeric vector defining the width and height of the Venn-diagram plot - it is passed to the \code{png()} function that saves the plot; defaults to c(380, 420)
 }
-\item{aggmap.size}{A numeric vector defining the width and height of the aggmap plot - it is passed to the png() function that saves the plot. Defaults to c(870, 440).
+\item{aggmap.size}{A numeric vector defining the width and height of the \code{aggmap} plot - it is passed to the \code{png()} function that saves the plot; defaults to c(870, 440)
 }
-\item{gui.size}{A numeric vector defining the width and height of the RGUI to be displayed. Defaults to c(900, 810).
+\item{gui.size}{A numeric vector defining the width and height of the RGUI to be displayed; defaults to c(900, 810)
 }
-\item{directory}{Specification of the name of the directory where the results and plots should be saved (including some temporary files used for calculation). Uses the \code{tempdir()} by default.
+\item{directory}{Specification of the name of the directory where the results and plots should be saved (including some temporary files required for the calculations); uses the \code{tempdir()} by default
 }
-\item{venndiag.res}{A number defining the resolution of the Venn-diagram plot - this argument is passed to the res = argument of the png() function saving the diagram, but affects also the RGUI display. Defaults to 70.
+\item{venndiag.res}{A number defining the resolution of the Venn-diagram plot - this argument is passed to the \code{res = argument} of the \code{png()} function saving the diagram, but affects also the RGUI display; defaults to 70
 }
-\item{aggmap.res}{A number defining the resolution of the aggmap plot - this argument is passed to the res = argument of the png() function saving the plot, but affects also the RGUI display. Defaults to 100.
+\item{aggmap.res}{A number defining the resolution of the \code{aggmap} plot - this argument is passed to the \code{res = argument} of the \code{png()} function saving the plot, but affects also the RGUI display; defaults to 100
 }
-\item{maxd}{for deltaplot - specification of the maximal delta-value that should be explored in the delta plot. Defaults to 500.
+\item{maxd}{Specification of the maximal \eqn{\delta}-value to be explored in the delta plot; defaults to 500
 }
 }
 \value{
@@ -47,12 +47,15 @@ RGUI window with three tabs:
 
 'Summary table': An intereactive table that displays all overlapping (gray) objects based on the truncated list comparison. Rank sum per object and frequency of each object in the input lists or truncated lists are calculated over all compared lists. The table can be ordered according to any of the displayed columns. 
 
-'Venn-diagram & Venn-table': The Venn-diagram and the Venn-table display the rank intersection of the identified top-K objects in two different formats. 
+'Venn-diagram & Venn-table': The Venn-diagram and the Venn-table display the rank intersection of the identified top-\emph{k} objects in two different formats. 
 
-This function also automatically saves all plots and tables into the selected directory.
+These tabs automatically save all plots and tables into the selected directory.
 
-'Delta-plot' - (see \code{deltaplot}) For a preselected maxd (delta ranges from zero to maxd in steps of one) and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window)
-'Mdelta' - (see \code{deltaplot}) For a preselected maxd (delta ranges from zero to maxd in steps of one) and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one rdata object (Mdelta.rdata) Each Delta-matrix is saved individually in a tab delimited .txt file.
+The following additional exploratory features are implemented:
+
+'Delta-plot' (see \code{deltaplot}): For a preselected maxd (\eqn{\delta} ranges from zero to maxd in steps of one) and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window).
+
+'Mdelta' (see \code{deltaplot}): For a preselected maxd (\eqn{\delta} ranges from zero to maxd in steps of one) and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt} file.
 }
 \author{
 Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <karl@eigenlab.net>, Michael G. Schimek <michael.schimek@medunigraz.at>

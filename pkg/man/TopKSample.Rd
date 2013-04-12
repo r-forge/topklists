@@ -1,10 +1,10 @@
 \name{TopKSample}
 \alias{TopKSample}
 \title{
-Sampler to generate N top-K lists according to p
+Sampler to generate N top-k lists according to p
 }
 \description{
-Sampler to generate N top K lists according to p. A function wrapping to a native C implementation is available as well.
+Sampler to generate \emph{N} top-\emph{k} lists according to \emph{p}. A function wrapping to a native C implementation is available as well.
 }
 \usage{
 TopKSample(p, N)
@@ -24,7 +24,7 @@ N TopKlists
 Jie Ding <jding@jimmy.harvard.edu>
 }
 \note{
-By default the C implementation is used due to the better performance.
+By default the C implementation is used due to its better performance.
 }
 \seealso{
 \code{\link{TopKSample.c}}

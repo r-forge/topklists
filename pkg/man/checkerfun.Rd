@@ -5,7 +5,7 @@
 Checks a number for being either odd or even
 }
 \description{
-Help function to check a number for either being odd or even.
+Help function to check a number for either being odd or even
 }
 \usage{
 is.odd(k)

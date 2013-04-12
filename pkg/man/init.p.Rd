@@ -12,7 +12,7 @@ init.p(topK, n, k, init.m = "p", init.w = 0)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{topK}{
-A list of input lists, with items coded from 1 to n
+A list of input lists, with items coded from 1 to \code{n}
 }
   \item{n}{
 Total number of items

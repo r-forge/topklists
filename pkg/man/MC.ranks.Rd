@@ -13,24 +13,22 @@ MC.ranks(elements, trans, a = 0.15, delta = 10^-15)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{elements}{
-Unique elemenets of the union of all input lists - second element of the output list
-from function trans.matrix
+Unique elemenets of the union of all input lists - second element of the output list from function \code{trans.matrix}
 }
   \item{trans}{
-One of the three transition matrices build by function trans.matrix - 4 (5 or 6)
-elements of the output list from function trans.matrix
+One of the three transition matrices build by function \code{trans.matrix} - 4 (5 or 6)
+elements of the output list from function \code{trans.matrix}
 }
   \item{a}{
 Tuning parameter to make sure Markov chain with the transition matrix is ergodic;
-default set to be 0.15 
+default set to 0.15 
 }
   \item{delta}{
-Convergence criterion for stationary distribution; default set to be 10^-15
+Convergence criterion for stationary distribution; default set to 10^-15
 }
 }
 \details{
-Compute stationary distribution based on a Markov chain transition matrix built with
-function trans.matrix.
+Compute stationary distribution based on a Markov chain transition matrix built with function \code{trans.matrix}
 }
 \value{
 Output is a list with 3 components

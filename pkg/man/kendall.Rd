@@ -12,10 +12,10 @@ kendall(rank.a, rank.b, k.a, k.b, n, p = 0)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{rank.a}{
-A single top-K list
+A single top-\emph{k} list
 }
   \item{rank.b}{
-A vector of matrix form of top-K list(s) to be compared to list \code{a}
+A vector of matrix form of top-\emph{k} list(s) to be compared to list \code{a}
 }
   \item{k.a}{
 Value of \code{k} for \code{rank.a}
@@ -27,11 +27,11 @@ Value of \code{k} for \code{rank.b}
 Total number of objects, numbered from 1 to n
 }
   \item{p}{
-Distance added for tied pair (potential problem when p != 0)
+Distance added for tied pair (potential problem when \code{p != 0})
 }
 }
 \value{
-Returns modified Kendall's Tau distance against \code{a} for each lists within \code{b} 
+Returns modified Kendall's Tau distance against \code{a} for each list within \code{b} 
 }
 \references{
 Lin, S., Ding, J. (2009)

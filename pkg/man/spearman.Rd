@@ -2,10 +2,10 @@
 \alias{spearman}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Calculate modified Spearman's footrule distance between two top K lists
+Calculate modified Spearman's footrule distance between two top-k lists
 }
 \description{
-Spearman's footrule is a measure for distance between ranked lists. It is given as the sum of absolute differences between ranks of two lists. This modificated version allows for comparing partial lists.
+Spearman's footrule is a measure for distance between ranked lists. It is given as the sum of absolute differences between ranks of two lists. Here a modified version is implemented that allows for comparing partial lists.
 }
 \usage{
 spearman(rank.a, rank.b, k.a, k.b, n)
@@ -13,10 +13,10 @@ spearman(rank.a, rank.b, k.a, k.b, n)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{rank.a}{
-A single top-K list
+A single top-\emph{k} list
 }
   \item{rank.b}{
-A vector of matrix form of top-K list(s) to be compared to list \code{a}
+A vector of matrix form of top-\emph{k} list(s) to be compared to list \code{a}
 }
   \item{k.a}{
 Value of \code{k} for \code{rank.a}
@@ -35,7 +35,7 @@ Returns modified spearman distance against \code{a} for each lists within \code{
 Jie Ding <jding@jimmy.harvard.edu>
 }
 \note{
-Implemented using native C code. For the R version see \code{\link{kendall}}.
+Implemented using native C code; for the R version see \code{\link{kendall}}
 }
 \seealso{
 \code{\link{kendall}}, \code{\link{spearman}}

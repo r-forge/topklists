@@ -13,10 +13,10 @@ Borda(input, space)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
-a list containing individual ranked lists
+A list containing individual ranked lists
 }
   \item{space}{
-a list containing the underlying spaces
+A list containing the underlying spaces
 }
 }
 \details{
@@ -24,9 +24,9 @@ Computes Borda scores and ranks based on four different aggregation functions, i
 }
 \value{
 Output is a list with two components
-\item{Comp 1 (RankedObjects)}{a matrix with 4 columns each corresponding to the rankings
+\item{Comp 1 (RankedObjects)}{A matrix with 4 columns each corresponding to the rankings
 by each of the 4 aggregation functions}
-\item{Comp 2 (BordaScores) }{a matix with 4 columns each corresponding to the Borda
+\item{Comp 2 (BordaScores) }{A matix with 4 columns each corresponding to the Borda
 scores from each of the 4 aggregation functions}
 }
 \references{

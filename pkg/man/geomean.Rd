@@ -12,7 +12,7 @@ geomean(x, na.rm = TRUE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-a vector of values
+A vector of values
 }
   \item{na.rm}{
 Whether missing values should be automatically removed from calculation

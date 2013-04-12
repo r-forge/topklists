@@ -6,11 +6,11 @@
 Sample input for TopKGUI functions
 }
 \description{
-Sample input for TopKGUI functions
+Sample input for \verb{TopKGUI} functions
 }
 \usage{data(TopKGUISampleInput)}
 \format{
-Two sets of lists for demonstrating the usage of TopKGUI related functions
+Two sets of lists for demonstrating the usage of \verb{TopKGUI}-related functions
 }
 \examples{
 data(TopKGUISampleInput)

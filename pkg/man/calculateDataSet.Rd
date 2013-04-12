@@ -4,14 +4,14 @@
 The main function for TopKInference
 }
 \description{
-Returns a complex object named truncated.lists containing the Idata vector (see \code{prepareIdata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-k estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}. 
+Returns a complex object named truncated.lists containing the Idata vector (see \code{prepareIdata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-\emph{k} estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}. 
 }
 \usage{
 calculateDataSet(lists, L, d, v, threshold) 
 }
 \arguments{
   \item{lists}{
-Data frame cotaining two or more columns that represent input lists of ordered objects subject to comparison
+Data frame containing two or more columns that represent input lists of ordered objects subject to comparison
 }
   \item{L}{
 Number of input lists that are compared
@@ -23,7 +23,7 @@ The maximal distance delta between object ranks required for the estimation of j
 The pilot sample size (tuning parameter) nu required for the estimation of j0
 }
   \item{threshold}{
-The percentage of occurencies of an object in the top-k selection among all comparisons in order to be gray-shaded in the aggmap as a consolidated object.
+The percentage of occurencies of an object in the top-\emph{k} selection among all comparisons in order to be gray-shaded in the \code{aggmap} as a consolidated object.
 }
 }
 \value{
@@ -31,8 +31,8 @@ A named list of the following content:
  \item{comparedLists}{Contains information about the overlap of all pairwise compared lists (structure for the \code{aggmap})}
  \item{info}{Contains information about the list names}
  \item{grayshadedLists}{Contains information which objects in a list are consolidated (gray-shaded in the \code{aggmap})}
- \item{summarytable}{Table of top-k list overlaps containing rank information, the rank sum, the order of objects as a function of the rank sum, the frequency of an object in the input lists and the frequency of an object in the truncated lists (for plotting in the \code{aggmap})}
- \item{vennlists}{Contains the top-k objects for each of the input lists (for display in the Venn-diagram)}
+ \item{summarytable}{Table of top-\emph{k} list overlaps containing rank information, the rank sum, the order of objects as a function of the rank sum, the frequency of an object in the input lists and the frequency of an object in the truncated lists (for plotting in the \code{aggmap})}
+ \item{vennlists}{Contains the top-\emph{k} objects for each of the input lists (for display in the Venn-diagram)}
  \item{venntable}{Contains the overlap information (for display in the Venn-table)}
  \item{v}{Selected pilot sample size (tuning parameter) nu}
  \item{Ntoplot}{Number of columns to be plotted in the \code{aggmap}}

@@ -7,11 +7,11 @@
 Sample input for TopKSpace functions
 }
 \description{
-Sample input for TopKSpace functions
+Sample input for \verb{TopKSpace} functions
 }
 \usage{data(TopKSpaceSampleInput)}
 \format{
-Two sets of lists for demonstrating the usage of TopKSpace related functions
+Two sets of lists for the demonstration of the usage of \verb{TopKSpace}-related functions
 }
 \examples{
 data(TopKSpaceSampleInput)
