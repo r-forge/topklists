@@ -12,22 +12,15 @@
 \maketitle
 \section{Introduction and background}
 
-The idea of the module \texttt{TopKSpace} is to consolidate information from
-the $l$ top-\emph{k} lists to arrive at an aggregate list ($AL$). 
+The idea of the module \texttt{TopKSpace} is to consolidate information from the $l$ top-\emph{k} lists to arrive at an aggregate list ($AL$). 
 As shown in Figure \ref{topkspace}, not only that the top-\emph{k} lists
 ($L_1, L_2, \ldots, L_l$) may be of different lengths, they may come from studies or assessments that consider different sets of objects, hence the underlying spaces ($S_1, S_2, \ldots, S_l$) from which the top-\emph{k} lists were derived may be different. The goal of the inference in \texttt{TopKSpace} is therefore to find the top-\emph{k} list, $AL$, from the aggregate new space ($\cup_{i=1}^l L_i$), such that the weighted sum of distances between each of the input lists and $AL$ will be the minimum among lists of the same length.
-Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. Both take the differences in the underlying spaces into
-account \cite{lin2010}. 
+Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. In both distance measures possible differences in the underlying spaces can be taken into account (see \cite{lin2010}). 
 
 There are three classes of algorithms implemented in \texttt{TopKSpace}, namely
 Borda's method, Markov chain (MC) algorithms \cite{lin}, 
 and a Cross Entropy Monte Carlo (CEMC) method taking advantage of the new Order Explicit Algorithm (OEA) due to \cite{linding}.
-The first two consist of heuristic algorithms which do not directly optimize
-the objective function (i.e., minimizing the weighted distances), whereas
-the third class employs a Monte Carlo search procedure for achieving
-the optimization. Borda and Markov chain algorithms run much 
-faster than Cross Entropy Monte Carlo, but the latter usually achieves
-a better result. Nevertheless, simulation studies (unpublished material)  indicate that taking the underlying space into consideration has much greater impact than using different algorithms.
+The first two consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the third class employs a Monte Carlo search procedure to accomplish the optimization. Borda and Markov chain algorithms run much faster than Cross Entropy Monte Carlo, but the latter usually achieves a better result. Nevertheless, simulation studies (unpublished material) indicate that taking the underlying space into consideration has much greater impact on the aggregation result than using different algorithms.
 
 \begin{figure}
 \centering
@@ -36,12 +29,13 @@ a better result. Nevertheless, simulation studies (unpublished material)  indica
 \label{topkspace}
 \end{figure}
 
-For running the examples in this vignette you have to load the package first:
+In order to run the examples in this vignette, the TopKLists package must first be loaded:
+
 <<eval=TRUE>>=
 library(TopKLists)
 @
 
-\subsection{Generate three variable input list and a common space}
+\subsection{Construction of three input lists and a common space}
 <<>>=
 L1=1:30
 L2=c(1:10,31:40,11:15)
@@ -50,10 +44,10 @@ input=list(L1,L2,L3)
 space=list(1:40,1:40,1:40)
 @
 
-\section{Calling of the functions}
+\section{Call of the functions}
 
 \subsection{Run three Borda algorithms}
-\subsubsection{Call with platform dependent assumption}
+\subsubsection{Call with platform dependence assumption}
 <<>>=
 bb1=Borda(input,space)
 @
@@ -132,9 +126,8 @@ pd$p[1:5,1:5]
 @
 
 \section{Comparison of the performance of the different algorithms}
-The modified Kendall's $\tau$ distance between the aggregate list and the input lists can be used to evaluate the relative performance of the algorithms.
-In the following we give two examples: the first one is under the assumption of 
-platform-dependence and the second one is under the assumption of top-\emph{k} space.  
+
+The modified Kendall's $\tau$ distance between the aggregate list and the input lists can be used to evaluate the relative performance of the algorithms. In the following we give two examples: the first one is under the assumption of platform dependence and the second one is under the assumption of top-\emph{k} space.  
 
 <<>>=
 kc.ARM=KendallCriterion(input, space, bb1[[1]][, 1], p = 0.5,

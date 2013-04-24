@@ -1,10 +1,10 @@
 \name{kendall.c}
 \alias{kendall.c}
 \title{
-Calculate modified Kendall's Tau distance (native C implementation)
+Calculate modified Kendall's tau distance (native C implementation)
 }
 \description{
-Kendall's Tau is equal to the number of adjunct pairwise exchanges required to convert one ranking into another. This modified version allows for partial lists to be compared.
+Kendall's tau is equal to the number of adjunct pairwise exchanges required to convert one ranking into another. This modified version allows for partial lists to be compared.
 }
 \usage{
 kendall.c(rank.a, rank.b, k.a, k.b, n, p = 0)
@@ -31,7 +31,7 @@ Distance added for tied pair (potential problem when \code{p != 0})
 }
 }
 \value{
-Returns modified Kendall's Tau distance against \code{a} for each list within \code{b} 
+Returns modified Kendall's tau distance against \code{a} for each list within \code{b} 
 }
 \author{
 Jie Ding <jding@jimmy.harvard.edu>

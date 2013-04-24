@@ -17,7 +17,7 @@ The nonparametric inference method of \cite{haschi} for the truncation of paired
 
 A cautionary note: For making inference on pairs of ranked lists, tuning parameters have to be specified. This is for the following reason: For a given set of $N$ objects, arbitrary ranked lists can be constructed by successive permutations. However, this fact does not help in practice when we have to analyze realizations of such lists because they comprise irregularities in terms of position shifts, inverted orderings, missing assignments, etc. As a consequence, a unique top-$k$ list or a complete set of top-conforming objects does not exist. This is the reason why the truncation algorithm (and any other algorithm) in \texttt{TopKLists} needs to be controlled by tuning parameters.
 
-The choice of the distance parameter $\delta$ is essential when the \texttt{Idata} are prepared. The $\delta$-plot of the module \texttt{TopKGraphics} was designed to help the user with the selection of $\delta$. There are two more tuning parameters: the constant $C$ which allows us to compensate for poor separability between the informative top parts and the remaining random parts of the input lists (the suggested interval is $0.25<C<0.6$), and the pilot sample size $\nu$ (a smoothing parameter) which controls the degree of irregularity of the rankings.
+The choice of the distance parameter $\delta$ (takes the values $0, 1, 2, 3,\ldots $) is essential when the \texttt{Idata} are prepared. The $\delta$-plot of the module \texttt{TopKGraphics} was designed to help the user with the selection of $\delta$ for any pair of input lists of the same length. When this plot indicates more than one feasible non-zero $\delta$-value (in that area where the discordance is starting to degrade), preference should be given to the smallest one. There are two more tuning parameters: the constant $C$ which allows us to compensate for poor separability between the informative top parts and the remaining random parts of the input lists (the suggested interval is $0.25<C<0.6$), and the pilot sample size $\nu$ (for this smoothing parameter any positive integer value is admissible), which controls the degree of irregularity of the rankings.
 
 The algorithmic solution of \texttt{TopKInference} for the case of more than two ranked lists is outlined in Figure \ref{topkinference}. There, the principle for the calculation of an overall index $k^\ast$ (a function of the individual $k$'s from the $\ell$ lists $L_i$; the maximum \texttt{maxK} is the default) based on all pairwise comparisons is outlined. Having obtained such an overall index, we arrive at truncated lists $T_i$. They can either be aggregated by graphical means (\texttt{aggmap} of module \texttt{TopKGraphics}) or by stochastic rank aggregation (module \texttt{TopKSpace}). Details of the approach taken for multiple lists can be found in \cite{schimybu}.
 
@@ -30,7 +30,7 @@ The algorithmic solution of \texttt{TopKInference} for the case of more than two
 
 \section{Construction of a dataset and execution of the inference procedure}
 
-For running the examples in this vignette you have to load the package first:
+In order to run the examples in this vignette, the TopKLists package must first be loaded:
 <<eval=TRUE>>=
 library(TopKLists)
 @
@@ -82,7 +82,7 @@ str(res.j0.10)
 
 \section{Visualization of the truncation results}
 
-The below plot summarizes the obtained estimation results $\hat{j}_0$ for the specified range of sample sizes $\nu$ and the assumed $j_0=30$. 
+The following plot summarizes the obtained estimation results $\hat{j}_0$ for the specified range of sample sizes $\nu$ and the assumed $j_0=30$. 
 
 <<fig=T>>=
 plot(res.j0.10[,1], res.j0.10[,2], pch=19, ylim=c(0, length(x)))
@@ -90,22 +90,24 @@ abline(a=k.to.estimate, b=0, col="green")
 lines(res.j0.10[,1], res.j0.10[,2])
 @
 
-\section{Specification of $\delta$ and calculation of maxK for multiple ranked lists}
+\section{Specification of $\delta$ and calculation of \texttt{maxK} for multiple ranked lists}
 
-Two overlapping ranked lists, L1 and L2, and a third one, L3, as random sample are constructed.
+Two overlapping ranked lists, $L1$ and $L2$, and a third one, $L3$, as random sample are constructed.
 <<>>=
 lists <- data.frame(L1=c("A","B","C","D","E","F","G","H","J","I","K","L","M","N"))
 lists$L2 <- c("B","C","A","E","G","F","G","J","K","L","M","N","I","H")
 lists$L3 <- sample(LETTERS[1:14])
 @
 
-Specification of the $\delta$-values from the three lists by means of \texttt{deltaplot} (belongs to the module \texttt{TopKGraphics}).
+Specification of the $\delta$-values for all possible pairs of the three input lists, $L1$, $L2$, and $L3$, by means of \texttt{deltaplot} (in the module \texttt{TopKGraphics} there is a complementary version of the \texttt{deltaplot} which also magnifies the function for a selected range of small $\delta$-values in a subplot).
 
 <<fig=T>>=
 a=deltaplot(lists, maxd=nrow(lists))
 @
 
-Calculation of the overall truncation index \texttt{maxK} for prespecified  values of $\delta$ and $\nu$.
+In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. $L1$ to $L2$ or vice versa, has little impact on the graph. What can be clearly seen is difference in the point configurations (functions) when one of the lists is a random sample.
+
+Calculation of the overall truncation index \texttt{maxK} for prespecified values of $\delta$ and $\nu$.
 
 <<>>=
 res = j0.multi(lists, d=2, v=4)

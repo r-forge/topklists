@@ -1,10 +1,10 @@
 \name{kendall2.c}
 \alias{kendall2.c}
 \title{
-Modified Kendall's Tau Distance (native C implementation)
+Modified Kendall's tau Distance (native C implementation)
 }
 \description{
-Kendall's Tau distance between top-\emph{k} lists with different underlying spaces
+Kendall's tau distance between top-\emph{k} lists with different underlying spaces
 }
 \usage{
 kendall2.c(rank.a, rank.b, k.a, k.b, n, p = 0)
@@ -31,7 +31,7 @@ Distance added for tied pair (potential problem when p != 0)
 }
 }
 \value{
-Returns modified Kendall's Tau distance against \code{a} for each list within \code{b} 
+Returns modified Kendall's tau distance against \code{a} for each list within \code{b} 
 }
 \author{
 Jie Ding <jding@jimmy.harvard.edu>

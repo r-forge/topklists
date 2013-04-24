@@ -3,9 +3,6 @@
 <HEAD>
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
 	<TITLE>TopKLists</TITLE>
-	<META NAME="GENERATOR" CONTENT="LibreOffice 3.5  (Linux)">
-	<META NAME="CREATED" CONTENT="20130104;15093300">
-	<META NAME="CHANGED" CONTENT="20130104;15274800">
 	<link rel="stylesheet" type="text/css" href="incl/main.css">
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">

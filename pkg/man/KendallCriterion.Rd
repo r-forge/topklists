@@ -1,10 +1,10 @@
 \name{KendallCriterion}
 \alias{KendallCriterion}
 \title{
-Compute Kendall's criterion
+Compute Kendall's tau criterion
 }
 \description{
-Compute Kendall's criterion
+Compute Kendall's tau criterion
 }
 \usage{
 KendallCriterion(input, space, aggregate, p, w)

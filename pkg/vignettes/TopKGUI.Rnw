@@ -5,35 +5,37 @@
 %opening
 \title{TopKLists: Usage of TopKGUI}
 %\VignetteIndexEntry{Usage of TopKGUI} 
-\author{Eva Budinsk\'{a}, Karl G. Kugler, Michael G. Schimek}
+\author{Michael G. Schimek, Karl G. Kugler, Eva Budinsk\'{a}}
 
 \begin{document}
 
 \maketitle
 \section{Introduction and background}
 
-\texttt{TopKGUI} is a graphical user interface that allows applied researchers an easy and straight forward access to all functions in \texttt{TopKInference} and to the graphical aggregation tool \texttt{aggmap} of \texttt{TopKGraphics} (note, statisticians might prefer the command line way of program control, hence benefitting from many additional features). The suit of functions which is supported by \texttt{TopKGUI} facilitates the exploratory analysis of multiple ranked lists. Sliders allow real-time analysis, and visualization of results, in dependence of the distance $\delta$ and the pilot sample size $\nu$ (note, for large list lengths $N$ you will need to be somewhat more patient because a tremendous amount of calculations is required). The usage of he \texttt{TopKGUI} in combination with a bioscience example concerning microarray platform data is describe in \cite{schietal} (note, since the publication of this paper both the GUI and the \texttt{aggmap} have been under constant improvement and might look slightly different now).
+The package \texttt{TopKLists} comprises a graphical user interface \texttt{TopKGUI} that offers applied researchers easy and straightforward access to all the functionality of \texttt{TopKInference} as well as access to the \texttt{aggmap} graphical aggregation tool contained in \texttt{TopKGraphics}. Moreover, Venn-diagrams and Venn-tables for the summary of rank aggregation results are available. 
 
-For running the examples in this vignette you have to load the package first:
+The suite of functions supported by \texttt{TopKGUI} facilitates the exploratory analysis of multiple ranked lists. Interactive input facilities (like a slider for the dynamic specification of the distance $\delta$) allow for the real-time analysis and visualization of results, in dependence of the distance $\delta$ or the pilot sample size $\nu$ (note that, for large list lengths $N$ very large numbers of calculations must be performed and longer waiting times should be expected). For an example of the usage of \texttt{TopKGUI} in the biosciences, which in this case concerns microarray platform data, see \cite{schietal} (the GUI and \texttt{aggmap} have since been under constant revision, and the examples contained in this article may differ in look and appearance from the current version).
+
+In order to run the examples in this vignette, the \texttt{TopKLists} package must first be loaded:
+
 <<eval=TRUE>>=
 library(TopKLists)
 @
 
 \subsection{Loading of Sample Input}
-This package provides sample input for the call of the GUI.
+The following package provides sample input when calling the GUI:
 <<>>=
 data(TopKGUISampleInput)
 str(lists)
 @
 
 \section{Opening of the GUI}
-To open the GUI with our sample input call
+To open the GUI using the sample data from above, run:
 <<eval=FALSE>>=
 TopKListsGUI(lists)
 @ 
 
-Now a window (see Fig. \ref{topkgui}) is opening that will allow the user to run an analysis of two or more ranked lists.
-
+The window seen in Fig. \ref{topkgui} now appears, allowing the user to perform an analysis of two or more lists.
 
 \begin{figure}
 \centering
