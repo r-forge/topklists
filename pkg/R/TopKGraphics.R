@@ -1,8 +1,10 @@
-TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = tempdir(), venndiag.res = 70, aggmap.res = 100, maxd = 500) {
+TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500) {
   options("guiToolkit"="RGtk2")
 
  					#setting up the directory
-   if(is.null(directory)) {directory <- tempdir()}
+   if(is.null(directory)) {directory <- paste(getwd(), "/TopKLists-temp",sep="")
+	if(!file.exists(directory)) dir.create(directory)
+	}
     message(paste("Writing files to", directory))
 
   
@@ -103,7 +105,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   }
 
                                         #update the calculated data set (aggmap, summary-table and Venn) in the three tabs
-  load.data <- function() {		
+  load.data <- function(truncated.lists) {		
                                         #update is only performed when delta slider is enabled
     if (enabled(wid$delta.slider)) {
                                         #check if calculated data set can be shown in the GUI (no file = error in the calculation for this delta-value)
