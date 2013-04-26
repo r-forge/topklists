@@ -428,14 +428,13 @@ return(pj.plus)
 prepareIdata <- function(x, d)
 {
 rank.diff = c(1:nrow(x))-match(x[,1],x[,2])
-Idata = abs(rank.diff)<=d
+######  Idata = abs(rank.diff)<=d  only works when no NAs 
+Idata = logical()
+for (i in 1:length(rank.diff))
+{
+    if (is.na(rank.diff[i])) {Idata[i] = F}
+    else if (abs(rank.diff[i])<= d) {Idata[i] = T}
+    else Idata[i] = F    
+}
 return(list(Idata = Idata, d = d))
-}
-
-is.odd <- function(k){
-  return(k %% 2 != 0)
-}
-
-is.even <- function(k){
-  return(!is.odd(k))
 }
