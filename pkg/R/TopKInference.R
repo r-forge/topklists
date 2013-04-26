@@ -432,9 +432,9 @@ rank.diff = c(1:nrow(x))-match(x[,1],x[,2])
 Idata = logical()
 for (i in 1:length(rank.diff))
 {
-    if (is.na(rank.diff[i])) {Idata[i] = F}
-    else if (abs(rank.diff[i])<= d) {Idata[i] = T}
-    else Idata[i] = F    
+    if (is.na(rank.diff[i])) {Idata[i] = FALSE}
+    else if (abs(rank.diff[i])<= d) {Idata[i] = TRUE}
+    else Idata[i] = FALSE    
 }
 return(list(Idata = Idata, d = d))
 }
