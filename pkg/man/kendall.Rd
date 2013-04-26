@@ -1,5 +1,6 @@
 \name{kendall}
 \alias{kendall}
+\alias{kendall.c}
 \title{
 Calculate modified Kendall's tau distance
 }
@@ -8,6 +9,7 @@ Kendall's tau is equal to the number of adjunct pairwise exchanges required to c
 }
 \usage{
 kendall(rank.a, rank.b, k.a, k.b, n, p = 0)
+kendall.c(rank.a, rank.b, k.a, k.b, n, p = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,6 +32,9 @@ Total number of objects, numbered from 1 to n
 Distance added for tied pair (potential problem when \code{p != 0})
 }
 }
+\details{
+There are two implementations available. Pure R code in \code{kendall} and a faster implementation using native C code \code{kendall.c}.
+}
 \value{
 Returns modified Kendall's tau distance against \code{a} for each list within \code{b} 
 }
@@ -40,18 +45,13 @@ Integration of ranked lists via Cross Entropy Monte Carlo with applications to m
 \author{
 Jie Ding <jding@jimmy.harvard.edu>
 }
-\note{
-A faster implementation using native C code is given as \code{\link{kendall.c}}
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-\code{\link{kendall.c}}, \code{\link{spearman}}
+\code{\link{spearman}}
 }
 \examples{
 set.seed(1234)
 a <- sample(1:10, 10)
 b <- sample(1:10, 10)
 kendall(a, b, 6, 6, 10)
+kendall.c(a, b, 6, 6, 10)
 }

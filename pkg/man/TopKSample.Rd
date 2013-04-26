@@ -1,5 +1,6 @@
 \name{TopKSample}
 \alias{TopKSample}
+\alias{TopKSample.c}
 \title{
 Sampler to generate N top-k lists according to p
 }
@@ -8,6 +9,7 @@ Sampler to generate \emph{N} top-\emph{k} lists according to \emph{p}. A functio
 }
 \usage{
 TopKSample(p, N)
+TopKSample.c(p, N)
 }
 \arguments{
   \item{p}{
@@ -17,6 +19,9 @@ Matrix of dimension n*(k+1), n is the number of items
 The number of samples
 }
 }
+\details{
+A pure R implementation \code{TopKSample} and a native C method \code{TopKSample.c} are available.
+}
 \value{
 N TopKlists
 }
@@ -25,9 +30,6 @@ Jie Ding <jding@jimmy.harvard.edu>
 }
 \note{
 By default the C implementation is used due to its better performance.
-}
-\seealso{
-\code{\link{TopKSample.c}}
 }
 \examples{
 set.seed(1234)

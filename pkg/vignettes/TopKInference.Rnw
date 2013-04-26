@@ -13,7 +13,8 @@
 
 \section{Introduction and background}
 
-The nonparametric inference method of \cite{haschi} for the truncation of paired ranked lists forms the core part of the module \texttt{TopKInference}. The associated iterative algorithm, as implemented here, allows the estimation of the length, $k$, of a top-$k$ list in the presence of irregular and missing assignments. Overlap of rank positions in two input lists is represented by a sequence of indicators, where $I_j=1$ if the ranking, given by the second assessor to the object ranked $j$ by the first assessor, is not more than $\delta$ index positions distant from $j$, and otherwise $I_j=0$. The variables $I_j$ are assumed to follow a Bernoulli random distribution. This implies independence, which is motivated by $k\ll N$ and a strong random contribution due to irregular assignments in real data. However, \cite{haschi} could prove that their theoretical results obtained under the assumption of complete independence also apply to the situation of moderate $m$-dependence. Simulation study evidence (unpublished material) is in full support of these theoretical findings, more than that, even under substantial list dependence, stable truncation results can be obtained from \texttt{TopKInference}. 
+The nonparametric inference method of \cite{haschi} for the truncation of paired ranked lists forms the core part of the module \texttt{TopKInference}. The associated iterative algorithm, as implemented here, allows the estimation of the length, $k$, of a top-$k$ list in the presence of irregular and missing assignments. Overlap of rank positions in two input lists is represented by a sequence of indicators, where $I_j=1$ if the ranking, given by the second assessor to the object ranked $j$ by the first assessor, is not more than $\delta$ index positions distant from $j$, and otherwise $I_j=0$. The variables $I_j$ are assumed to follow a Bernoulli random distribution. This implies independence, which is motivated by $k\ll N$ and a strong random contribution due to irregular assignments in real data. However, \cite{haschi} could prove that their theoretical results obtained under the assumption of complete independence also apply to the situation of moderate $m$-dependence. Simulation study evidence (
+unpublished material) is in full support of these theoretical findings, more than that, even under substantial list dependence, stable truncation results can be obtained from \texttt{TopKInference}. 
 
 A cautionary note: For making inference on pairs of ranked lists, tuning parameters have to be specified. This is for the following reason: For a given set of $N$ objects, arbitrary ranked lists can be constructed by successive permutations. However, this fact does not help in practice when we have to analyze realizations of such lists because they comprise irregularities in terms of position shifts, inverted orderings, missing assignments, etc. As a consequence, a unique top-$k$ list or a complete set of top-conforming objects does not exist. This is the reason why the truncation algorithm (and any other algorithm) in \texttt{TopKLists} needs to be controlled by tuning parameters.
 
@@ -101,11 +102,16 @@ lists$L3 <- sample(LETTERS[1:14])
 
 Specification of the $\delta$-values for all possible pairs of the three input lists, $L1$, $L2$, and $L3$, by means of \texttt{deltaplot} (in the module \texttt{TopKGraphics} there is a complementary version of the \texttt{deltaplot} which also magnifies the function for a selected range of small $\delta$-values in a subplot).
 
-<<fig=T>>=
-a=deltaplot(lists, maxd=nrow(lists))
+<<fig=T,include=TRUE,label=deltaplot>>=
+a=deltaplot(lists, maxd=nrow(lists), subset.plotted=NA)
 @
 
-In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. $L1$ to $L2$ or vice versa, has little impact on the graph. What can be clearly seen is difference in the point configurations (functions) when one of the lists is a random sample.
+To also see the additional subplots for all pair-wise list comparisons call the function with the parameter \texttt{subset.plotted} set to \texttt{NULL}:
+<<>>=
+a=deltaplot(lists, maxd=nrow(lists), subset.plotted=NULL)
+@
+
+In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. $L1$ to $L2$ or vice versa, has little impact on the graph. What can be clearly seen is difference in the point configurations (functions) when one of the lists is a random sample. 
 
 Calculation of the overall truncation index \texttt{maxK} for prespecified values of $\delta$ and $\nu$.
 

@@ -12,7 +12,7 @@ The consolidated top-\emph{k} list results can be displayed in three different f
 (3) 'Venn-diagram & Venn-table': A Venn-diagram and a Venn-table of the overlapping objects based on all truncated input lists. 
 }
 \usage{
-TopKListsGUI(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = tempdir(), venndiag.res = 70, aggmap.res = 100, maxd = 500)
+TopKListsGUI(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500)
 }
 \arguments{
   \item{lists}{A data frame of ordered lists of objects - rows represent the objects, columns represent the individual input lists
@@ -31,7 +31,7 @@ TopKListsGUI(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf
 }
 \item{gui.size}{A numeric vector defining the width and height of the RGUI to be displayed; defaults to c(900, 810)
 }
-\item{directory}{Specification of the name of the directory where the results and plots should be saved (including some temporary files required for the calculations); uses the \code{tempdir()} by default
+\item{directory}{Specification of the name of the directory where the results and plots should be saved (including some temporary files required for the calculations). If kept \code{NULL} a directory called "TopKLists-temp" will be created in \code{getwd()}. In that case write permission are needed for \code{getwd()}.
 }
 \item{venndiag.res}{A number defining the resolution of the Venn-diagram plot - this argument is passed to the \code{res = argument} of the \code{png()} function saving the diagram, but affects also the RGUI display; defaults to 70
 }

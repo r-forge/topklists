@@ -1,6 +1,5 @@
 \name{compute.stream}
 \alias{compute.stream}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Calculates point of degeneration j0 into noise of the Idata, applying moderate deviation-based inference
 }
@@ -48,5 +47,4 @@ compute.stream(mydata, v=10)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{top-\emph{k} ranked list, list truncation, inference, moderate deviation bound}
 
