@@ -395,47 +395,83 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 }
 
 #function that generates Delta-plot and Delta-matrix 
-deltaplot<-function(lists, mind=0, maxd=NULL)
+deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NULL)
 {
+ if (is.null(subset.plotted) & nrow(lists) > 200){
+   stop("Subset for calculating zero count (subset.plotted) has to be specified \n")
+ }
+ if (is.null(subset.plotted) & nrow(lists) < 201){
+   warning(paste("Subset of the lists for calculating zero count is not specified, using", nrow(lists)), "\n")
+   subset.plotted <- nrow(lists)
+ }
 if (is.null(maxd)) {
-cat(paste("The maximum for delta not specified, using",nrow(lists)/2), "\n")
-maxd=c(nrow(lists)/2)
+cat(paste("The maximum for delta not specified, using",nrow(lists)*0.25), "\n")
+maxd=c(nrow(lists)*0.25)
 }
 if (maxd>nrow(lists)) {
-cat(paste("The maximum for delta you specified is larger than the number of objects in your lists. Maxd changed to",nrow(lists)/2), "\n")
-maxd=c(nrow(lists)/2)
+cat(paste("The maximum for delta you specified is larger than the number of objects in your lists. Maxd changed to",nrow(lists)*0.25), "\n")
+maxd=c(nrow(lists)*0.25)
  }
+if(is.null(names(lists)) | any(names(lists)=="")){
+  names(lists) <- paste("L",1:ncol(lists),sep="")
+  warning(paste("List names not be given or incorrect. Replaced by 'L1', 'L2',... L",ncol(lists),'\n'))
+}
 
+lists = lists[1:subset.plotted,] ## takes only specified subset of input list
 deltas = c(mind:maxd)
 Mdelta = list()
+xxs = list()
 n=ncol(lists)
 a = n*(n-1)
 aa = round(a/2,0)
 aaa = 2
 par(mfrow=c(aa,aaa))
+k=1 
 	for (i in 1:ncol(lists))
 	{
           for (j in 1:ncol(lists))
 		{
-		 if (i!=j)
+		 if (i!=j)  ##
 		  {
    		   Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
    		   names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
    		   xx = c()
-		   for (d in deltas)
-		   {	
- 		   a = prepareIdata(lists[,c(i,j)],d=d)
-		   x = table(as.numeric(a$Idata))['0']
-		   xx = c(xx,x)
-   		   Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
-		   }# end for d
+			   for (d in deltas)
+			   {	
+			   a = prepareIdata(lists[,c(i,j)],d=d)
+			   x = table(as.numeric(a$Idata))['0']
+			   xx = c(xx,x)
+			   Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
+			   }# end for d
+		   xxs[[k]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
+		   k=k+1
 		   Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
 		   par(mar=c(5,5,1,1))
-	           plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+	       plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
 	        }# end for if
             }# end for j
 	}# end for i
-	return(Mdelta)
+	
+	## deltaplot with subplot in the top right corner:
+	k=1
+	for (i in 1:ncol(lists))
+	{
+		for (j in 1:ncol(lists))
+		{
+			if (i!=j){
+			   x11()
+			   par(mar=c(5,5,1,1))
+			   plot(deltas,xxs[[k]], xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))			
+			   extremes = par("usr")
+			   dimen = par("pin")					   
+			   subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],xxs[[k]][1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
+			   k=k+1
+			}
+		}
+	}
+	
+return(Mdelta)
+
 }#end deltaplot
 
 ## Aggregation map (aggmap) for the graphical representation of more than two top-k lists obtained from the method by Hall and Schimek (2012) - it applies Paul Murrell's grid package
@@ -629,55 +665,3 @@ aggmap <- function(truncated.lists, N, L, d, v, threshold, lists) {
   }
 }
 
-deltaplot.w.subplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NULL){
-  if(length(lists)!=2){
-    stop("Lists must be of length 2")
-  }
-  if(is.null(names(lists)) | any(names(lists)=="")){
-    names(lists) <- paste("L",1:2,sep="")
-    warning("List names not be given or incorrect. Replaced by 'L1' and 'L2'")
-  }
-  if (length(lists[[1]]) != length(lists[[2]])) {
-    stop("Lists  do not have the same length")
-  }
-  
-  if (is.null(subset.plotted) & length(lists[[1]]) > 200){
-    stop("Subset for calculating zero count (subset.plotted) has to be specified \n")
-  }
-  if (is.null(subset.plotted) & length(lists[[1]]) < 201){
-    warning(paste("Subset of the lists for calculating zero count is not specified, using", length(lists[[1]])), "\n")
-    subset.plotted <- length(lists[[1]])
-  }
-  if (is.null(maxd)) {
-    warning(paste("The maximum for delta not specified, using",(length(lists[[1]])*0.25), "\n"))
-    maxd <- length(lists[[1]])*0.25
-  }
-  if (maxd>subset.plotted) {
-    warning(paste("The maximum for delta you specified is larger than the number of objects for calculating zero count. Maxd changed to", subset.plotted), "\n")
-    maxd <- subset.plotted
-  }
-
-  
-  L1 = lists[[1]][1:subset.plotted]
-  L2 = lists[[2]][1:subset.plotted]
-  deltas = c(mind:maxd)
-  Mdelta = list()
-  
-  Mdelta.temp = data.frame(Object=c(as.character(L1), "#zeros"), L1=c(c(1:length(L1)), NA), L2 = c(match(L1,L2), NA))
-  xx = c()
-  for (d in deltas)
-    {	
-      a = prepareIdata(data.frame(L1,L2, stringsAsFactors=F),d=d)
-      x = table(as.numeric(a$Idata))['0']
-      xx = c(xx,x)
-      Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
-    }# end for d
-  Mdelta = Mdelta.temp
-  par(mar=c(5,5,1,1))
-  plot(deltas[1:maxd],xx[1:maxd], xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste(names(lists)[1], " vs. ", names(lists)[2], sep=""))
-  extremes = par("usr")
-  dimen = par("pin")					   
-  subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],xx[1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", yaxp=c(min(xx),max(xx),4),  mar=c(5,5,1,1)))   
-  ## dev.copy(png, paste("deltaplot_maxd",maxd,".png",sep=""))
-## dev.off()
-}#end deltaplot.w.subbplot
