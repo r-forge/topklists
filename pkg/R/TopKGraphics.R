@@ -428,10 +428,10 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
   xxs = list()
   n=ncol(lists)
   a = n*(n-1)
-  aa = round(a/2,0)
-  aaa = 2
-  par(mfrow=c(aa,aaa))
+ 
+  par(mfrow=c(3,2))
   k=1 
+  count.win = 0
   for (i in 1:ncol(lists))
     {
       for (j in 1:ncol(lists))
@@ -451,8 +451,18 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
               xxs[[k]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
               k=k+1
               Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
+			  if (count.win == 6) {
+				x11()
+				plot.window(1:2,1:2,log="x", par(mfrow=c(3,2)))
+				par(mar=c(5,5,1,1))
+                plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+				count.win = 1
+			  }
+			  else {
               par(mar=c(5,5,1,1))
               plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+			  count.win = count.win + 1
+			  }
             }# end for if
         }# end for j
     }# end for i
