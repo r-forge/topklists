@@ -17,10 +17,10 @@ A data frame cotaining two or more columns that represent lists of ordered objec
 Minimal \eqn{\delta} value to be examined; default is 0
 }
   \item{maxd}{
-Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)/2}
+Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)*0.25}
 }
   \item{perc.subplot}{
-Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)/2}
+Percentage of the range of the main plot used for creating a subplot in the top right corner, default is 50(\%).  Subplot provides a detailed view of the main plot
 }
   \item{subset.plotted}{
 The default \code{NA} will suppress the creation of any pair-wise subplots. Setting it to \code{NULL} will create all possible pairs of list combinations for creating subplots.
