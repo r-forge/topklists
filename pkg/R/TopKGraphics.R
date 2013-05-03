@@ -423,21 +423,20 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
     lists = lists[1:subset.plotted,] ## takes only specified subset of input list  
   }
   
+  ## calculate zero count for each pair of lists  
   deltas = c(mind:maxd)
   Mdelta = list()
   xxs = list()
   n=ncol(lists)
   a = n*(n-1)
- 
-  par(mfrow=c(3,2))
-  k=1 
-  count.win = 0
-  for (i in 1:ncol(lists))
+  for (i in 1:(ncol(lists)-1))
     {
-      for (j in 1:ncol(lists))
+      for (j in (i+1):ncol(lists))
         {
-          if (i!=j)  ##
-            {
+			x11()
+			par(mfrow=c(1,2))
+        ## zero count calculation and deltaplot for LiLj and LjLi (in one window)
+			## LiLj
               Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
               names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
               xx = c()
@@ -448,28 +447,35 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
                   xx = c(xx,x)
                   Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
                 }# end for d
-              xxs[[k]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
-              k=k+1
-              Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
-			  if (count.win == 6) {
-				x11()
-				plot.window(1:2,1:2,log="x", par(mfrow=c(3,2)))
-				par(mar=c(5,5,1,1))
-                plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
-				count.win = 1
-			  }
-			  else {
-              par(mar=c(5,5,1,1))
+			  Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
+              xxs[[paste("L",i,"L",j, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
+	    	  par(mar=c(5,5,1,1))
               plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
-			  count.win = count.win + 1
-			  }
-            }# end for if
+
+			## LjLi  
+              Mdelta.temp = data.frame(Object=c(as.character(lists[,j]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,j],lists[,i]), NA))
+              names(Mdelta.temp)[2:3] = c(paste("L",j, sep=""),paste("L",i, sep=""))
+              xx = c()
+              for (d in deltas)
+                {	
+                  a = prepareIdata(lists[,c(j,i)],d=d)
+                  x = table(as.numeric(a$Idata))['0']
+                  xx = c(xx,x)
+                  Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
+                }# end for d
+			  Mdelta[[paste("L",j,"L",i, sep="")]] = Mdelta.temp
+              xxs[[paste("L",j,"L",i, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
+	    	  par(mar=c(5,5,1,1))
+              plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",j, " vs L",i, sep=""))		  
         }# end for j
     }# end for i
 
+	## plot deltaplot
+	par(mfrow=c(1,2))
+    	
+	
   if(!is.na(subset.plotted)){
     ## deltaplot with subplot in the top right corner:
-    k=1
     for (i in 1:ncol(lists))
       {
         for (j in 1:ncol(lists))
@@ -477,11 +483,10 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
             if (i!=j){
               x11()
               par(mar=c(5,5,1,1))
-              plot(deltas,xxs[[k]], xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))			
+              plot(deltas,xxs[[paste("L",i,"L",j,sep="")]], xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))			
               extremes = par("usr")
               dimen = par("pin")					   
-              subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],xxs[[k]][1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
-              k=k+1
+              subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],xxs[[paste("L",i,"L",j,sep="")]][1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
             }
           }
       }
