@@ -459,7 +459,7 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
               for (d in deltas)
                 {	
                   a = prepareIdata(lists[,c(j,i)],d=d)
-                  x = table(as.numeric(a$Idata))['0']
+                  x = table(a$Idata)['0']
                   xx = c(xx,x)
                   Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
                 }# end for d
