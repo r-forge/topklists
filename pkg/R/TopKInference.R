@@ -429,12 +429,12 @@ prepareIdata <- function(x, d)
 {
 rank.diff = c(1:nrow(x))-match(x[,1],x[,2])
 ######  Idata = abs(rank.diff)<=d  only works when no NAs 
-Idata = logical()
+Idata = numeric()
 for (i in 1:length(rank.diff))
 {
-    if (is.na(rank.diff[i])) {Idata[i] = FALSE}
-    else if (abs(rank.diff[i])<= d) {Idata[i] = TRUE}
-    else Idata[i] = FALSE    
+    if (is.na(rank.diff[i])) {Idata[i] = 0}
+    else if (abs(rank.diff[i])<= d) {Idata[i] = 1}
+    else Idata[i] = 0   
 }
 return(list(Idata = Idata, d = d))
 }
