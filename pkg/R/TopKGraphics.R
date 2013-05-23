@@ -77,7 +77,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
                                         #create four tabs for presenting the results of the calculation
   nb <- gnotebook(container = maingroup, expand = TRUE)
-  aggmapg <- ggroup(horizontal = FALSE, container = nb, label = "Aggregation map")
+  aggmapg <- ggroup(horizontal = FALSE, container = nb, label = "Aggregation map", use.scrollwindow = TRUE)
   summtblg <- ggroup(horizontal = FALSE, container = nb, label = "Summary table")
   venng <- ggroup(horizontal = TRUE, container = nb, label = "Venn-diagram & Venn-table")
   svalue(nb) <- 1 #set the first tab as the selected tab

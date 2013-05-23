@@ -102,7 +102,7 @@ lists$L3 <- sample(LETTERS[1:14])
 
 Specification of the $\delta$-values for all possible pairs of the three input lists, $L1$, $L2$, and $L3$, by means of \texttt{deltaplot} (in the module \texttt{TopKGraphics} there is a complementary version of the \texttt{deltaplot} which also magnifies the function for a selected range of small $\delta$-values in a subplot).
 
-<<fig=T,include=TRUE,label=deltaplot>>=
+<<fig=F,include=TRUE,label=deltaplot>>=
 a=deltaplot(lists, maxd=nrow(lists), subset.plotted=NA)
 @
 
