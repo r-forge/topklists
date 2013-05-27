@@ -129,28 +129,31 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
         }
         wid$sumtable <- gtable(truncated.lists$summarytable, container = summtblg, expand = TRUE)
 
-                                        #third tab: show Venn-diagram and Venn-table (only if L <= 4)
+        ##third tab: show Venn-diagram and Venn-table (only if L <= 4)
         if (current.arguments$val.L <= 4) {			
           if (!is.null(wid$venndiag) & !is.null(wid$venntbl)) {
-                                        #delete current Venn-diagram and Venn-table
+            ##delete current Venn-diagram and Venn-table
             delete(venng, wid$venndiag)
             delete(venng, wid$venntbl)
           }
           if (!is.null(wid$nodraw) & !is.null(wid$nodrawimage)) {
-                                        #delete the icon and message
+            ##delete the icon and message
             delete(venng, wid$nodrawimage)
             delete(venng, wid$nodraw)
           }
           wid$venndiag <- gimage(paste(directory, "/venn_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = venng)
-          wid$venntbl <- gtable(truncated.lists$venntable, container = venng, expand = TRUE)
+          ##need to do some conversions to correctly make data visible in gtable
+          mydata <- as.data.frame(truncated.lists$venntable)
+          mydata <- matrix(unlist(mydata), byrow=FALSE,ncol=2)
+          wid$venntbl <- gtable(mydata, multiple=TRUE, container = venng, expand = TRUE, drop=FALSE, index=TRUE)
 
         } else {
-					#output message that Venn-diagram and Venn-table are not shown for L > 4
+          ##output message that Venn-diagram and Venn-table are not shown for L > 4
           if (is.null(wid$nodrawimage) & is.null(wid$nodraw)) {
             wid$nodrawimage <- gimage("info", dirname = "stock", container = venng)
             wid$nodraw <- glabel("There are more than four input lists.\nVenn-diagram and Venn-table are only drawn to a maximum of four input lists.", container = venng)
           }
-        }# end for third tab if
+        }## end for third tab if
   
       } else {
         gmessage("There is no data to show in the GUI!\nThis is caused by an error in the calculation.\nYou may have to adjust the arguments!", title = "Loading data failed", icon = "error")
@@ -291,8 +294,6 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
                                         #show the GUI
   visible(win) <- TRUE
 }
-
-
 
 
 .calculateVennValues <- function(genetable, L) {

@@ -183,9 +183,32 @@ calculateDataSet <- function(lists, L, d, v, threshold) {
               if (current.genesymbol %in% temp.sumtrunclists[[curr.listname]]) {
                 temp.freqtrunc <- temp.freqtrunc + 1
               }
-            }		
-            
-                                        #add the calculated row (of the current object) to the summary-table
+            }
+
+            ## ##calculate Venn table
+            temp.sumtrunclists.vect <- sapply(temp.sumtrunclists,as.vector)
+            names(temp.sumtrunclists.vect) <- names(temp.sumtrunclists)
+            all.entries <- unique(unlist(as.vector(temp.sumtrunclists.vect)))
+            print("all entires")
+            print(all.entries)
+            ##check for each object  if entry is present in lists
+            venn.table <- data.frame(do.call(cbind, lapply(names(temp.sumtrunclists.vect), function(nn){
+              ifelse(all.entries %in% as.vector(temp.sumtrunclists.vect[[nn]]),nn,NA)
+            })), stringsAsFactors=FALSE)
+            rownames(venn.table) <- all.entries
+            venn.table$listname <-apply(venn.table, 1, function(x){paste(sort(x[!is.na(x)]), sep="", collapse="_")})
+            print(venn.table)
+            venn.list <- split(rownames(venn.table),venn.table$listname)
+            venn.list <- venn.list[order(-sapply(names(venn.list), nchar), names(venn.list))]
+            print(venn.list)
+            venntable <- data.frame(t(sapply(names(venn.list), function(nn){
+              data.frame(intersection=nn,objects=paste(sort(venn.list[[nn]]), sep="",collapse=", "), stringsAsFactors=FALSE)
+            })))
+            rownames(venntable) <- NULL
+            print(venntable)
+            ## print(str(venntable))
+                   
+            ##add the calculated row (of the current object) to the summary-table
             current.genesymbol_temp = c(current.genesymbol_temp, current.genesymbol)
             summary.table <- rbind(summary.table, c(temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
           }# end for j
@@ -204,16 +227,18 @@ calculateDataSet <- function(lists, L, d, v, threshold) {
           
                                         #calculate the Venn-lists (to view the Venn-diagram) and the Venn-table
                                         #the calculation takes place only for L between 2 and 4 (a Venn-diagram for L > 4 cannot be properly arranged)
-          venn.values <- .calculateVennValues(summary.table.final[,1:(L + 1)], L)
-          
-                                        #combine all necessary objects into one single list
+          ##venn.values <- .calculateVennValues(summary.table.final[,1:(L + 1)], L)
+          ##combine all necessary objects into one single list
           truncated.lists <- list()
           truncated.lists$comparedLists <- compared.lists
           truncated.lists$info <- info
           truncated.lists$grayshadedLists <- grayshaded.lists
           truncated.lists$summarytable <- summary.table.final
-          truncated.lists$vennlists <- venn.values$vennlists
-          truncated.lists$venntable <- venn.values$venntable
+          ##truncated.lists$vennlists <- venn.values$vennlists #old version using wrong lists
+          truncated.lists$vennlists <- temp.sumtrunclists
+          ##outdated no longer needed
+          ##truncated.lists$venntable <- venn.values$venntable
+          truncated.lists$venntable <- venntable #use this instead
           truncated.lists$v <- v
           truncated.lists$Ntoplot<-sum(unlist(lapply(inblock_list_order_final,length)))+sum(unlist(lapply(inblock_list_order_final,length))>0)
           truncated.lists$Idata <- res.j0.temp$Idata
