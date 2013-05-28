@@ -398,15 +398,8 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
 
 ###function that generates Delta-plot and Delta-matrix
 ##if subset.plotted is NA no subplots are created
-deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA)
+deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50)
 {
-  if (is.null(subset.plotted) & nrow(lists) > 200){
-    stop("Subset for calculating zero count (subset.plotted) has to be specified \n")
-  }
-  if (is.null(subset.plotted) & nrow(lists) < 201){
-    warning(paste("Subset of the lists for calculating zero count is not specified, using", nrow(lists)), "\n")
-    subset.plotted <- nrow(lists)
-  }
   if (is.null(maxd)) {
     cat(paste("The maximum for delta not specified, using",nrow(lists)*0.25), "\n")
     maxd=c(nrow(lists)*0.25)
@@ -420,8 +413,8 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
     warning(paste("List names not be given or incorrect. Replaced by 'L1', 'L2',... L",ncol(lists),'\n'))
   }
 
-  if(is.null(subset.plotted) | !is.na(subset.plotted)){
-    lists = lists[1:subset.plotted,] ## takes only specified subset of input list  
+  if(!is.null(subset.lists)){
+    lists = lists[1:subset.lists,] ## takes only specified subset of input list  
   }
   
   ## calculate zero count for each pair of lists  
@@ -475,7 +468,7 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
 	par(mfrow=c(1,2))
     	
 	
-  if(!is.na(subset.plotted)){
+  if(subplot){
     ## deltaplot with subplot in the top right corner:
     for (i in 1:ncol(lists))
       {
