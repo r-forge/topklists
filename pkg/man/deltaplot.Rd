@@ -7,7 +7,7 @@ An exploratory plot of discordance for delta selection.
 Returns a graph of non-overlap (discordance) of rankings represented by the sum of zeros across all objects in the \eqn{\delta}-dependent Idata vector (see \code{compute.stream}) for a suitable range of \eqn{\delta} values starting at \eqn{\delta=0}. Graphs are plotted for all pairwise list combinations. 
 }
 \usage{
-deltaplot(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA) 
+deltaplot(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50) 
 }
 \arguments{
   \item{lists}{
@@ -19,11 +19,14 @@ Minimal \eqn{\delta} value to be examined; default is 0
   \item{maxd}{
 Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)*0.25}
 }
-  \item{perc.subplot}{
-Percentage of the range of the main plot used for creating a subplot in the top right corner, default is 50(\%).  Subplot provides a detailed view of the main plot
+\item{subset.lists}{
+
 }
-  \item{subset.plotted}{
-The default \code{NA} will suppress the creation of any pair-wise subplots. Setting it to \code{NULL} will create all possible pairs of list combinations for creating subplots.
+\item{subplot}{
+
+}
+\item{perc.subplot}{
+Percentage of the range of the main plot used for creating a subplot in the top right corner, default is 50(\%).  Subplot provides a detailed view of the main plot
 }
 }
 \value{
@@ -38,11 +41,11 @@ The default \code{NA} will suppress the creation of any pair-wise subplots. Sett
 \examples{
 set.seed(1234)
 data(TopKGUISampleInput)
-##don't make pair-wise comparisons (default)
-deltaplot(lists, mind=0, maxd=50, subset.plotted=NULL)
+##plot subsets
+deltaplot(lists, mind=0, maxd=50, subplot=TRUE)
 
-##make all pair-wise comparisons
-deltaplot(lists, mind=0, maxd=50, subset.plotted=NULL)
+##don't plot subets (default)
+deltaplot(lists, mind=0, maxd=50, subplot=FALSE)
 }
 \keyword{ list}
 
