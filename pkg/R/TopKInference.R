@@ -189,23 +189,23 @@ calculateDataSet <- function(lists, L, d, v, threshold) {
             temp.sumtrunclists.vect <- sapply(temp.sumtrunclists,as.vector)
             names(temp.sumtrunclists.vect) <- names(temp.sumtrunclists)
             all.entries <- unique(unlist(as.vector(temp.sumtrunclists.vect)))
-            print("all entires")
-            print(all.entries)
+            ##print("all entires")
+            ##print(all.entries)
             ##check for each object  if entry is present in lists
             venn.table <- data.frame(do.call(cbind, lapply(names(temp.sumtrunclists.vect), function(nn){
               ifelse(all.entries %in% as.vector(temp.sumtrunclists.vect[[nn]]),nn,NA)
             })), stringsAsFactors=FALSE)
             rownames(venn.table) <- all.entries
             venn.table$listname <-apply(venn.table, 1, function(x){paste(sort(x[!is.na(x)]), sep="", collapse="_")})
-            print(venn.table)
+            ##print(venn.table)
             venn.list <- split(rownames(venn.table),venn.table$listname)
             venn.list <- venn.list[order(-sapply(names(venn.list), nchar), names(venn.list))]
-            print(venn.list)
+            ##print(venn.list)
             venntable <- data.frame(t(sapply(names(venn.list), function(nn){
               data.frame(intersection=nn,objects=paste(sort(venn.list[[nn]]), sep="",collapse=", "), stringsAsFactors=FALSE)
             })))
             rownames(venntable) <- NULL
-            print(venntable)
+            ##print(venntable)
             ## print(str(venntable))
                    
             ##add the calculated row (of the current object) to the summary-table
