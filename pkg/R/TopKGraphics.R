@@ -396,9 +396,28 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   return(c(start.delta, stop.delta))
 }
 
+.prepareDeltaplot <- function(lists, i, j, deltas)
+{			
+	## zero count calculation and deltaplot for LiLj (in one window)
+    Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
+    names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
+    xx = c()
+    for (d in deltas)
+    {	
+        a = prepareIdata(lists[,c(i,j)],d=d)
+        x = table(as.numeric(a$Idata))['0']
+        xx = c(xx,x)
+        Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
+    }# end for d
+	Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
+    xxs[[paste("L",i,"L",j, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
+	par(mar=c(5,5,1,1))
+    plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+}
+
 ###function that generates Delta-plot and Delta-matrix
 ##if subset.plotted is NA no subplots are created
-deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50)
+deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory = NULL)
 {
   if (is.null(maxd)) {
     cat(paste("The maximum for delta not specified, using",nrow(lists)*0.25), "\n")
@@ -422,52 +441,26 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
   Mdelta = list()
   xxs = list()
   n=ncol(lists)
-  a = n*(n-1)
   for (i in 1:(ncol(lists)-1))
     {
       for (j in (i+1):ncol(lists))
         {
-			x11()
-			par(mfrow=c(1,2))
-        ## zero count calculation and deltaplot for LiLj and LjLi (in one window)
-			## LiLj
-              Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
-              names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
-              xx = c()
-              for (d in deltas)
-                {	
-                  a = prepareIdata(lists[,c(i,j)],d=d)
-                  x = table(as.numeric(a$Idata))['0']
-                  xx = c(xx,x)
-                  Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
-                }# end for d
-			  Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
-              xxs[[paste("L",i,"L",j, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
-	    	  par(mar=c(5,5,1,1))
-              plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
-
-			## LjLi  
-              Mdelta.temp = data.frame(Object=c(as.character(lists[,j]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,j],lists[,i]), NA))
-              names(Mdelta.temp)[2:3] = c(paste("L",j, sep=""),paste("L",i, sep=""))
-              xx = c()
-              for (d in deltas)
-                {	
-                  a = prepareIdata(lists[,c(j,i)],d=d)
-                  x = table(a$Idata)['0']
-                  xx = c(xx,x)
-                  Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
-                }# end for d
-			  Mdelta[[paste("L",j,"L",i, sep="")]] = Mdelta.temp
-              xxs[[paste("L",j,"L",i, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
-	    	  par(mar=c(5,5,1,1))
-              plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",j, " vs L",i, sep=""))		  
-        }# end for j
+			if (is.null(directory)) {
+				x11()
+				par(mfrow=c(1,2))
+				prepareDeltaplot(lists,i,j,deltas)
+				prepareDeltaplot(lists,j,i,deltas)
+				}
+			if (!is.null(directory)) {
+				pdf(paste(directory,'\\deltaplotL',i,j,'.pdf',sep=''))
+				par(mfrow=c(1,2))
+				prepareDeltaplot(lists,i,j,deltas)
+				prepareDeltaplot(lists,j,i,deltas)
+				dev.off()
+			}
+		}# end for j
     }# end for i
 
-	## plot deltaplot
-	par(mfrow=c(1,2))
-    	
-	
   if(subplot){
     ## deltaplot with subplot in the top right corner:
     for (i in 1:ncol(lists))
