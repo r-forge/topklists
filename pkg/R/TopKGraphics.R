@@ -448,14 +448,14 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
 			if (is.null(directory)) {
 				x11()
 				par(mfrow=c(1,2))
-				prepareDeltaplot(lists,i,j,deltas)
-				prepareDeltaplot(lists,j,i,deltas)
+				.prepareDeltaplot(lists,i,j,deltas)
+				.prepareDeltaplot(lists,j,i,deltas)
 				}
 			if (!is.null(directory)) {
 				pdf(paste(directory,'\\deltaplotL',i,j,'.pdf',sep=''))
 				par(mfrow=c(1,2))
-				prepareDeltaplot(lists,i,j,deltas)
-				prepareDeltaplot(lists,j,i,deltas)
+				.prepareDeltaplot(lists,i,j,deltas)
+				.prepareDeltaplot(lists,j,i,deltas)
 				dev.off()
 			}
 		}# end for j
