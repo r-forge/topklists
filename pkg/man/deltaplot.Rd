@@ -7,7 +7,7 @@ An exploratory plot of discordance for delta selection.
 Returns a graph of non-overlap (discordance) of rankings represented by the sum of zeros across all objects in the \eqn{\delta}-dependent Idata vector (see \code{compute.stream}) for a suitable range of \eqn{\delta} values starting at \eqn{\delta=0}. Graphs are plotted for all pairwise list combinations. 
 }
 \usage{
-deltaplot(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50) 
+deltaplot(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory=NULL) 
 }
 \arguments{
   \item{lists}{
@@ -20,14 +20,16 @@ Minimal \eqn{\delta} value to be examined; default is 0
 Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)*0.25}
 }
 \item{subset.lists}{
-
+Specifies the subset of the input lists, which is used for calculating zero counts for the deltaplot. The value contained in 'subset.lists' specifies which elements are taken for the calculation from each input list, e.g. a value of 100 would use the first 100 elements of each input list. Default in NULL, in which case the all elements of each list are used. 
 }
 \item{subplot}{
-
+Logical: if TRUE an additional deltaplot is generated containing a detail subplot placed in the top right corner of the plot. The detail subplot plots a configurable subset of the values found in the delatplot. This percentage value can be specified using the perc.subplot parameter. Defaults to FALSE
 }
 \item{perc.subplot}{
-Percentage of the range of the main plot used for creating a subplot in the top right corner, default is 50(\%).  Subplot provides a detailed view of the main plot
+Percentage of the range of the main plot used for creating a subplot in the top right corner, default is 50(\%). Subplot provides a detailed view of the main plot
 }
+\item{directory}{
+Specifies the directory in which to save the generated deltaplots in PDF format. When specified plots are not displayed on screen. Defaults to NULL, whereby plots are only displayed on screen. }
 }
 \value{
  \item{Mdelta}{A list of \eqn{\delta}-matrices for each comparison of ordered lists}
