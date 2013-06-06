@@ -44,10 +44,10 @@ Specifies the directory in which to save the generated deltaplots in PDF format.
 set.seed(1234)
 data(TopKGUISampleInput)
 ##plot subsets
-deltaplot(lists, mind=0, maxd=50, subplot=TRUE)
+a = deltaplot(lists, mind=0, maxd=50, subplot=TRUE)
 
 ##don't plot subets (default)
-deltaplot(lists, mind=0, maxd=50, subplot=FALSE)
+a = deltaplot(lists, mind=0, maxd=50, subplot=FALSE)
 }
 \keyword{ list}
 
