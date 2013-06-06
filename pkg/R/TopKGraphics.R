@@ -396,8 +396,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   return(c(start.delta, stop.delta))
 }
 
-.prepareDeltaplot <- function(lists, i, j, deltas)
-{			
+.prepareDeltaplot <- function(lists, i, j, deltas,Mdelta,xxs)
+{		
+	
 	## zero count calculation and deltaplot for LiLj (in one window)
     Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
     names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
@@ -413,6 +414,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
     xxs[[paste("L",i,"L",j, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
 	par(mar=c(5,5,1,1))
     plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+	
+	MdeltaXxs = list(Mdelta=Mdelta, xxs=xxs)
+	return(MdeltaXxs)
 }
 
 ###function that generates Delta-plot and Delta-matrix
@@ -438,9 +442,8 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
   
   ## calculate zero count for each pair of lists  
   deltas = c(mind:maxd)
-  Mdelta = list()
-  xxs = list()
-  n=ncol(lists)
+  MdeltaXxs=list(Mdelta=list(), xxs = list())
+  
   for (i in 1:(ncol(lists)-1))
     {
       for (j in (i+1):ncol(lists))
@@ -448,14 +451,14 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
 			if (is.null(directory)) {
 				x11()
 				par(mfrow=c(1,2))
-				.prepareDeltaplot(lists,i,j,deltas)
-				.prepareDeltaplot(lists,j,i,deltas)
+				MdeltaXxs=.prepareDeltaplot(lists,i,j,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
+				MdeltaXxs=.prepareDeltaplot(lists,j,i,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
 				}
 			if (!is.null(directory)) {
 				pdf(paste(directory,'\\deltaplotL',i,j,'.pdf',sep=''))
 				par(mfrow=c(1,2))
-				.prepareDeltaplot(lists,i,j,deltas)
-				.prepareDeltaplot(lists,j,i,deltas)
+				MdeltaXxs=.prepareDeltaplot(lists,i,j,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
+				MdeltaXxs=.prepareDeltaplot(lists,j,i,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
 				dev.off()
 			}
 		}# end for j
@@ -463,6 +466,7 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
 
   if(subplot){
     ## deltaplot with subplot in the top right corner:
+	xxs = MdeltaXxs$xxs
     for (i in 1:ncol(lists))
       {
         for (j in 1:ncol(lists))
@@ -478,7 +482,7 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
           }
       }
   }
-  return(Mdelta)
+  return(MdeltaXxs$Mdelta) # returns vectors of zeros and ones
 
 }#end deltaplot
 
