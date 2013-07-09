@@ -1,0 +1,159 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{Sweave}
+
+%opening
+\title{TopKLists: Usage of the module \texttt{TopKSpace}}
+%\VignetteIndexEntry{Usage of TopKSpace} 
+\author{Shili Lin, Karl G. Kugler}
+
+\begin{document}
+
+\maketitle
+\section{Introduction and background}
+
+The idea of the module \texttt{TopKSpace} is to consolidate information from the $l$ top-\emph{k} lists to arrive at an aggregate list ($AL$). 
+As shown in Figure \ref{topkspace}, not only that the top-\emph{k} lists
+($L_1, L_2, \ldots, L_l$) may be of different lengths, they may come from studies or assessments that consider different sets of objects, hence the underlying spaces ($S_1, S_2, \ldots, S_l$) from which the top-\emph{k} lists were derived may be different. The goal of the inference in \texttt{TopKSpace} is therefore to find the top-\emph{k} list, $AL$, from the aggregate new space ($\cup_{i=1}^l L_i$), such that the weighted sum of distances between each of the input lists and $AL$ will be the minimum among lists of the same length.
+Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. In both distance measures possible differences in the underlying spaces can be taken into account (see \cite{lin2010}). 
+
+There are three classes of algorithms implemented in \texttt{TopKSpace}, namely
+Borda's method, Markov chain (MC) algorithms \cite{lin}, 
+and a Cross Entropy Monte Carlo (CEMC) method taking advantage of the new Order Explicit Algorithm (OEA) due to \cite{linding}.
+The first two consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the third class employs a Monte Carlo search procedure to accomplish the optimization. Borda and Markov chain algorithms run much faster than Cross Entropy Monte Carlo, but the latter usually achieves a better result. Nevertheless, simulation studies (unpublished material) indicate that taking the underlying space into consideration has much greater impact on the aggregation result than using different algorithms.
+
+\begin{figure}
+\centering
+\includegraphics{TopKSpaceSchema.pdf}\\
+\caption{The optimization concept for the aggregation of $\ell$ full ranked lists $L_i$ into one list $AL$ under space consideration}
+\label{topkspace}
+\end{figure}
+
+In order to run the examples in this vignette, the TopKLists package must first be loaded:
+
+<<eval=TRUE>>=
+library(TopKLists)
+@
+
+\subsection{Construction of three input lists and a common space}
+<<>>=
+L1=1:30
+L2=c(1:10,31:40,11:15)
+L3=c(1:10,16:20,11:15)
+input=list(L1,L2,L3)
+space=list(1:40,1:40,1:40)
+@
+
+\section{Call of the functions}
+
+\subsection{Run three Borda algorithms}
+\subsubsection{Call with platform dependence assumption}
+<<>>=
+bb1=Borda(input,space)
+@
+
+\subsubsection{Call with top-\emph{k} assumption}
+<<>>=
+bb2=Borda(input,input)
+@
+
+\subsubsection{Plotting Borda's scores}
+<<fig=T>>=
+plot(1:30,bb1[[2]][1:30,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
+ylab="Borda's score", sub=("(a)"))
+lines(1:30,bb1[[2]][1:30,2], type="o", col="red", pch=2,lty=2)
+lines(1:30,bb1[[2]][1:30,3], type="o", col="red", pch=3,lty=2)
+lines(1:30,bb2[[2]][1:30,1], type="o", col="blue", pch=1,lty=4)
+lines(1:30,bb2[[2]][1:30,2], type="o", col="blue", pch=2,lty=4)
+lines(1:30,bb2[[2]][1:30,3], type="o", col="blue", pch=3,lty=4)
+legend(18,10,legend=c("Platform depend.", "Top-$k$ spaces"), col=c("red","blue"),
+lty=c(2,4))
+legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
+@
+
+\subsection{Run three MC algorithms}
+\subsubsection{Call with platform dependence assumption}
+<<>>=
+mm=trans.matrix(input,space)
+MC1=MC.ranks(mm[[2]],mm[[4]])
+probMC1=rev(sort(MC1[[2]]))[1:30] 
+MC2=MC.ranks(mm[[2]],mm[[5]])
+probMC2=rev(sort(MC2[[2]]))[1:30]
+MC3=MC.ranks(mm[[2]],mm[[6]])
+probMC3=rev(sort(MC3[[2]]))[1:30]
+@
+
+\subsubsection{Call with top-\emph{k} space assumption}
+<<>>=
+mm=trans.matrix(input,input)
+MC11=MC.ranks(mm[[2]],mm[[4]])
+probMC11=rev(sort(MC11[[2]]))[1:30]
+MC21=MC.ranks(mm[[2]],mm[[5]])
+probMC21=rev(sort(MC21[[2]]))[1:30]
+MC31=MC.ranks(mm[[2]],mm[[6]])
+probMC31=rev(sort(MC31[[2]]))[1:30]
+@
+
+\subsubsection{Generating the plot of equilibrium probabilities}
+<<fig=T>>=
+plot(1:30,probMC1, type="o", col="red", lty=2, pch=1, xlab="Ranking",
+ylab="Stationary probability", sub=("(b)"))
+lines(1:30,probMC2, type="o", col="red", pch=2, lty=2)
+lines(1:30,probMC3, type="o", col="red", pch=3, lty=2)
+lines(1:30,probMC11, type="o", col="blue", pch=1, lty=4)
+lines(1:30,probMC21, type="o", col="blue", pch=2, lty=4)
+lines(1:30,probMC31, type="o", col="blue", pch=3, lty=4)
+legend(18,0.14,legend=c("Platform depend.", "Top-$k$ space"), col=c("red","blue"),
+lty=c(2,4))
+legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=1:3)
+@
+
+\subsection{Run CEMC algorithm}
+\subsubsection{Call with platform dependence assumption}
+<<>>=
+set.seed(1234)
+pd = CEMC(input, 30, space=space, N=2000)
+pd$topK
+pd$p[1:5,1:5] 
+pd$input.par
+@
+
+\subsubsection{Call with top-\emph{k} assumption}
+<<>>=
+pd = CEMC(input, 30, space=input, N=2000)
+pd$topK
+pd$p[1:5,1:5]
+@
+
+\section{Comparison of the performance of the different algorithms}
+
+The modified Kendall's $\tau$ distance between the aggregate list and the input lists can be used to evaluate the relative performance of the algorithms. In the following we give two examples: the first one is under the assumption of platform dependence and the second one is under the assumption of top-\emph{k} space.  
+
+<<>>=
+kc.ARM=KendallCriterion(input, space, bb1[[1]][, 1], p = 0.5,
+w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 * (20 -+ 1))))
+@
+
+<<>>=
+kc.MC3=KendallCriterion(input, input, MC31[[3]],
+p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 *
+(20 - 1))))
+@
+
+\begin{thebibliography}{}
+
+\bibitem[Lin, 2010a]{lin2010} Lin, S. (2010). Space oriented rank-based data integration. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{9}, Article 20.
+
+\bibitem[Lin, 2010b]{lin} Lin, S. (2010). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
+
+\bibitem[Lin and Ding, 2009]{linding} Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. \emph{Biometrics}, \textbf{65}, 9-18.
+
+\end{thebibliography}
+
+\section*{Session info}
+<<>>=
+sessionInfo()
+@
+
+\end{document}
+

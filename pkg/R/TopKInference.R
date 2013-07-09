@@ -401,11 +401,6 @@ return(list(j0_est=j0_est, reason.break=reason.break, Js=Js, v=v))
 #v=10
 
 j0.multi<-function(lists,d,v) {
-  if(is.null(colnames(lists))){
-  colnames(lists)<-paste("L",1:
-  ncol(lists),sep="")
-  warning("No colnames given in lists. Replaced with default values: L1, L2...")
-  }
   maxK=0
   L = c()
   Idata_ID = c()
@@ -414,10 +409,10 @@ j0.multi<-function(lists,d,v) {
   for (j in 1:ncol(lists)){
     if (i!=j) {
 	ID = prepareIdata(lists[,c(i,j)],d=d)
-    Idata_ID=cbind(Idata_ID, ID$Idata)
-	names_idata = c(names_idata, paste(colnames(lists)[i],"_",colnames(lists)[j],sep=""))
+        Idata_ID=cbind(Idata_ID, ID$Idata)
+	names_idata = c(names_idata, paste("L",i,"_","L",j,sep=""))
 	J = compute.stream(ID$Idata,v=v)$j0_est
-	L = rbind(L, cbind(colnames(lists)[i], colnames(lists)[j], v,J,d))
+	L = rbind(L, cbind(names(lists)[i], names(lists)[j], v,J,d))
 	}# end for if
       }# end for j
     }# end for i
@@ -459,12 +454,12 @@ prepareIdata <- function(x, d)
 {
 rank.diff = c(1:nrow(x))-match(x[,1],x[,2])
 ######  Idata = abs(rank.diff)<=d  only works when no NAs 
-Idata = numeric()
+Idata = logical()
 for (i in 1:length(rank.diff))
 {
-    if (is.na(rank.diff[i])) {Idata[i] = 0}
-    else if (abs(rank.diff[i])<= d) {Idata[i] = 1}
-    else Idata[i] = 0   
+    if (is.na(rank.diff[i])) {Idata[i] = FALSE}
+    else if (abs(rank.diff[i])<= d) {Idata[i] = TRUE}
+    else Idata[i] = FALSE    
 }
 return(list(Idata = Idata, d = d))
 }

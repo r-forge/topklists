@@ -43,7 +43,7 @@ Stop criteria w.r.t. p
 Stop criteria w.r.t. y
 }
   \item{w}{
-Weight of the new probability vector for the next iterate
+Weight of the new probabilities estimate each iterate
 }
   \item{b}{
 Parameter used in blur function
@@ -61,8 +61,7 @@ Weights for distances from different input lists
 Input parameters in a data.frame
 }
   \item{extra}{
-Number of additional items to be included in the combined ranked list during the 
-calculation
+TODO: describe
 }
 }
 \details{

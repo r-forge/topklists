@@ -7,7 +7,7 @@ An exploratory plot of discordance for delta selection.
 Returns a graph of non-overlap (discordance) of rankings represented by the sum of zeros across all objects in the \eqn{\delta}-dependent Idata vector (see \code{compute.stream}) for a suitable range of \eqn{\delta} values starting at \eqn{\delta=0}. Graphs are plotted for all pairwise list combinations. 
 }
 \usage{
-deltaplot(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory=NULL) 
+deltaplot(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA) 
 }
 \arguments{
   \item{lists}{
@@ -17,19 +17,14 @@ A data frame cotaining two or more columns that represent lists of ordered objec
 Minimal \eqn{\delta} value to be examined; default is 0
 }
   \item{maxd}{
-Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)*0.25}
+Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)/2}
 }
-\item{subset.lists}{
-Specifies the subset of the input lists, which is used for calculating zero counts for the deltaplot. The value contained in 'subset.lists' specifies which elements are taken for the calculation from each input list, e.g. a value of 100 would use the first 100 elements of each input list. Default in NULL, in which case the all elements of each list are used. 
+  \item{perc.subplot}{
+Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)/2}
 }
-\item{subplot}{
-Logical: if TRUE an additional deltaplot is generated containing a detail subplot placed in the top right corner of the plot. The detail subplot plots a configurable subset of the values found in the delatplot. This percentage value can be specified using the perc.subplot parameter. Defaults to FALSE
+  \item{subset.plotted}{
+The default \code{NA} will suppress the creation of any pair-wise subplots. Setting it to \code{NULL} will create all possible pairs of list combinations for creating subplots.
 }
-\item{perc.subplot}{
-Percentage of the range of the main plot used for creating a subplot in the top right corner, default is 50(\%). Subplot provides a detailed view of the main plot
-}
-\item{directory}{
-Specifies the directory in which to save the generated deltaplots in PDF format. When specified plots are not displayed on screen. Defaults to NULL, whereby plots are only displayed on screen. }
 }
 \value{
  \item{Mdelta}{A list of \eqn{\delta}-matrices for each comparison of ordered lists}
@@ -43,11 +38,11 @@ Specifies the directory in which to save the generated deltaplots in PDF format.
 \examples{
 set.seed(1234)
 data(TopKGUISampleInput)
-##plot subsets
-a = deltaplot(lists, mind=0, maxd=50, subplot=TRUE)
+##don't make pair-wise comparisons (default)
+deltaplot(lists, mind=0, maxd=50, subset.plotted=NULL)
 
-##don't plot subets (default)
-a = deltaplot(lists, mind=0, maxd=50, subplot=FALSE)
+##make all pair-wise comparisons
+deltaplot(lists, mind=0, maxd=50, subset.plotted=NULL)
 }
 \keyword{ list}
 
