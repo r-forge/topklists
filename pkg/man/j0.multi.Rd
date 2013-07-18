@@ -12,7 +12,7 @@ j0.multi(lists, d, v)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{lists}{
-Input matrix, where each column represents one list of ordered items
+Input data frame, where each column represents one list of ordered items
 }
   \item{d}{
 The maximal distance of an object's rank positions when two lists are compared. When the distance between the respective rank positions of the object is smaller or equal \code{d}, then the object is assigned the value 1, otherwise 0
@@ -26,8 +26,9 @@ The smaller \code{d}, the stronger the assumption about the concordance of any t
 }
 \value{
 A list containing the maximal estimated indices of information degradation j0 through all combinations of \emph{L} lists:
-\item{maxK}{Maximal estimated j0 through all combinations of two lists}
-\item{K}{Matrix of estimated j0 for each pairwise comparison}
+\item{maxK}{Maximal estimated k through all combinations of two lists}
+\item{L}{Data frame of estimated j0 for each pairwise comparison}
+\item{Idata}{Data stream vector of zeros and ones}
 }
 \author{
 Eva Budinska <budinska@iba.muni.cz>, Michael G. Schimek <michael.schimek@medunigraz.at>

@@ -12,14 +12,14 @@ The consolidated top-\emph{k} list results can be displayed in three different f
 (3) 'Venn-diagram & Venn-table': A Venn-diagram and a Venn-table of the overlapping objects based on all truncated input lists. 
 }
 \usage{
-TopKListsGUI(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500)
+TopKListsGUI(lists, autorange.delta = FALSE, override.errors = TRUE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500)
 }
 \arguments{
   \item{lists}{A data frame of ordered lists of objects - rows represent the objects, columns represent the individual input lists
 }
 \item{autorange.delta}{If TRUE, results for all \eqn{\delta} values leading to the  \eqn{\hat{k}_i} estimates (as function of the parameters specified by the user) will be displayed (note, for a large list length \emph{N} this can take quite some time, because the \eqn{\delta} range examined is from 0 to \code{nrow(lists)} by steps of 1) if FALSE, then the user defines the \eqn{\delta} range (min and max) in the RGUI window 
 }
-\item{override.errors}{If TRUE, errors due to an inappropriate value selection are overridden and the calculation continues for all other \eqn{\delta} values, but there is no output for viewing in the GUI corresponding to that combination of values which has caused the error; defaults to FALSE 
+\item{override.errors}{If TRUE, errors due to an inappropriate value selection are overridden and the calculation continues for all other \eqn{\delta} values, but there is no output for viewing in the GUI corresponding to that combination of values which has caused the error; defaults to TRUE 
 }
 \item{aggmap.pdf.size}{A numeric vector defining the width and height of the \code{aggmap} plot - it is passed to the \code{pdf()} function that saves the plot; defaults to c(9, 8)
 }

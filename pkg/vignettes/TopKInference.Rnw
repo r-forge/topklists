@@ -102,13 +102,13 @@ lists$L3 <- sample(LETTERS[1:14])
 
 Specification of the $\delta$-values for all possible pairs of the three input lists, $L1$, $L2$, and $L3$, by means of \texttt{deltaplot} (in the module \texttt{TopKGraphics} there is a complementary version of the \texttt{deltaplot} which also magnifies the function for a selected range of small $\delta$-values in a subplot).
 
-<<fig=T,include=TRUE,label=deltaplot>>=
-a=deltaplot(lists, maxd=nrow(lists), subset.plotted=NA)
+<<fig=T,include=TRUE,label=deltaplot, eval=FALSE>>=
+a=deltaplot(lists, maxd=nrow(lists), subplot=FALSE)
 @
 
 To also see the additional subplots for all pair-wise list comparisons call the function with the parameter \texttt{subset.plotted} set to \texttt{NULL}:
-<<>>=
-a=deltaplot(lists, maxd=nrow(lists), subset.plotted=NULL)
+<<eval=FALSE>>=
+a=deltaplot(lists, maxd=nrow(lists), subplot=TRUE)
 @
 
 In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. $L1$ to $L2$ or vice versa, has little impact on the graph. What can be clearly seen is difference in the point configurations (functions) when one of the lists is a random sample. 

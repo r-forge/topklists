@@ -1,4 +1,4 @@
-TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500) {
+TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500) {
   options("guiToolkit"="RGtk2")
 
   ##setting up the directory
@@ -18,7 +18,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
     return("TopKLists GUI Error: Given list-object is not of type data.frame!")
   } else if ((dim(lists)[1] < 2) | (dim(lists)[2] < 2)) {
     gmessage("ERROR:\nGiven list-object has eighter only one feature or only one list!\nProgram will exit.", title = "Incorrect input", icon = "error")
-    return("TopKLists GUI Error: Given list-object has eighter only one feature or only one list!")
+    return("TopKLists GUI Error: Given list-object has either only one feature or only one list!")
   }
 
   win <- gwindow("TopKLists GUI", visible = FALSE, width = gui.size[1], height = gui.size[2]) #main window
@@ -30,8 +30,8 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   calcframe <- gframe("ARGUMENTS", pos = 0.5, container = maingroup)
   calcgroup <- ggroup(horizontal = FALSE, container = calcframe, expand = TRUE)
   agroup <- ggroup(horizontal = TRUE, container = calcgroup, expand = TRUE)
-  a1frame <- gframe("Calculated from given list", container = agroup, expand = TRUE)
-  a2frame <- gframe("Choose range for delta (depends on nu)", container = agroup, expand = TRUE)
+  a1frame <- gframe("Multiple ranked lists input", container = agroup, expand = TRUE)
+  a2frame <- gframe("Select nu and choose range of delta", container = agroup, expand = TRUE)
   a3frame <- gframe("Threshold", container = agroup, expand = TRUE)
 
   wid$calculate <- gbutton("Calculate", container = calcgroup, handler = function(h,...) { calculate.all.truncationlists() })	
@@ -41,7 +41,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   tbl1 <- glayout(spacing = 10,container = a1frame)
   tbl1[2,2, anchor = c(1,0)] <- glabel("N", container = tbl1)
   tbl1[2,3] <- wid$N <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = dim(lists)[1], container = tbl1)
-  tbl1[2,4, anchor = c(-1,0)] <- glabel("maximal number of objects" ,container = tbl1)
+  tbl1[2,4, anchor = c(-1,0)] <- glabel("number of objects" ,container = tbl1)
   tbl1[3,2, anchor = c(1,0)] <- glabel("L", container = tbl1)
   tbl1[3,3] <- wid$L <- gspinbutton(from = 0, to = dim(lists)[2], by = 1, value = dim(lists)[2], container = tbl1)
   tbl1[3,4, anchor = c(-1,0)] <- glabel("number of lists", container = tbl1)
@@ -50,7 +50,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   tbl2 <- glayout(spacing = 10, container = a2frame)
   tbl2[2,2, anchor = c(1,0)] <- glabel(expression(nu), container = tbl2)
   tbl2[2,3] <- wid$v <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2, handler = function(h,...) { update.deltarange() })
-  tbl2[2,4:5, anchor = c(1,0)] <- glabel("value used for j0 estimation", container = tbl2)
+  tbl2[2,4:5, anchor = c(1,0)] <- glabel("for list truncation", container = tbl2)
   tbl2[3,2, anchor = c(1,0)] = glabel(expression(delta), container = tbl2)
   tbl2[3,3] <- wid$delta.start <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2)
   if (autorange.delta) {
@@ -67,7 +67,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   tbl3[2,2, anchor = c(1,0)] <- glabel("min", container = tbl3)
   tbl3[2,3] <- wid$threshold <- gedit(text = "50", width = 3, container = tbl3)
   tbl3[2,4, anchor = c(-1,0)] <- glabel("%" ,container = tbl3)
-  tbl3[3,2:4, anchor = c(1,0)] <- glabel("to gray-shade gene symbol", container = tbl3)
+  tbl3[3,2:4, anchor = c(1,0)] <- glabel("for gray-shading of objects", container = tbl3)
 
                                         #create the delta slider for choosing the desired delta value (and to show the calculated data for the selected delta value)
   sldrframe <- gframe("DELTA-SLIDER", pos = 0.5, container = maingroup)
@@ -92,7 +92,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   wid$progress <- gtkProgressBar(show = TRUE)
   add(maingroup, wid$progress)	
 
-                                        #update the allowed range for delta (based on the v-value)
+                                        #update the allowed range for delta (based on the nu-value)
   update.deltarange <- function() {
                                         #check if allowed range for delta should be updated
     if (autorange.delta) {
@@ -129,31 +129,30 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
         }
         wid$sumtable <- gtable(truncated.lists$summarytable, container = summtblg, expand = TRUE)
 
-        ##third tab: show Venn-diagram and Venn-table (only if L <= 4)
+                                        #third tab: show Venn-diagram and Venn-table (only if L <= 4)
         if (current.arguments$val.L <= 4) {			
           if (!is.null(wid$venndiag) & !is.null(wid$venntbl)) {
-            ##delete current Venn-diagram and Venn-table
+                                        #delete current Venn-diagram and Venn-table
             delete(venng, wid$venndiag)
             delete(venng, wid$venntbl)
           }
           if (!is.null(wid$nodraw) & !is.null(wid$nodrawimage)) {
-            ##delete the icon and message
+                                        #delete the icon and message
             delete(venng, wid$nodrawimage)
             delete(venng, wid$nodraw)
           }
           wid$venndiag <- gimage(paste(directory, "/venn_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = venng)
-          ##need to do some conversions to correctly make data visible in gtable
           mydata <- as.data.frame(truncated.lists$venntable)
           mydata <- matrix(unlist(mydata), byrow=FALSE,ncol=2)
           wid$venntbl <- gtable(mydata, multiple=TRUE, container = venng, expand = TRUE, drop=FALSE, index=TRUE)
 
         } else {
-          ##output message that Venn-diagram and Venn-table are not shown for L > 4
+					#output message that Venn-diagram and Venn-table are not shown for L > 4
           if (is.null(wid$nodrawimage) & is.null(wid$nodraw)) {
             wid$nodrawimage <- gimage("info", dirname = "stock", container = venng)
             wid$nodraw <- glabel("There are more than four input lists.\nVenn-diagram and Venn-table are only drawn to a maximum of four input lists.", container = venng)
           }
-        }## end for third tab if
+        }# end for third tab if
   
       } else {
         gmessage("There is no data to show in the GUI!\nThis is caused by an error in the calculation.\nYou may have to adjust the arguments!", title = "Loading data failed", icon = "error")
@@ -174,7 +173,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
       return()
     }
 
-    wid$status$push(info, "Begin calculation of data sets for range of delta")
+    wid$status$push(info, "Begin calculation for the selected range of delta")
     gtkProgressBarSetFraction(wid$progress, 0) #set progress-bar to start-value
     gtkMainIterationDo(FALSE)
 
@@ -185,6 +184,21 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
     temp.tocalc <- (as.numeric(svalue(wid$delta.stop)) - as.numeric(svalue(wid$delta.start))) + 1
     temp.loopcounter <- 0
     wid$error <- FALSE
+
+	
+       					 #draw the Delta-plot and save it as pdf-image in the destination directory
+        Mdelta = deltaplot(lists, directory=directory, plotpdf=TRUE)
+
+        save(Mdelta, file=paste(directory, "/Mdelta.rdata", sep=""))
+        for (aname in names(Mdelta))
+        {
+	write.table(Mdelta[[aname]], file=paste(directory, "/Mdelta",aname,".txt", sep=""), sep="\t", row.names=FALSE)
+        }
+
+        rm(Mdelta)
+
+
+
     for (i in as.numeric(svalue(wid$delta.start)):as.numeric(svalue(wid$delta.stop))) {
       gtkMainIterationDo(FALSE)
                                         #try to calculate data set for current delta
@@ -197,31 +211,19 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
         aggmap(truncated.lists, N=as.numeric(svalue(wid$N)), L=as.numeric(svalue(wid$L)), d=i, v=as.numeric(svalue(wid$v)), threshold=as.numeric(svalue(wid$threshold)), lists)
         dev.off()
 
- 	  png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = aggmap.size[1], height = aggmap.size[2], res=aggmap.res)
+	if(is.null(truncated.lists)){max.length=10}else{max.length <- min(length(truncated.lists$comparedLists[[1]]), as.numeric(svalue(wid$N)))}
+
+ 	png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = aggmap.size[1], height = 60+28*max.length, res=aggmap.res)
         aggmap(truncated.lists, N=as.numeric(svalue(wid$N)), L=as.numeric(svalue(wid$L)), d=i, v=as.numeric(svalue(wid$v)), threshold=as.numeric(svalue(wid$threshold)), lists)
         dev.off()
-
-                                      #draw the Delta-plot and save it as pdf-image in the destination directory
-        pdf(file = paste(directory, "/deltaplot_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), ".pdf", sep = ""), width = aggmap.pdf.size[1], height = aggmap.pdf.size[2])
-        Mdelta=deltaplot(lists)
-        dev.off()
-
-        save(Mdelta, file=paste(directory, "/Mdelta.rdata", sep=""))
-        for (aname in names(Mdelta))
-        {
-	write.table(Mdelta[[aname]], file=paste(directory, "/Mdelta",aname,".txt", sep=""), sep="\t", row.names=FALSE)
-        }
-
- 	png(filename = paste(directory, "/deltaplot_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), ".png", sep = ""), width = aggmap.size[1], height = aggmap.size[2], res=aggmap.res)
-        Mdelta=deltaplot(lists)
-        dev.off()
-        rm(Mdelta)
 
                                         #draw the Venn-diagram and save it as pdf-image in the destination directory (only if L is between 2 and 4 & if there is a j0 estimated)
         if((as.numeric(svalue(wid$L)) >= 2) & (as.numeric(svalue(wid$L)) <= 4) & !is.null(truncated.lists)) {
           pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
           venn(truncated.lists$vennlists)
           dev.off()
+
+
           png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
           venn(truncated.lists$vennlists)
           dev.off()
@@ -294,8 +296,6 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
                                         #show the GUI
   visible(win) <- TRUE
 }
-
-
 
 
 .calculateVennValues <- function(genetable, L) {
@@ -398,17 +398,33 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = FALSE
   return(c(start.delta, stop.delta))
 }
 
+.prepareDeltaplot <- function(lists, i, j, deltas,Mdelta,xxs)
+{		
+	
+	## zero count calculation and deltaplot for LiLj (in one window)
+    Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
+    names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
+    xx = c()
+    for (d in deltas)
+    {	
+        a = prepareIdata(lists[,c(i,j)],d=d)
+        x = table(as.numeric(a$Idata))['0']
+        xx = c(xx,x)
+        Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
+    }# end for d
+	Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
+    xxs[[paste("L",i,"L",j, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
+	par(mar=c(5,5,1,1))
+    plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+	
+	MdeltaXxs = list(Mdelta=Mdelta, xxs=xxs)
+	return(MdeltaXxs)
+}
+
 ###function that generates Delta-plot and Delta-matrix
 ##if subset.plotted is NA no subplots are created
-deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA)
+deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory = NULL, plotpdf=FALSE)
 {
-  if (is.null(subset.plotted) & nrow(lists) > 200){
-    stop("Subset for calculating zero count (subset.plotted) has to be specified \n")
-  }
-  if (is.null(subset.plotted) & nrow(lists) < 201){
-    warning(paste("Subset of the lists for calculating zero count is not specified, using", nrow(lists)), "\n")
-    subset.plotted <- nrow(lists)
-  }
   if (is.null(maxd)) {
     cat(paste("The maximum for delta not specified, using",nrow(lists)*0.25), "\n")
     maxd=c(nrow(lists)*0.25)
@@ -419,50 +435,39 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
   }
   if(is.null(names(lists)) | any(names(lists)=="")){
     names(lists) <- paste("L",1:ncol(lists),sep="")
-    warning(paste("List names not be given or incorrect. Replaced by 'L1', 'L2',... L",ncol(lists),'\n'))
+    warning(paste("List names not given or incorrect. Replaced by 'L1', 'L2',... L",ncol(lists),'\n'))
   }
 
-  if(is.null(subset.plotted) | !is.na(subset.plotted)){
-    lists = lists[1:subset.plotted,] ## takes only specified subset of input list  
+  if(!is.null(subset.lists)){
+    lists = lists[1:subset.lists,] ## takes only specified subset of input list  
   }
   
+  ## calculate zero count for each pair of lists  
   deltas = c(mind:maxd)
-  Mdelta = list()
-  xxs = list()
-  n=ncol(lists)
-  a = n*(n-1)
-  aa = round(a/2,0)
-  aaa = 2
-  par(mfrow=c(aa,aaa))
-  k=1 
-  for (i in 1:ncol(lists))
+  MdeltaXxs=list(Mdelta=list(), xxs = list())
+  
+  for (i in 1:(ncol(lists)-1))
     {
-      for (j in 1:ncol(lists))
+      for (j in (i+1):ncol(lists))
         {
-          if (i!=j)  ##
-            {
-              Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
-              names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
-              xx = c()
-              for (d in deltas)
-                {	
-                  a = prepareIdata(lists[,c(i,j)],d=d)
-                  x = table(as.numeric(a$Idata))['0']
-                  xx = c(xx,x)
-                  Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
-                }# end for d
-              xxs[[k]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
-              k=k+1
-              Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
-              par(mar=c(5,5,1,1))
-              plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
-            }# end for if
-        }# end for j
+			if (plotpdf) {
+				pdf(file=paste(directory,'/deltaplotL',i,"-" ,j,'.pdf',sep=''), width=16)
+				par(mfrow=c(1,2))
+				MdeltaXxs=.prepareDeltaplot(lists,i,j,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
+				MdeltaXxs=.prepareDeltaplot(lists,j,i,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
+				dev.off()
+				}else {
+				x11()
+				par(mfrow=c(1,2))
+				MdeltaXxs=.prepareDeltaplot(lists,i,j,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
+				MdeltaXxs=.prepareDeltaplot(lists,j,i,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
+				}#end plotpdf
+		}# end for j
     }# end for i
 
-  if(!is.na(subset.plotted)){
+  if(subplot){
     ## deltaplot with subplot in the top right corner:
-    k=1
+	xxs = MdeltaXxs$xxs
     for (i in 1:ncol(lists))
       {
         for (j in 1:ncol(lists))
@@ -470,16 +475,15 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
             if (i!=j){
               x11()
               par(mar=c(5,5,1,1))
-              plot(deltas,xxs[[k]], xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))			
+              plot(deltas,xxs[[paste("L",i,"L",j,sep="")]], xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))			
               extremes = par("usr")
               dimen = par("pin")					   
-              subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],xxs[[k]][1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
-              k=k+1
+              subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],xxs[[paste("L",i,"L",j,sep="")]][1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
             }
           }
       }
   }
-  return(Mdelta)
+  return(MdeltaXxs$Mdelta) # returns vectors of zeros and ones
 
 }#end deltaplot
 
@@ -493,51 +497,64 @@ deltaplot<-function(lists, mind=0, maxd=NULL, perc.subplot=50, subset.plotted=NA
 
 aggmap <- function(truncated.lists, N, L, d, v, threshold, lists) {
 
-                                        #delta_symbol = substitute(delta)
+                                       #delta_symbol = substitute(delta)
                                         #nu_symbol = expression(nu)
 
-  if (!is.null(truncated.lists)) 
-    {
       require(grid)
       wid <- 1
       hei <- 1
                                         #create list of background colours to shade the distance-polygons  
+      red.orange.white = c( "#BC0000", "#FF3700", "#FF6E00", "#FFA500", "#FFC300", "#FFE100", "#FFFF00", "#FFFF54", "#FFFFA9", "#FFFFFF")
+ 
+   if(is.null(truncated.lists)){max.length=10}else{max.length <- min(length(truncated.lists$comparedLists[[1]]), N)}
 
-      red.white.green <- colorRampPalette(c("red", "orange", "yellow", "white"))(nrow(lists) + 1) 
+
+      grid.newpage()
+
+      #pushViewport(viewport(layout = grid.layout(2, 1, widths = c(1, 1), heights = c(0.1, 0.9)), name="basic"))# creating the basic viewport with two rows and one column
+
+      pushViewport(viewport(layout = grid.layout(2, 1, widths = c(1, 1), heights = unit(c(40,max.length*20), "points")), name="basic"))# creating the basic viewport with two rows and one column
+
+
+                         #output the header (the parameters and the colour gradient)
+
+      pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1, name="header")) #writing in first row of the parent region basic
+
+ 	     pushViewport(viewport(layout = grid.layout(2,2, widths = c(1, 1,1,1), heights = c(1, 1,1,1)), name="HeaderSplit")) # in this first row and first column of the parent region basic we are defining another split with two rows and two columns
+		      pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1, name="headerLeft1")) #writing in first column and first row of the header region 
+		    	  grid.text(substitute(paste(hat(k)[max],"= ", kmax,", N = ", N, ", L = ", L, sep = ""), list(N=N, L=L, kmax=max.length)), x = 0.5, y = 0.4)
+		      upViewport() # coming back to the HeaderSplit
+
+		      pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1, name="headerLeft2")) #writing in first column and second row of the header region 
+ 		      	grid.text(substitute(paste(delta, "= ", a, ", ",nu," = ", b, ", threshold = ", f, "%", sep = ""), list(a=d, b=v, f=threshold)), x = 0.5, y = 0.6)
+    		      upViewport() # coming back to the HeaderSplit
+
+
+     		      pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2, name="headerRight1")) #writing in the second column and first row of the header region 
+      			pushViewport(plotViewport(margins = c(1, 1, 1, 1))) #plotting in the headerRight
+				grid.points(seq(0.2, 0.8, length =  10), rep(1, 10), pch = 15, gp = gpar(col = red.orange.white))
+      			upViewport() # coming back to headerRight1 level
+		      upViewport() # coming back to the HeaderSplit
       
-                                        #get the necessary data
+     		      pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2, name="headerRight2")) #writing in the second column and second row of the header region 
+      			grid.text("close", x = 0.15, y = 0.8, gp = gpar(fontsize = 8, col = "black"))
+     			grid.text("RANK POSITION", x = 0.5, y = 0.5, gp = gpar(fontsize = 7, col = "black"))
+    			grid.text("distant", x = 0.85, y = 0.8, gp = gpar(fontsize = 8, col = "black"))
+      		      upViewport() #coming back to the HeaderSplit 
+     	     upViewport() #coming back to the header
+      upViewport() #coming back to the basic
+
+  if (!is.null(truncated.lists)) 
+    {
+                                         #get the necessary data
       compared.lists <- truncated.lists$comparedLists
       info <- truncated.lists$info
       grayshaded.lists <- truncated.lists$grayshadedLists
-      max.length <- min(length(compared.lists[[1]]), N) 
 
-   #  
-      grid.newpage()
-      
-                                        #output the header (the parameters and the colour gradient)
-      pushViewport(viewport(layout = grid.layout(2, 1, widths = c(1, 1), heights = c(0.1, 0.9))))
-      pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
-      pushViewport(viewport(layout = grid.layout(1, 1, widths = c(1, 1), heights = rep(1, 2))))
-      grid.text(substitute(paste(hat(k)[max],"= ", kmax,", N = ", N, ", L = ", L, sep = ""), list(N=N, L=L, kmax=length(compared.lists[[1]]))), x = 0.2, y = 0.65)
-      grid.text(substitute(paste(delta, "= ", a, ", ",nu," = ", b, ", threshold = ", f, "%", sep = ""), list(a=d, b=v, f=threshold)), x = 0.2, y = 0.25)
-      upViewport()
-      pushViewport(viewport(layout = grid.layout(2, 2, widths = c(1, 1), heights = rep(1, 2))))
-      pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-      pushViewport(plotViewport(margins = c(1.5, 1, 1, 1)))
-      grid.points(seq(0, 1, length =  nrow(lists)), rep(1, nrow(lists)), pch = 15, gp = gpar(col = red.white.green))
-      pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2))	
-      grid.text("close", x = 0, y = 0.5, gp = gpar(fontsize = 8, col = "black"))
-      grid.text("RANK POSITION", x = 0.5, y = 0.5, gp = gpar(fontsize = 7, col = "black"))
-      grid.text("distant", x = 1, y = 0.5, gp = gpar(fontsize = 8, col = "black"))
-      upViewport()
-      popViewport()
-      popViewport()
-      upViewport()
-      upViewport()
-      
-                                        #set the layout of the 
-      pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1))	
-      pushViewport(viewport(layout = grid.layout(max.length + 1, 1+truncated.lists$Ntoplot, widths = rep(1, 1+truncated.lists$Ntoplot) * (max.length), heights = rep(1, 1 + truncated.lists$Ntoplot) * (max.length))))
+                                        #set the layout of the heatmap part
+      pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1))	 #writing in the second row of the parent region basic
+ 
+      pushViewport(viewport(layout = grid.layout(max.length + 1, 1+truncated.lists$Ntoplot, widths = rep(1, 1+truncated.lists$Ntoplot) * (max.length), heights = rep(1, 1 + truncated.lists$Ntoplot) * (max.length)))) #dividing the second row into rows and columns
       
                                         #output row-numbers
       for (g in c(1:max.length)) {
@@ -561,22 +578,22 @@ aggmap <- function(truncated.lists, N, L, d, v, threshold, lists) {
                                         #output reference list
           for (y in 1:min(length(compared.lists[[i]]), max.length)) {
             pushViewport(viewport(width = wid, height = hei, layout.pos.col = i + 1, layout.pos.row = y + 1))				
-                                        #check if the object-symbol or name has to be gray-shaded
+                                          #check if the object name has to be gray-shaded
             bg <- "white"
             if (!is.na(grayshaded.lists[[i]][y])) { if(grayshaded.lists[[i]][y]==1) {
               bg <- "grey"
-            }}
+            }}# end for y
             grid.rect(gp = gpar(col = "black", fill = bg))
             grid.text(compared.lists[[i]][y], gp = gpar(fontsize = 8, col = "black", fontface = "bold"))
             popViewport()
-          }
+          }# end if info
         } else if (info[3,i] == "T") {
             #output truncated list                            
           for (y in 1:min(length(compared.lists[[i]]), max.length)) {
             distance <- compared.lists[[i]][y]
             pushViewport(viewport(width = wid, height = hei, layout.pos.col = i + 1, layout.pos.row = y + 1))
             if (!is.na(distance)) {
-              grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = red.white.green[distance + 1]))
+              grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = red.orange.white[distance/N*10 + 1]))
               grid.text(distance, x = 0.9, y = 0.4, gp = gpar(cex = 0.7))
             } else {
               grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = "white"))
@@ -585,38 +602,15 @@ aggmap <- function(truncated.lists, N, L, d, v, threshold, lists) {
             bg <- "white"
             if (!is.na(grayshaded.lists[[i]][y])) { if(grayshaded.lists[[i]][y]==1) {
               bg <- "grey"
-            }}
+            }}#end for else if
             grid.polygon(x = c(0, 1,0), y = c(1, 1, 0), gp = gpar(col = "black", fill = bg))
             popViewport()				
           }
         }
-      }
-      upViewport()
-      upViewport()
-    } else {grid.newpage()
-            red.white.green <- colorRampPalette(c("red", "orange", "yellow", "white"))(nrow(lists) + 1) 
-                                        #output the header (the parameters and the colour gradient)
-            pushViewport(viewport(layout = grid.layout(2, 1, widths = c(1, 1), heights = c(0.1, 0.9))))
-            pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
-            pushViewport(viewport(layout = grid.layout(1, 1, widths = c(1, 1), heights = rep(1, 2))))
-            grid.text(substitute(paste(k[max],"= NA, N = ", N, ", L = ", L, sep = ""), list(N=N, L=L)), x = 0.2, y = 0.65)
-            grid.text(substitute(paste(delta, "= ", a, ", ",nu," = ", b, ", threshold = ", f, "%", sep = ""), list(a=d, b=v, f=threshold)), x = 0.2, y = 0.3)
-            upViewport()
-            pushViewport(viewport(layout = grid.layout(2, 2, widths = c(1, 1), heights = rep(1, 2))))
-
-            pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-            pushViewport(plotViewport(margins = c(1.5, 1, 1, 1)))
-            grid.points(seq(0, 1, length =  nrow(lists)), rep(1, nrow(lists)), pch = 15, gp = gpar(col = red.white.green))
-            pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 2))	
-            grid.text("close", x = 0, y = 0.5, gp = gpar(fontsize = 8, col = "black"))
-            grid.text("RANK POSITION", x = 0.5, y = 0.5, gp = gpar(fontsize = 7, col = "black"))
-            grid.text("distant", x = 1, y = 0.5, gp = gpar(fontsize = 8, col = "black"))
-            upViewport()
-            popViewport()
-            popViewport()
-            upViewport()
-            upViewport()
-                                        #set the layout 
+      }#end for i
+      upViewport()# returning to the heatmap part
+      upViewport()# returning to the basic viewport
+    } else {                                        #set the layout of the heatmap
             pushViewport(viewport(layout.pos.row = 2, layout.pos.col = 1))	
             pushViewport(viewport(layout = grid.layout(1, 2, widths = c(1), heights = c(1,1))))
             grid.text(substitute(paste("On selected ", delta ,", no overlap found", sep="")))
