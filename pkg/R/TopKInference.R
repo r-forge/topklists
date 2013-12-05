@@ -3,146 +3,154 @@
 # Stage sk is associated with an integer Jsk, which when k is odd, is a potential lower bound to j0
 # Idata - input data is a vector of 0's and 1's
 
-calculateDataSet <- function(lists, L, d, v, threshold) {
-  message("StartCalculate")
+calculateDataSet <- function(lists, L, d, v, threshold=50) {
   compared.lists <- list() #contains all pairwise compared lists (structure for aggmap)
   info <- matrix(ncol = 0, nrow = 3) #contains information about list names
   rownames(info) <- c("listname", "original listname", "ref-list or trunc-list")
-  grayshaded.lists <- list() #contains information which object in the list has to be gray-shaded
-  grayshaded.genes <- c() #contains all gray-shaded objects
+  grayL <- list() #contains information which object in the list has to be gray-shaded
+  grayO <- c() #contains all gray-shaded objects
   temp.sumtrunclists <- list() #contains the summarized truncated lists (number of lists = L)
-  summary.table <- matrix(nrow = 0, ncol = (4 + L)) #contains the summary-table
+  summarytable <- matrix(nrow = 0, ncol = (3 + L)) #contains the summary-table
   venn.values <- list() #contains the Venn-lists for the Venn-diagram and the Venn-table (a Venn-diagram in table form)
-  current.genesymbol_temp = c()
+  cg_temp = c()
   
-  
-  
-                                        #first step: calculate res.j0.temp
+                                        #first step: estimate the j_0 (and so k)
   res.j0.temp <- j0.multi(lists, d, v)
   res.temp <- as.matrix(res.j0.temp$L)
                                         #print(res.temp)
-  max.j0.est <- res.j0.temp$maxK
-
-##### adjusts v - in case the estimated max.j0.est is larger than nrow(lists)-v 
-                                        #v_adj = min(nrow(lists)-max.j0.est, v, na.rm=T)
-
-  temp = tapply(as.numeric(res.temp[,4]), res.temp[,1], function(x) max(x, na.rm = TRUE))
+  maxK <- res.j0.temp$maxK
   
-  if(sum(is.na(res.temp[,4]))<nrow(res.temp))
+  tl=as.list(lists[1:maxK,]) #truncating lists on max K
+  tli = as.character(unique(unlist(tl)))
+  
+  
+  resS = CEMC(tl,maxK, space=tl)
+  
+
+##### adjusts v - in case the estimated maxK is larger than nrow(lists)-v 
+                                        #v_adj = min(nrow(lists)-maxK, v, na.rm=T)
+
+  temp = tapply(as.numeric(res.temp[,5]), res.temp[,1], function(x) max(x, na.rm = TRUE))
+  
+  if(sum(is.na(res.temp[,5]))<nrow(res.temp))
     {
       if (sum(temp!="-Inf")>1)
         {
-          if (sum(is.na(res.temp[,4]))>0)
+          if (sum(is.na(res.temp[,5]))>0)
             {
-              res.temp2 = res.temp[-which(is.na(res.temp[,4])),]
+              res.temp2 = res.temp[-which(is.na(res.temp[,5])),]
             } else {res.temp2 = res.temp}
         }else{
-          if (sum(is.na(res.temp[,4]))>0)
-            {res.temp2 = t(as.matrix(res.temp[-which(is.na(res.temp[,4])),]))
+          if (sum(is.na(res.temp[,5]))>0)
+            {res.temp2 = t(as.matrix(res.temp[-which(is.na(res.temp[,5])),]))
            } else {res.temp2 = t(as.matrix(res.temp))}
           
         }
       
+      temp2 = tapply(as.numeric(res.temp2[,5]), res.temp2[,1], function(x) max(x, na.rm = TRUE))
       
       list_t = list()
       for (i in unique(res.temp2[,1]))
         {
           res.temp.temp = res.temp2[res.temp2[,1]==i,]
           if(!is.matrix(res.temp.temp)){res.temp.temp = t(as.matrix(res.temp.temp))}
-          list_t[[i]] = cbind(res.temp.temp[,2][order(res.temp.temp[,4], decreasing=T)], res.temp.temp[,4][order(res.temp.temp[,4],decreasing=T)])
+          list_t[[i]] = cbind(res.temp.temp[,2][order(res.temp.temp[,5], decreasing=T)], res.temp.temp[,5][order(res.temp.temp[,5],decreasing=T)])
         }
-      block_order = names(sort(unlist(lapply(list_t, FUN=function(x) max(as.numeric(x[,2]), na.rm=T))), decreasing=T))
-                                        #print(block_order)
-      inblock_list_order = lapply(list_t, FUN=function(x) x[,1][order(as.numeric(x[,2]), decreasing=T)])
+      
+                     #Calculating block order(bo)
+      
+      bo = names(sort(unlist(lapply(list_t, FUN=function(x) max(as.numeric(x[,2]), na.rm=T))), decreasing=T))
+                                             
+      ilor = lapply(list_t, FUN=function(x) x[,1][order(as.numeric(x[,2]), decreasing=T)]) #inblock list order
 
-      if (length(block_order)>1)
+      if (length(bo)>1)
         {
-          inblock_list_order_final = list()
-          inblock_list_order_final[[block_order[1]]] = inblock_list_order[[block_order[1]]]
-          block_order_temp = c()
+          ilor_final = list() # inblock list order final 
+          ilor_final[[bo[1]]] = ilor[[bo[1]]]
+          bo_temp = c()
           
-          for (i in c(2:length(block_order)))
+          for (i in c(2:length(bo)))
             {
-              block_order_temp = c(block_order_temp, block_order[[i-1]]);
-              inblock_list_order_final[[block_order[i]]] = setdiff(inblock_list_order[[block_order[i]]], block_order_temp)
+              bo_temp = c(bo_temp, bo[[i-1]]);
+              ilor_final[[bo[i]]] = setdiff(ilor[[bo[i]]], bo_temp)
             }
-        }else{inblock_list_order_final = inblock_list_order}
+        }else{ilor_final = ilor}
       
       
-      block_order_final = names(inblock_list_order_final)[which(lapply(inblock_list_order_final, length)!=0)]
+      bo_final = names(ilor_final)[which(lapply(ilor_final, length)!=0)]
       
 ##### condition if maximal estimated j0 is NA, then warning is returned #####
 
-      if (max.j0.est!="-Inf")
+      if (maxK!="-Inf")
         {	
           
 ###### building plotflow#####
           
-          current.referencelist <- 0
+          crl <- 0 #current reference list
                                         #iterate over all blocks (a block is a reference list with the corresponding truncation lists)
           
-          for (first.list.name in block_order_final) {
-            
+          # fln - first list name
+          for (fln in bo_final) {  
                                         # selecting block
-            temp2 = list_t[[first.list.name]]
-            rownames(temp2) = list_t[[first.list.name]][,1]
+            temp2 = list_t[[fln]]
+            rownames(temp2) = temp2[,1]
 
                                         #get the objects of the current reference list
-            gene.names.to.plot <- lists[, first.list.name][1:max.j0.est]
-            gene.names.to.plot <- as.vector(gene.names.to.plot)
+            gnp <- as.vector(lists[, fln][1:maxK]) # gene names to plot
+            #gnp <- as.vector(gnp)
             
-            current.referencelist <- current.referencelist + 1
-            compared.lists[[paste("R", current.referencelist, sep = "")]] <- gene.names.to.plot
+            crl <- crl + 1
+            compared.lists[[paste("R", crl, sep = "")]] <- gnp
 
-            temp.sumtrunclists[[first.list.name]] <- gene.names.to.plot
-            info <- cbind(info, c(paste("R", current.referencelist, sep = ""), first.list.name, "R"))
-            message(temp.sumtrunclists)
+            temp.sumtrunclists[[fln]] <- gnp
+            info <- cbind(info, c(paste("R", crl, sep = ""), fln, "R"))
 
-            current.trunclist <- 0
-            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] <- rep(FALSE, length(gene.names.to.plot))		
-            temp.countgray <- matrix(ncol = 2, nrow = length(gene.names.to.plot), data = 0)
+            ctr <- 0 #current truncated lists
+            grayL[[paste("R", crl, sep = "")]] <- rep(FALSE, length(gnp))		
+            temp.countgray <- matrix(ncol = 2, nrow = length(gnp), data = 0)
             
                                         #iterate over the truncated lists of the current block
-            for (l in c(1:length(inblock_list_order_final[[first.list.name]]))) {
-              message(paste(l, "\n"))
-              n.genes.to.plot <- as.numeric(temp2[inblock_list_order_final[[first.list.name]][l],2])
+            for (l in c(1:length(ilor_final[[fln]]))) {
+              n.genes.to.plot <- as.numeric(temp2[ilor_final[[fln]][l],2])
               
-              temp.distances = abs(c(1:length(gene.names.to.plot)) - match(gene.names.to.plot, as.character(lists[, inblock_list_order_final[[first.list.name]][l]])))
-              temp.countgray[,2] = temp.countgray[,2]+c(temp.distances<=d)
+              temp.distances = c(1:length(gnp)) - match(gnp, as.character(lists[, ilor_final[[fln]][l]]))
+              temp.countgray[,2] = temp.countgray[,2]+c(abs(temp.distances)<=d)
 
-              temp.sumtrunclists[[inblock_list_order_final[[first.list.name]][l]]] <- lists[, inblock_list_order_final[[first.list.name]][l]][1:(as.numeric(temp2[inblock_list_order_final[[first.list.name]][l],2]))]
+              temp.sumtrunclists[[ilor_final[[fln]][l]]] <- lists[, ilor_final[[fln]][l]][1:(as.numeric(temp2[ilor_final[[fln]][l],2]))]
 
                                         #check for gray-shade of an object in the truncated list
-              temp.grayshade = temp.distances<=d
+              temp.grayshade = abs(temp.distances)<=d
                                         #add the truncated list
-              current.trunclist <- current.trunclist + 1
-              compared.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.distances
-              grayshaded.lists[[paste("R", current.referencelist, "_T", current.trunclist, sep = "")]] <- temp.grayshade
-              info <- cbind(info, c(paste("R", current.referencelist, "_T", current.trunclist, sep = ""), inblock_list_order_final[[first.list.name]][l], "T"))
+              ctr <- ctr + 1
+              compared.lists[[paste("R", crl, "_T", ctr, sep = "")]] <- temp.distances
+              grayL[[paste("R", crl, "_T", ctr, sep = "")]] <- temp.grayshade
+              info <- cbind(info, c(paste("R", crl, "_T", ctr, sep = ""), ilor_final[[fln]][l], "T"))
               
             }# end for l
             
                                         #calculate if respective object of the reference list has to be gray-shaded
-            temp.percentage = apply(as.matrix(temp.countgray[,-1]),1,sum)/c(length(inblock_list_order_final[[first.list.name]]))*100
-            grayshaded.lists[[paste("R", current.referencelist, sep = "")]] = temp.percentage >= threshold
-
+            temp.percentage = apply(as.matrix(temp.countgray[,-1]),1,sum)/c(length(ilor_final[[fln]]))*100
+            grayL[[paste("R", crl, sep = "")]] = temp.percentage >= threshold
                                         #add object to a new list which contains all gray-shaded objects (add only if it is not already in the list)
-            grayshaded.genes = union(grayshaded.genes, lists[, first.list.name][which(temp.percentage >= threshold)])
-          }# end for first.list.name
+            grayO = union(grayO, lists[, fln][which(temp.percentage >= threshold)])
+          }# end for fln
           
 
 
                                         #having all the necessary information, calculate the summary-table
-          colnames(summary.table) <- c(names(lists), "Rank sum", "Object order", "Freq in input lists", "Freq in truncated lists")
-          
-          for (j in 1:length(grayshaded.genes)) {
-            current.genesymbol <- grayshaded.genes[j]
+          colnames(summarytable) <- c(names(lists), "Rank sum", "Freq in input lists", "Freq in truncated lists")
+
+          for (j in 1:length(tli)) {
+            cg <- tli[j] #current genesymbol
             
                                         #get the positions of the current object in the input lists
             temp.positions <- rep(NA,L)
             for (q in 1:L) {
-              temp.positions[q] <- match(current.genesymbol, lists[,names(lists)[q]])
-            }
+              temp.positions[q] <- match(cg, lists[,names(lists)[q]])
+            }#end for q
+            
+            #### positions = apply(lists,2,FUN=function(x) match(tli,x))
+            
             
                                         #calculate the rank sum
             temp.ranksum <- 0
@@ -151,7 +159,7 @@ calculateDataSet <- function(lists, L, d, v, threshold) {
               if (is.na(temp.positions[q])) {
                 temp.missingvalues <- temp.missingvalues + 1
               }
-            }
+            }#end for q
                                         #if one or more rank positions are unavaliable (e.g. an object does not exist in a list), interpolate the rank sum
             if (temp.missingvalues > 0) {
               temp.meanrank <- 0
@@ -161,13 +169,13 @@ calculateDataSet <- function(lists, L, d, v, threshold) {
                 if (!is.na(temp.positions[q])) {
                   temp.partialranksum <- temp.partialranksum + temp.positions[q]
                 }
-              }
+              }#end for q
                                         #calculate the mean rank-position for the unavailable rank-positions
               temp.meanrank <- round(temp.partialranksum / (L - temp.missingvalues))
               temp.ranksum <- temp.partialranksum + (temp.meanrank * temp.missingvalues)
             } else {
               temp.ranksum <- sum(temp.positions)
-            }
+            }# end if temp.missingvalues
             
                                         #calculate the frequency in the input lists
             temp.freqinput <- L - temp.missingvalues
@@ -175,7 +183,7 @@ calculateDataSet <- function(lists, L, d, v, threshold) {
                                         #calculate the frequency in the summarized truncated lists
             temp.freqtrunc <- 0	
             for (curr.listname in names(temp.sumtrunclists)) {
-              if (current.genesymbol %in% temp.sumtrunclists[[curr.listname]]) {
+              if (cg %in% temp.sumtrunclists[[curr.listname]]) {
                 temp.freqtrunc <- temp.freqtrunc + 1
               }
             }
@@ -198,41 +206,42 @@ calculateDataSet <- function(lists, L, d, v, threshold) {
             rownames(venntable) <- NULL
                    
             #add the calculated row (of the current object) to the summary-table
-            current.genesymbol_temp = c(current.genesymbol_temp, current.genesymbol)
-            summary.table <- rbind(summary.table, c(temp.positions, temp.ranksum, NA, temp.freqinput, temp.freqtrunc))
+            cg_temp = c(cg_temp, cg)
+            summarytable <- rbind(summarytable, c(temp.positions, temp.ranksum, temp.freqinput, temp.freqtrunc))
           }# end for j
           
                                         #conversion of the summary table into a data frame so that the rankings are given as numbers, not as characters, otherwise the ordering is wrong
           
-          summary.table.final = data.frame(Object=current.genesymbol_temp,summary.table, stringsAsFactors=FALSE)
+          summarytable.temp = data.frame(Object=cg_temp,summarytable, stringsAsFactors=FALSE)
+	  summarytable.final = summarytable.temp[order(summarytable.temp[,L+2]),]
           
-          
-                                        #the last task for creation of the summary-table is to order the objects according to their rank sum
-          temp.counter <- 0
-          for (curr.genepos in order(summary.table.final[,(2 + L)])) {
-            temp.counter <- temp.counter + 1
-            summary.table.final[temp.counter,(3+L)] <- summary.table.final[curr.genepos,1]
-          }
-          
+                  
                                         #calculate the Venn-lists (to view the Venn-diagram) and the Venn-table
                                         #the calculation takes place only for L between 2 and 4 (a Venn-diagram for L > 4 cannot be properly arranged)
           ##combine all necessary objects into one single list
           truncated.lists <- list()
           truncated.lists$comparedLists <- compared.lists
           truncated.lists$info <- info
-          truncated.lists$grayshadedLists <- grayshaded.lists
-          truncated.lists$summarytable <- summary.table.final
+          truncated.lists$grayshadedLists <- grayL
+          truncated.lists$summarytable <- summarytable.final
           truncated.lists$vennlists <- temp.sumtrunclists
           truncated.lists$venntable <- venntable
           truncated.lists$v <- v
-          truncated.lists$Ntoplot<-sum(unlist(lapply(inblock_list_order_final,length)))+sum(unlist(lapply(inblock_list_order_final,length))>0)
+          truncated.lists$Ntoplot<-sum(unlist(lapply(ilor_final,length)))+sum(unlist(lapply(ilor_final,length))>0)
           truncated.lists$Idata <- res.j0.temp$Idata
+          truncated.lists$d <- d
+          truncated.lists$threshold <- threshold
+          truncated.lists$L <- L
+          truncated.lists$N <- nrow(lists)
+          truncated.lists$lists <- lists
+          truncated.lists$maxK <-maxK
+          truncated.lists$topkspace <-resS$topK
           return(truncated.lists)
         }
     } else {
       message(paste("!!!...For selected delta, the top L list cannot be estimated (little or no overlap)!!!", "\n"))
       return(truncated.lists=NULL)
-    } # end if if (max.j0.est)
+    } # end if if (maxK)
 }# end of function calculateDataSet
 
 compute.stream<-function(Idata, const=0.251, v, r=1.2)
@@ -307,7 +316,7 @@ if (floor(k/2)<(k/2))
 		Js[k] = j	
 		Js					
 		# breaking the repeat loop condition 2
-		if ((k-3)>=1) {if (Js[k-2]==Js[k] & Js[k-1]==Js[k-3]) {reason.break="Js[k-2]==Js[k] & Js[k-1]==Js[k-3]";
+		if ((k-3)>=1) {if (Js[k-2]==Js[k] & Js[k-1]==Js[k-3]) {reason.break="Js[i-2]==Js[i] & Js[i-1]==Js[i-3]";
 							break}
 			 		 }
 		}# end if
@@ -347,7 +356,7 @@ if ((floor(k/2)==(k/2)))
 
 	# breaking the repeat loop condition 1
 	if (is.infinite(Js[k-1]) & is.infinite(Js[k])) 
-		{reason.break="is.infinite(Js[k-1]) & is.infinite(Js[k])"; break}
+		{reason.break="is.infinite(Js[i-1]) & is.infinite(Js[i])"; break}
 
 	} # end if
 	if(reason.break!="NA"){break;}
@@ -357,8 +366,8 @@ k=k+1
 v[k]=v.last
 
 }#end repeat
-if(v.last<=1 | reason.break!="Js[k-2]==Js[k] & Js[k-1]==Js[k-3]"){j0_est=NA} else {if ((floor(k/2)<(k/2)) & k>2) {j0_est = ceiling(Js[k-2]+0.5*v[k-2]-1)}else if ((floor(k/2)==(k/2)) & k>1){j0_est = ceiling(Js[k-1]+0.5*v[k-1]-1)} else{j0_est=NA}}
-return(list(j0_est=j0_est, reason.break=reason.break, Js=Js, v=v))
+if(v.last<=1 | reason.break!="Js[i-2]==Js[i] & Js[i-1]==Js[i-3]"){j0_est=NA} else {if ((floor(k/2)<(k/2)) & k>2) {j0_est = ceiling(Js[k-2]+0.5*v[k-2])}else if ((floor(k/2)==(k/2)) & k>1){j0_est = ceiling(Js[k-1]+0.5*v[k-1])} else{j0_est=NA}}
+return(list(j0_est=j0_est+1, k=j0_est, reason.break=reason.break, Js=Js+1, v=v))
 }# end if sum(Idata)==length(Idata)
 }
 
@@ -389,14 +398,15 @@ j0.multi<-function(lists,d,v) {
    	Idata_ID=cbind(Idata_ID, ID$Idata)
 	names_idata = c(names_idata, paste(colnames(lists)[i],"_",colnames(lists)[j],sep=""))
 	J = compute.stream(ID$Idata,v=v)$j0_est
-	L = rbind(L, cbind(colnames(lists)[i], colnames(lists)[j], v,J,d))
+	k = compute.stream(ID$Idata,v=v)$k
+	L = rbind(L, cbind(colnames(lists)[i], colnames(lists)[j], v,J,k, d))
 	}# end for if
       }# end for j
     }# end for i
 colnames(Idata_ID) = names_idata
 L = data.frame(L, stringsAsFactors=F)
-names(L) = c("list1", "list2", "v", "j0_est","delta")
-if(sum(is.na(L$j0_est))<nrow(L)){maxK = max(as.numeric(L$j0_est), na.rm=T)}else{maxK=NA}
+names(L) = c("list1", "list2", "v", "j0_est","k","delta")
+if(sum(is.na(L$k))<nrow(L)){maxK = max(as.numeric(L$k), na.rm=T)}else{maxK=NA}
 return(list(maxK=maxK,L=L, Idata=Idata_ID))
 }
 

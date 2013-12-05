@@ -1,4 +1,4 @@
-TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE, aggmap.pdf.size = c(9, 8), venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), aggmap.size = c(870, 440), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500) {
+TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,  venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100) {
   options("guiToolkit"="RGtk2")
 
   ##setting up the directory
@@ -42,14 +42,14 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
   tbl1[2,2, anchor = c(1,0)] <- glabel("N", container = tbl1)
   tbl1[2,3] <- wid$N <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = dim(lists)[1], container = tbl1)
   tbl1[2,4, anchor = c(-1,0)] <- glabel("number of objects" ,container = tbl1)
-  tbl1[3,2, anchor = c(1,0)] <- glabel("L", container = tbl1)
-  tbl1[3,3] <- wid$L <- gspinbutton(from = 0, to = dim(lists)[2], by = 1, value = dim(lists)[2], container = tbl1)
+  tbl1[3,2, anchor = c(1,0)] <- glabel("L ", container = tbl1)
+  tbl1[3,3, anchor = c(1,0)] <- glabel(dim(lists)[2], container = tbl1)
   tbl1[3,4, anchor = c(-1,0)] <- glabel("number of lists", container = tbl1)
 
                                         #layout of the second argument input area
   tbl2 <- glayout(spacing = 10, container = a2frame)
   tbl2[2,2, anchor = c(1,0)] <- glabel(expression(nu), container = tbl2)
-  tbl2[2,3] <- wid$v <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2, handler = function(h,...) { update.deltarange() })
+  tbl2[2,3] <- wid$v <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 10, container = tbl2, handler = function(h,...) { update.deltarange() })
   tbl2[2,4:5, anchor = c(1,0)] <- glabel("for list truncation", container = tbl2)
   tbl2[3,2, anchor = c(1,0)] = glabel(expression(delta), container = tbl2)
   tbl2[3,3] <- wid$delta.start <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2)
@@ -57,7 +57,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
     enabled(wid$delta.start) <- FALSE
   }
   tbl2[3,4, anchor = c(0,0)] = glabel("<- between ->", container = tbl2)
-  tbl2[3,5] <- wid$delta.stop <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2)
+  tbl2[3,5] <- wid$delta.stop <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 10, container = tbl2)
+  tbl2[3,6, anchor = c(0,0)] = glabel("by", container = tbl2)
+  tbl2[3,7] <- wid$delta.by <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 1, container = tbl2)############
   if (autorange.delta) {
     enabled(wid$delta.stop) <- FALSE
   }
@@ -96,7 +98,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
   update.deltarange <- function() {
                                         #check if allowed range for delta should be updated
     if (autorange.delta) {
-      deltarange <- .determineDeltaRange(lists, as.numeric(svalue(wid$N)), as.numeric(svalue(wid$L)), as.numeric(svalue(wid$v)))
+      deltarange <- .determineDeltaRange(lists, as.numeric(svalue(wid$N)), dim(lists)[2], as.numeric(svalue(wid$v)))
       svalue(wid$delta.start) <- deltarange[1]
       svalue(wid$delta.stop) <- deltarange[2]
       enabled(wid$delta.start) <- TRUE
@@ -127,7 +129,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 					#delete current summary-table
           delete(summtblg, wid$sumtable)
         }
-        wid$sumtable <- gtable(truncated.lists$summarytable, container = summtblg, expand = TRUE)
+        wid$sumtable <- gtable(truncated.lists$summarytable, container = summtblg, expand = TRUE)#########################
 
                                         #third tab: show Venn-diagram and Venn-table (only if L <= 4)
         if (current.arguments$val.L <= 4) {			
@@ -181,7 +183,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
     enabled(wid$delta.slider) <- FALSE
 
                                         #calculate data set for each delta in the given range for delta
-    temp.tocalc <- (as.numeric(svalue(wid$delta.stop)) - as.numeric(svalue(wid$delta.start))) + 1
+    temp.tocalc <- length(seq(as.numeric(svalue(wid$delta.start)),as.numeric(svalue(wid$delta.stop)),by=as.numeric(svalue(wid$delta.by))))+ 1
     temp.loopcounter <- 0
     wid$error <- FALSE
 
@@ -199,41 +201,43 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
 
 
-    for (i in as.numeric(svalue(wid$delta.start)):as.numeric(svalue(wid$delta.stop))) {
+    for (i in seq(as.numeric(svalue(wid$delta.start)),as.numeric(svalue(wid$delta.stop)),by=as.numeric(svalue(wid$delta.by)))) {
       gtkMainIterationDo(FALSE)
-                                        #try to calculate data set for current delta
+                                        #try to calculate data set for current delta and selected N
       tryCatch({
-        truncated.lists <- calculateDataSet(lists, as.numeric(svalue(wid$L)), i, as.numeric(svalue(wid$v)), as.numeric(svalue(wid$threshold)))
+        truncated.lists <- calculateDataSet(lists[1:as.numeric(svalue(wid$N)),], dim(lists)[2], i, as.numeric(svalue(wid$v)), as.numeric(svalue(wid$threshold)))
                                         #save calculated truncated lists for current delta in the destination directory
-        save(truncated.lists, file = paste(directory, "/N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".Rdata", sep = ""))
-                                        #draw the aggmap and save it as pdf-image in the destination directory
-        pdf(file = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = aggmap.pdf.size[1], height = aggmap.pdf.size[2])
-        aggmap(truncated.lists, N=as.numeric(svalue(wid$N)), L=as.numeric(svalue(wid$L)), d=i, v=as.numeric(svalue(wid$v)), threshold=as.numeric(svalue(wid$threshold)), lists)
-        dev.off()
+        save(truncated.lists, file = paste(directory, "/N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".Rdata", sep = ""))
 
+        #draw the aggmap and save it as pdf-image in the destination directory
 	if(is.null(truncated.lists)){max.length=10}else{max.length <- min(length(truncated.lists$comparedLists[[1]]), as.numeric(svalue(wid$N)))}
 
- 	png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = aggmap.size[1], height = 60+28*max.length, res=aggmap.res)
-        aggmap(truncated.lists, N=as.numeric(svalue(wid$N)), L=as.numeric(svalue(wid$L)), d=i, v=as.numeric(svalue(wid$v)), threshold=as.numeric(svalue(wid$threshold)), lists)
+ 	png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = 870, height = 60+28*max.length, res=aggmap.res, type="cairo-png")
+        aggmap(truncated.lists)
         dev.off()
+        
+        pdf(file = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = 9, height = 0.8+0.29*max.length)
+        aggmap(truncated.lists)
+        dev.off()
+        
 
                                         #draw the Venn-diagram and save it as pdf-image in the destination directory (only if L is between 2 and 4 & if there is a j0 estimated)
-        if((as.numeric(svalue(wid$L)) >= 2) & (as.numeric(svalue(wid$L)) <= 4) & !is.null(truncated.lists)) {
-          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
+        if((dim(lists)[2] >= 2) & (dim(lists)[2] <= 4) & !is.null(truncated.lists)) {
+          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
           venn(truncated.lists$vennlists)
           dev.off()
 
 
-          png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
+          png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
           venn(truncated.lists$vennlists)
           dev.off()
         }else{
-          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
+          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
           plot(1,1, type="n", axes=FALSE)
           text(1,1,"No overlap on selected parameters")
           dev.off()
 
- 	 png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", as.numeric(svalue(wid$L)), "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
+ 	 png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
           plot(1,1, type="n", axes=FALSE)
           text(1,1,"No overlap on selected parameters")
           dev.off()
@@ -272,7 +276,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
     }
 
                                         #update the range of the delta-slider
-    wid$delta.slider[] <- seq(as.numeric(svalue(wid$delta.start)), as.numeric(svalue(wid$delta.stop)), by = 1)
+    wid$delta.slider[] <- seq(as.numeric(svalue(wid$delta.start)), as.numeric(svalue(wid$delta.stop)), by = as.numeric(svalue(wid$delta.by)))
 
                                         #set the start position of the slider and enable slider
     if (temp.tocalc > 2) {
@@ -285,7 +289,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
                                         #save the current arguments
                                         #(this prevents errors when sliding through the delta-values - otherwise changing the arguments in the GUI could cause errors when showing the calculated data)
     current.arguments$val.N <- as.numeric(svalue(wid$N))
-    current.arguments$val.L <- as.numeric(svalue(wid$L))
+    current.arguments$val.L <- dim(lists)[2]
     current.arguments$val.v <- as.numeric(svalue(wid$v))
     current.arguments$val.threshold <- as.numeric(svalue(wid$threshold))
     
@@ -398,12 +402,12 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
   return(c(start.delta, stop.delta))
 }
 
-.prepareDeltaplot <- function(lists, i, j, deltas,Mdelta,xxs)
+.prepareDeltaplot <- function(lists, i, j, deltas, Mdelta,xxs)
 {		
 	
 	## zero count calculation and deltaplot for LiLj (in one window)
     Mdelta.temp = data.frame(Object=c(as.character(lists[,i]), "#zeros"), L1=c(c(1:nrow(lists)), NA), L2 = c(match(lists[,i],lists[,j]), NA))
-    names(Mdelta.temp)[2:3] = c(paste("L",i, sep=""),paste("L",j, sep=""))
+    names(Mdelta.temp)[2:3] = names(lists)[c(i,j)]
     xx = c()
     for (d in deltas)
     {	
@@ -412,10 +416,10 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
         xx = c(xx,x)
         Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)
     }# end for d
-	Mdelta[[paste("L",i,"L",j, sep="")]] = Mdelta.temp
-    xxs[[paste("L",i,"L",j, sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
+	Mdelta[[paste(names(lists)[i],"_",names(lists)[j], sep="")]] = Mdelta.temp
+    xxs[[paste(names(lists)[i],"_",names(lists)[j], sep="")]] = xx  ##saving xx for plotting single deltaplot with subplot in the corner
 	par(mar=c(5,5,1,1))
-    plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))
+    plot(deltas,xx, xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste(names(lists)[i]," vs ",names(lists)[j], sep=""))
 	
 	MdeltaXxs = list(Mdelta=Mdelta, xxs=xxs)
 	return(MdeltaXxs)
@@ -423,15 +427,16 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
 ###function that generates Delta-plot and Delta-matrix
 ##if subset.plotted is NA no subplots are created
-deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory = NULL, plotpdf=FALSE)
+deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory = NULL, plotpdf=FALSE)
 {
-  if (is.null(maxd)) {
-    cat(paste("The maximum for delta not specified, using",nrow(lists)*0.25), "\n")
-    maxd=c(nrow(lists)*0.25)
+
+  if (is.null(deltas)) {
+    cat(paste("The vector of delta values was not specified, using range from 0 to ", nrow(lists)*0.25, "by 1"), "\n")
+    deltas=c(0:(nrow(lists)*0.25))
   }
-  if (maxd>nrow(lists)) {
-    cat(paste("The maximum for delta you specified is larger than the number of objects in your lists. Maxd changed to",nrow(lists)*0.25), "\n")
-    maxd=c(nrow(lists)*0.25)
+  if (max(deltas)>nrow(lists)) {
+    cat(paste("The maximum for delta you specified is larger than the number of objects in your lists. The vector of deltas was truncated,","\n","so that max(delta)<",nrow(lists)*0.25), "\n")
+    deltas=deltas[which(deltas<nrow(lists)*0.25)]
   }
   if(is.null(names(lists)) | any(names(lists)=="")){
     names(lists) <- paste("L",1:ncol(lists),sep="")
@@ -440,10 +445,14 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
 
   if(!is.null(subset.lists)){
     lists = lists[1:subset.lists,] ## takes only specified subset of input list  
+    if (max(deltas)>nrow(lists)) {
+    	cat(paste("The maximum for delta you specified is larger than the number of objects to be analyzed in your lists.","\n","The vector of deltas was truncated so that max(delta)<",nrow(lists)*0.25), "\n")
+    	deltas=deltas[which(deltas<nrow(lists)*0.25)]
+     }
+
   }
   
   ## calculate zero count for each pair of lists  
-  deltas = c(mind:maxd)
   MdeltaXxs=list(Mdelta=list(), xxs = list())
   
   for (i in 1:(ncol(lists)-1))
@@ -495,8 +504,13 @@ deltaplot<-function(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE
 # res.temp - data frame, result from the Hall and Schimek (2012) algorithm for all pairings of lists, 4 columns, the first and second column contain the list names that were compared, the third column contains the selected nu, and the fourth column the estimated j0
 # The lists data frame contains the complete set of L ordered input lists - column names are obligatory
 
-aggmap <- function(truncated.lists, N, L, d, v, threshold, lists) {
-
+aggmap <- function(truncated.lists) {
+N=truncated.lists$N
+v=truncated.lists$v
+d=truncated.lists$d
+lists=truncated.lists$lists
+threshold=truncated.lists$threshold
+L=truncated.lists$L
                                        #delta_symbol = substitute(delta)
                                         #nu_symbol = expression(nu)
 
@@ -593,8 +607,8 @@ aggmap <- function(truncated.lists, N, L, d, v, threshold, lists) {
             distance <- compared.lists[[i]][y]
             pushViewport(viewport(width = wid, height = hei, layout.pos.col = i + 1, layout.pos.row = y + 1))
             if (!is.na(distance)) {
-              grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = red.orange.white[distance/N*10 + 1]))
-              grid.text(distance, x = 0.9, y = 0.4, gp = gpar(cex = 0.7))
+              grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = red.orange.white[abs(distance)/N*10 + 1]))
+              grid.text(-distance, x = 0.9, y = 0.4, gp = gpar(cex = 0.7))
             } else {
               grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = "white"))
               grid.text("NA", x = 0.9, y = 0.4, gp = gpar(cex = 0.7))

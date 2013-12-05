@@ -1,18 +1,233 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8x]{inputenc}
 \usepackage{Sweave}
+\usepackage{float}
 
 %opening
-\title{Analyzing top-$k$ ranked lists using the package TopKLists}
+\title{Analyzing multiple ranked lists using the package TopKLists}
 %\VignetteIndexEntry{Usage of TopKLists} 
-\author{TopKLists developers}
+\author{Michael G. Schimek, Eva Budinska, Jie Ding, \\ Karl G. Kugler, Shili Lin and Vendula Svendova}
 
 \begin{document}
 
 \maketitle
 
 \section{Introduction and background}
-@Michael
+
+The ranking of distinct items has become mainstream in recent years. Examples are Web search engine results for query terms, institution league tables in higher education, preference rankings of brands, betting results in sports, results from microarray platforms in biotechnology, meta-analysis of multiple study findings in medicine, among many others. The rank position of an object or institution might be the result of measuring the strength of evidence or of assessment based on expert knowledge or preference. The assessor can be a human person or a technical device. Typically, such lists comprise thousands up to tens of thousands of items. However, only a comparably small subset of \emph{k} top-ranked items is usually informative. These are characterized by a strong overlap of their rank positions when they are ranked by several independent assessors.
+
+There are two basic statistical tasks: (i) Identification of the top-\emph{k} most conforming items. For this task, two lists are analyzed together (multiple lists in a pairwise manner). (ii) Calculation of a consolidated top-\emph{k} sublist with a new optimized ordering of the conforming items from two or more lists. For long ranked lists, (i) is a prerequisite of (ii) because for any kind of rank aggregation the top-$k$ list lengths of the individual input lists need to be specified.
+
+For these two tasks the package offers several options which can be selected from three provided modules. Some options of high practical value are supported by a graphical user interface (GUI):\\
+(1) \texttt{TopKInference} provides exploratory nonparametric inference for the estimation of the top \emph{k} list length of paired rankings;
+(2) \texttt{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists of different lengths (space) as well as missing rank information;
+(3) \texttt{TopKGraphics} provides a collection of graphical tools for visualization of the inputs to and the outputs from the other modules.
+In the following we illustrate the usage of these modules.
+
+
+\section{Usage of TopKInference}
+
+The nonparametric inference method of \cite{haschi} for the truncation of paired ranked lists forms the core part of the module \texttt{TopKInference}. The associated iterative algorithm, as implemented here, allows the estimation of the length, $k$, of a top-$k$ list in the presence of irregular and missing assignments. Overlap of rank positions in two input lists is represented by a sequence of indicators, where $I_j=1$ if the ranking, given by the second assessor to the object ranked $j$ by the first assessor, is not more than $\delta$ index positions distant from $j$, and otherwise $I_j=0$. The variables $I_j$ are assumed to follow a Bernoulli random distribution. This implies independence, which is motivated by $k\ll N$ and a strong random contribution due to irregular assignments in real data. However, \cite{haschi} could prove that their theoretical results obtained under the assumption of complete independence also apply to the situation of moderate $m$-dependence. Simulation study evidence (unpublished material) is in full support of these theoretical findings, more than that, even under substantial list dependence, stable truncation results can be obtained from \texttt{TopKInference}. 
+
+A cautionary note: For making inference on pairs of ranked lists, tuning parameters have to be specified. This is for the following reason: For a given set of $N$ objects, arbitrary ranked lists can be constructed by successive permutations. However, this fact does not help in practice when we have to analyze realizations of such lists because they comprise irregularities in terms of position shifts, inverted orderings, missing assignments, etc. As a consequence, a unique top-$k$ list or a complete set of top-conforming objects does not exist. This is the reason why the truncation algorithm (and any other algorithm) in \texttt{TopKLists} needs to be controlled by tuning parameters. 
+We stick to the well established notion of top-$k$ lists. Per definition, a top-$k$ list consists of $k$ items. The next index value after $k$ is $j_0$, the point of overlap degradation ($k$=$j_0$-1).
+
+The choice of the distance parameter $\delta$ (takes the values $0, 1, 2, 3,\ldots $) is essential when the \texttt{Idata} are prepared. The $\delta$-plot of the module \texttt{TopKGraphics} was designed to help the user with the selection of $\delta$ for any pair of input lists of the same length. When this plot indicates more than one feasible non-zero $\delta$-value (in that area where the discordance is starting to degrade), preference should be given to the smallest one. There are two more tuning parameters: the constant $C$ which allows us to compensate for poor separability between the informative top parts and the remaining random parts of the input lists (the suggested interval is $0.25<C<0.6$), and the pilot sample size $\nu$ (for this smoothing parameter any positive integer value is admissible), which controls the degree of irregularity of the rankings.
+
+The algorithmic solution of \texttt{TopKInference} for the case of more than two ranked lists is outlined in Figure \ref{topkinference}. There, the principle for the calculation of an overall index $k^\ast$ (a function of the individual $k$'s from the $\ell$ lists $L_i$; the maximum \texttt{maxK} is the default) based on all pairwise comparisons is outlined. Having obtained such an overall index, we arrive at truncated lists $T_i$. They can either be aggregated by graphical means (\texttt{aggmap} of module \texttt{TopKGraphics}) or by stochastic rank aggregation (module \texttt{TopKSpace}). Details of the approach taken for multiple lists can be found in \cite{schimybu}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{TopKInferenceFlowmap.pdf}\\
+\caption{The inference concept to obtain $\ell$ truncated consensual lists $T_i$ from $\ell$ full ranked lists $L_i$}
+\label{topkinference}
+\end{figure}
+
+\subsection{Construction of a dataset and execution of the inference procedure}
+
+In order to run the examples in this vignette, the TopKLists package must first be loaded:
+<<eval=TRUE>>=
+library(TopKLists)
+@
+
+The truncation point $j_0$ where noise takes over for a pair of ranked lists (i.e., the first index position after the end of the top-$k$ list), can be estimated for any prespecified distance $\delta$ and the selected tuning parameter values $C$ and $\nu$. It should be noted that in the R code $\delta$ is equivalent to d, $C$ to const and $\nu$ to v. For this example we simulate a dataset with an assumed top length of $k=30$. and thus truncation point of $j_0=31$.
+
+<<>>=
+k = 30
+set.seed = 11
+x = c(rep(1,k), rbinom(100, 1, 0.2))
+@
+
+Now let us estimate $j_0$ for different values of $\nu$ using the \texttt{compute.stream} function. It outputs a list of estimated  $j_0$ values, as well as other details of the algorithm's convergency.
+
+<<>>=
+
+v.vect=seq(2,length(x), by=2) #setting up a vector of $\nu$ values
+
+resF=c()
+
+for (v in v.vect)
+ {
+	res=compute.stream(x, const=0.5, v)
+	resF=rbind(resF,c(v,paste(res)))
+ }
+
+colnames(resF)=c("v", "j0_est", "k","reason.break", "Js", "v.vector")
+head(resF)
+
+table(resF[,2])
+@
+
+\subsection{Visualization of the truncation results}
+
+The following plot summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. 
+
+<<fig=T>>=
+plot(resF[,1], resF[,2], pch=19, ylim=c(0, length(x)), 
+xlab=substitute(nu), ylab=substitute(paste(hat(j)[0])))
+abline(a=31, b=0, col="red")
+lines(resF[,1], resF[,2])
+@
+
+\subsection{Specification of $\delta$ and calculation of \texttt{maxK} for multiple ranked lists}
+
+Two overlapping ranked lists, $L1$ and $L2$, and a third one, $L3$, as random sample are constructed.
+<<>>=
+lists <- data.frame(L1=c("A","B","C","D","E","F","G","H","J","I","K","L","M","N"))
+lists$L2 <- c("B","C","A","E","G","F","G","J","K","L","M","N","I","H")
+lists$L3 <- sample(LETTERS[1:14])
+@
+Specification of the $\delta$-values for all possible pairs of the three input lists, $L1$, $L2$, and $L3$ is possible by inspecting \texttt{deltaplot}. 
+
+<<fig=F>>=
+a=deltaplot(lists, deltas= c(1:nrow(lists)))
+@
+The parameter \texttt{subplot} magnifies a selected range of small $\delta$-values in a subplot, defined by parameter \texttt{perc.subplot}.
+
+<<fig=F>>=
+a=deltaplot(lists, deltas=c(1:nrow(lists)), subplot=TRUE, perc.subplot=50)
+@
+To see the results for a subset of the original list data, specify the length using the parameter \texttt{subset.lists}:
+<<fig=F>>=
+a=deltaplot(lists, deltas=c(0:2), subset.lists=5)
+@
+In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. $L1$ to $L2$ or vice versa, has little impact on the graph. What can be clearly seen are differences in the point configurations (functions) when one of the lists ($L3$) is a random sample, all of length $N$=14. 
+
+Calculation of the overall truncation index \texttt{maxK} for prespecified values of $\delta$ and $\nu$ is performed using the function \texttt{j0.multi}. This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's and estimates the $j_0$. Finally, the \texttt{maxK} is estimated as maximum of all pairwise $k$ values. 
+
+<<>>=
+res = j0.multi(lists, d=2, v=4)
+res
+@
+In our example, \texttt{maxK=12}  and, as expected, no overlap was found with list L3.
+
+\section{Usage of the TopKGraphics}
+\subsection{Introduction and background}
+
+
+\section{Usage of the TopKListsGUI}
+\subsection{Introduction and background}
+
+The package \texttt{TopKLists} comprises a graphical user interface \texttt{TopKGUI} that offers applied researchers easy and straightforward access to all the functionality of \texttt{TopKInference} as well as access to the \texttt{aggmap} graphical aggregation tool contained in \texttt{TopKGraphics}. Moreover, Venn-diagrams and Venn-tables for the summary of rank aggregation results are available. 
+
+The suite of functions supported by \texttt{TopKGUI} facilitates the exploratory analysis of multiple ranked lists. Interactive input facilities (like a slider for the dynamic specification of the distance $\delta$) allow for the real-time analysis and visualization of results, in dependence of the distance $\delta$ or the pilot sample size $\nu$ (note that, for large list lengths $N$ very large numbers of calculations must be performed and longer waiting times should be expected). For an example of the usage of \texttt{TopKGUI} in the biosciences, which in this case concerns microarray platform data, see \cite{schietal} (the GUI and \texttt{aggmap} have since been under constant revision, and the examples contained in this article may differ in look and appearance from the current version).
+
+In order to run the examples in this vignette, the \texttt{TopKLists} package must first be loaded:
+
+<<eval=TRUE>>=
+library(TopKLists)
+@
+
+\subsection{Introduction of the example dataset}
+
+The example dataset comprises three lists of microarray results (differential gene expression) from breast cancer studies. 
+<<>>=
+data(breast)
+str(breast)
+@
+
+\newpage
+
+\subsection{The graphical user interface}
+To open the GUI using the example data from above, run
+<<eval=FALSE>>=
+TopKListsGUI(breast)
+@ 
+A window appears, allowing the user to perform an analysis of two or more lists.
+
+\begin{figure}[H]
+\centering
+\includegraphics{TopKListsGUI-1.png}\\
+\caption{Main windows of the \texttt{TopKListsGUI}
+\label{topkgui}}
+\end{figure}
+The TopKListsGUI window is divided into four panels: Arguments, Delta-slider, Results and Analysis status.
+
+\subsubsection{Arguments}
+
+\begin{figure}[H]
+\centering
+\includegraphics{TopKListsGUI-1-Arguments.png}\\
+\caption{The delta slider part of the main window of \texttt{TopKListsGUI}
+\label{topkgui}}
+\end{figure}
+
+In this panel, the user is informed about the number of lists and objects in the dataset. Further he/she can set up values of variables for the top k list computation. The user selects $\nu$ (default value is 10) and choose the range of $\delta$ for which the top-$k$ lists should be calculated (default is from 0 to 10, by steps of 1). A threshold of minimum percentage of top lists comprising an object used for gray-shading in the aggregation map can be selected (default is 50). Finally, we can choose the \texttt{TopKSpace} algorithm for the generation of the aggregate list, with default algorithm of \texttt{CEMC}. This panel also contains the button Calculate, to start the analysis.
+
+
+\subsubsection{Delta-slider}
+
+\begin{figure}[H]
+\centering
+\includegraphics{TopKListsGUI-1-DeltaSlider.png}\\
+\caption{Delta slider part of the main window of the \texttt{TopKListsGUI}
+\label{topkgui}}
+\end{figure}
+
+Once the analysis is completed, the delta-slider allows to switch between results obtained under different choices of $\delta$. The moving bar shows the value of the actual $\delta$. Just left-click on the moving bar and slide to the left or right to see results for smaller or larger $\delta$ .
+
+
+\subsubsection{Results panel}
+After the analysis is completed, this part serves for the visualization of the results for the selected $\delta$ value (position of the delta-slider). Three tabs show the results as follows:
+
+\begin{itemize}
+\item{\texttt{Aggregation map}}
+
+\begin{figure}[H]
+\centering
+\includegraphics{TopKListsGUI-2-Results.png}\\
+\caption{Aggregation map result tab of \texttt{TopKListsGUI}
+\label{topkgui}}
+\end{figure}
+
+For $\delta$ =6, the best overlap was found when comparing MDCC and Transbig to Pusztai list. The estimated k is 13, with 12 genes in top-$k$ lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (distance 0 in both MDCC and TransBig from Pusztai).
+
+\item{\texttt{Summary table} Displays table of objects present in at least one of the top-$k$ lists, as shown in the aggregation map. The table contains object name, position of the object in each of the lists, sum of ranks, frequency in he input lists and frequency in the truncated lists. Highlighted are genes that form the final aggregate list as resulted from the \texttt{TopKSpace}}.
+
+\begin{figure}[H]
+\centering
+\includegraphics{TopKListsGUI-2-SummaryTable.png}\\
+\caption{Summary table result tab of \texttt{TopKListsGUI}
+\label{topkgui}}
+\end{figure}
+
+The table is ordered in ascending order of the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes EVL, SCUBE2, CIRBP and FBP1 are also consistenly present in the top-$k$ truncated lists, but at different positions. Genes FUT8 and RHOB are found ...
+
+\item{\texttt{Venn-diagram and Venn-table}: They show overlaps of objects in the top-$k$ lists of all input lists in the analysis. Highlighted are genes that form the final aggregate list as resulted from the \texttt{TopKSpace}.}
+
+\begin{figure}[H]
+\centering
+\includegraphics{TopKListsGUI-2-Venn.png}\\
+\caption{Venn-diagram and Venn-table result tab of \texttt{TopKListsGUI}
+\label{topkgui}}
+\end{figure}
+
+\end{itemize}
+
+
+\subsubsection{Analysis status panel}
+The very bottom part of the \texttt{TopKListsGUI} shows the status of the analysis. 
+
 
 \section{Usage of TopKSpace}
 
@@ -40,6 +255,7 @@ library(TopKLists)
 @
 
 \subsection{Construction of three input lists and a common space}
+Let us produce the following three ranked lists of different length and their common space.
 <<>>=
 L1=1:30
 L2=c(1:10,31:40,11:15)
@@ -48,20 +264,18 @@ input=list(L1,L2,L3)
 space=list(1:40,1:40,1:40)
 @
 
-\subsection{Call of the functions}
-
 \subsection{Run three Borda algorithms}
-\subsubsection{Call with platform dependence assumption}
+all with platform dependence assumption:
 <<>>=
 bb1=Borda(input,space)
 @
 
-\subsubsection{Call with top-\emph{k} assumption}
+Call with top-$k$ assumption:
 <<>>=
 bb2=Borda(input,input)
 @
 
-\subsubsection{Plotting Borda's scores}
+\subsection{Plotting Borda's scores}
 <<fig=T>>=
 plot(1:30,bb1[[2]][1:30,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
 ylab="Borda's score", sub=("(a)"))
@@ -70,13 +284,15 @@ lines(1:30,bb1[[2]][1:30,3], type="o", col="red", pch=3,lty=2)
 lines(1:30,bb2[[2]][1:30,1], type="o", col="blue", pch=1,lty=4)
 lines(1:30,bb2[[2]][1:30,2], type="o", col="blue", pch=2,lty=4)
 lines(1:30,bb2[[2]][1:30,3], type="o", col="blue", pch=3,lty=4)
-legend(18,10,legend=c("Platform depend.", "Top-$k$ spaces"), col=c("red","blue"),
+legend(18,10,legend=c("Platform depend.", "Top-k spaces"), col=c("red","blue"),
 lty=c(2,4))
 legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
 @
 
+The difference in the Borda scores can be clearly seen in the resulting graph.
+
 \subsection{Run three MC algorithms}
-\subsubsection{Call with platform dependence assumption}
+Call with platform dependence assumption
 <<>>=
 mm=trans.matrix(input,space)
 MC1=MC.ranks(mm[[2]],mm[[4]])
@@ -87,7 +303,7 @@ MC3=MC.ranks(mm[[2]],mm[[6]])
 probMC3=rev(sort(MC3[[2]]))[1:30]
 @
 
-\subsubsection{Call with top-\emph{k} space assumption}
+Call with the top-$k$ space assumption
 <<>>=
 mm=trans.matrix(input,input)
 MC11=MC.ranks(mm[[2]],mm[[4]])
@@ -98,7 +314,7 @@ MC31=MC.ranks(mm[[2]],mm[[6]])
 probMC31=rev(sort(MC31[[2]]))[1:30]
 @
 
-\subsubsection{Generating the plot of equilibrium probabilities}
+Generation of the plot of the equilibrium probabilities
 <<fig=T>>=
 plot(1:30,probMC1, type="o", col="red", lty=2, pch=1, xlab="Ranking",
 ylab="Stationary probability", sub=("(b)"))
@@ -107,13 +323,13 @@ lines(1:30,probMC3, type="o", col="red", pch=3, lty=2)
 lines(1:30,probMC11, type="o", col="blue", pch=1, lty=4)
 lines(1:30,probMC21, type="o", col="blue", pch=2, lty=4)
 lines(1:30,probMC31, type="o", col="blue", pch=3, lty=4)
-legend(18,0.14,legend=c("Platform depend.", "Top-$k$ space"), col=c("red","blue"),
+legend(18,0.14,legend=c("Platform depend.", "Top-k space"), col=c("red","blue"),
 lty=c(2,4))
 legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 @
 
-\subsection{Run CEMC algorithm}
-\subsubsection{Call with platform dependence assumption}
+\subsection{Run the CEMC algorithm}
+Call with platform dependence assumption
 <<>>=
 set.seed(1234)
 pd = CEMC(input, 30, space=space, N=2000)
@@ -122,7 +338,7 @@ pd$p[1:5,1:5]
 pd$input.par
 @
 
-\subsubsection{Call with top-\emph{k} assumption}
+Call with top-$k$ space assumption
 <<>>=
 pd = CEMC(input, 30, space=input, N=2000)
 pd$topK
@@ -144,154 +360,14 @@ p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 *
 (20 - 1))))
 @
 
-\section{Usage of TopKInference}
 
-The nonparametric inference method of \cite{haschi} for the truncation of paired ranked lists forms the core part of the module \texttt{TopKInference}. The associated iterative algorithm, as implemented here, allows the estimation of the length, $k$, of a top-$k$ list in the presence of irregular and missing assignments. Overlap of rank positions in two input lists is represented by a sequence of indicators, where $I_j=1$ if the ranking, given by the second assessor to the object ranked $j$ by the first assessor, is not more than $\delta$ index positions distant from $j$, and otherwise $I_j=0$. The variables $I_j$ are assumed to follow a Bernoulli random distribution. This implies independence, which is motivated by $k\ll N$ and a strong random contribution due to irregular assignments in real data. However, \cite{haschi} could prove that their theoretical results obtained under the assumption of complete independence also apply to the situation of moderate $m$-dependence. Simulation study evidence (
-unpublished material) is in full support of these theoretical findings, more than that, even under substantial list dependence, stable truncation results can be obtained from \texttt{TopKInference}. 
-
-A cautionary note: For making inference on pairs of ranked lists, tuning parameters have to be specified. This is for the following reason: For a given set of $N$ objects, arbitrary ranked lists can be constructed by successive permutations. However, this fact does not help in practice when we have to analyze realizations of such lists because they comprise irregularities in terms of position shifts, inverted orderings, missing assignments, etc. As a consequence, a unique top-$k$ list or a complete set of top-conforming objects does not exist. This is the reason why the truncation algorithm (and any other algorithm) in \texttt{TopKLists} needs to be controlled by tuning parameters.
-
-The choice of the distance parameter $\delta$ (takes the values $0, 1, 2, 3,\ldots $) is essential when the \texttt{Idata} are prepared. The $\delta$-plot of the module \texttt{TopKGraphics} was designed to help the user with the selection of $\delta$ for any pair of input lists of the same length. When this plot indicates more than one feasible non-zero $\delta$-value (in that area where the discordance is starting to degrade), preference should be given to the smallest one. There are two more tuning parameters: the constant $C$ which allows us to compensate for poor separability between the informative top parts and the remaining random parts of the input lists (the suggested interval is $0.25<C<0.6$), and the pilot sample size $\nu$ (for this smoothing parameter any positive integer value is admissible), which controls the degree of irregularity of the rankings.
-
-The algorithmic solution of \texttt{TopKInference} for the case of more than two ranked lists is outlined in Figure \ref{topkinference}. There, the principle for the calculation of an overall index $k^\ast$ (a function of the individual $k$'s from the $\ell$ lists $L_i$; the maximum \texttt{maxK} is the default) based on all pairwise comparisons is outlined. Having obtained such an overall index, we arrive at truncated lists $T_i$. They can either be aggregated by graphical means (\texttt{aggmap} of module \texttt{TopKGraphics}) or by stochastic rank aggregation (module \texttt{TopKSpace}). Details of the approach taken for multiple lists can be found in \cite{schimybu}.
-
-\begin{figure}
-\centering
-\includegraphics[width=0.43\textwidth]{TopKInferenceFlowmap.pdf}\\
-\caption{The inference concept to obtain $\ell$ truncated consensual lists $T_i$ from $\ell$ full ranked lists $L_i$}
-\label{topkinference}
-\end{figure}
-
-\subsection{Construction of a dataset and execution of the inference procedure}
-
-In order to run the examples in this vignette, the TopKLists package must first be loaded:
-<<eval=TRUE>>=
-library(TopKLists)
-@
-
-The truncation point $j_0$ where noise takes over for a pair of ranked lists (i.e., the first index position after the end of the top-$k$ list), can be estimated for any prespecified distance ($\delta$=d) and the selected tuning parameter values ($C$=const and $\nu$=v). For this example we simulate a dataset with an assumed truncation point $j_0=30$.
-
-<<>>=
-
-k.to.estimate = 30
-x = c(rep(1,k.to.estimate), rbinom(100, 1, 0.2))
-
-#x = c(rbinom(150, 1, 0.5))
-
-v.vect=seq(2,length(x), by=2)
-
-res.j0.10=matrix(NA,length(v.vect), 5)
-res.j0.10.Js = list()
-
-i=0
-
-for (v in v.vect)
- {
-	i=i+1
-	res=compute.stream(x, const=0.5, v)
-	res.j0.10[i,1] = v
-	res.j0.10[i,2] = res[[1]][1]
-	res.j0.10[i,3] = res[[2]][1]
-	
-	temp.paste = ""
-	v.vector.paste = ""
-
-	for (j in c(1:length(res[[3]])))
-	{
-		temp.paste = paste(temp.paste, res[[3]][j])
-	}
-
-	res.j0.10[i,4] = temp.paste
-
-	for (a in c(1:length(res[[4]])))
-	{
-		v.vector.paste = paste(v.vector.paste, res[[4]][a])
-	}
-	res.j0.10[i,5] = v.vector.paste
-}
-
-colnames(res.j0.10)=c("v", "j0_est", "reason.break", "Js", "v.vector")
-str(res.j0.10)
-@
-
-\subsection{Visualization of the truncation results}
-
-The following plot summarizes the obtained estimation results $\hat{j}_0$ for the specified range of sample sizes $\nu$ and the assumed $j_0=30$. 
-
-<<fig=T>>=
-plot(res.j0.10[,1], res.j0.10[,2], pch=19, ylim=c(0, length(x)))
-abline(a=k.to.estimate, b=0, col="green")
-lines(res.j0.10[,1], res.j0.10[,2])
-@
-
-\subsection{Specification of $\delta$ and calculation of \texttt{maxK} for multiple ranked lists}
-
-Two overlapping ranked lists, $L1$ and $L2$, and a third one, $L3$, as random sample are constructed.
-<<>>=
-lists <- data.frame(L1=c("A","B","C","D","E","F","G","H","J","I","K","L","M","N"))
-lists$L2 <- c("B","C","A","E","G","F","G","J","K","L","M","N","I","H")
-lists$L3 <- sample(LETTERS[1:14])
-@
-
-Specification of the $\delta$-values for all possible pairs of the three input lists, $L1$, $L2$, and $L3$, by means of \texttt{deltaplot} (in the module \texttt{TopKGraphics} there is a complementary version of the \texttt{deltaplot} which also magnifies the function for a selected range of small $\delta$-values in a subplot).
-
-<<fig=F>>=
-a=deltaplot(lists, maxd=nrow(lists))
-@
-
-To also see the additional subplots for all pair-wise list comparisons call the function with the parameter \texttt{subset.plotted} set to \texttt{NULL}:
-<<fig=F>>=
-a=deltaplot(lists, maxd=nrow(lists))
-@
-
-In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. $L1$ to $L2$ or vice versa, has little impact on the graph. What can be clearly seen is difference in the point configurations (functions) when one of the lists is a random sample. 
-
-Calculation of the overall truncation index \texttt{maxK} for prespecified values of $\delta$ and $\nu$.
-
-<<>>=
-res = j0.multi(lists, d=2, v=4)
-@
-
-\section{Usage of TopKGraphics}
-
-The package \texttt{TopKLists} comprises a graphical user interface \texttt{TopKGUI} that offers applied researchers easy and straightforward access to all the functionality of \texttt{TopKInference} as well as access to the \texttt{aggmap} graphical aggregation tool contained in \texttt{TopKGraphics}. Moreover, Venn-diagrams and Venn-tables for the summary of rank aggregation results are available. 
-
-The suite of functions supported by \texttt{TopKGUI} facilitates the exploratory analysis of multiple ranked lists. Interactive input facilities (like a slider for the dynamic specification of the distance $\delta$) allow for the real-time analysis and visualization of results, in dependence of the distance $\delta$ or the pilot sample size $\nu$ (note that, for large list lengths $N$ very large numbers of calculations must be performed and longer waiting times should be expected). For an example of the usage of \texttt{TopKGUI} in the biosciences, which in this case concerns microarray platform data, see \cite{schietal} (the GUI and \texttt{aggmap} have since been under constant revision, and the examples contained in this article may differ in look and appearance from the current version).
-
-In order to run the examples in this vignette, the \texttt{TopKLists} package must first be loaded:
-
-<<eval=TRUE>>=
-library(TopKLists)
-@
-
-\subsection{Loading of Sample Input}
-The following package provides sample input when calling the GUI:
-<<>>=
-data(TopKGUISampleInput)
-str(lists)
-@
-
-\subsection{Opening of the GUI}
-To open the GUI using the sample data from above, run:
-<<eval=FALSE>>=
-TopKListsGUI(lists)
-@ 
-
-The window seen in Fig. \ref{topkgui} now appears, allowing the user to perform an analysis of two or more lists.
-
-\begin{figure}
-\centering
-\includegraphics{TopKListsGUI-1.png}\\
-\caption{Main windows for TopKListsGUI
-\label{topkgui}}
-\end{figure}
 
 
 \begin{thebibliography}{}
 
-\bibitem[Lin, 2010a]{lin2010} Lin, S. (2010). Space oriented rank-based data integration. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{9}, Article 20.
+\bibitem[Lin, 2010a]{lin2010} Lin, S. (2010a). Space oriented rank-based data integration. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{9}, Article 20.
 
-\bibitem[Lin, 2010b]{lin} Lin, S. (2010). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
+\bibitem[Lin, 2010b]{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
 
 \bibitem[Lin and Ding, 2009]{linding} Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. \emph{Biometrics}, \textbf{65}, 9-18.
 

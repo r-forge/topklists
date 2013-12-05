@@ -7,21 +7,20 @@ An exploratory plot of discordance for delta selection.
 Returns a graph of non-overlap (discordance) of rankings represented by the sum of zeros across all objects in the \eqn{\delta}-dependent Idata vector (see \code{compute.stream}) for a suitable range of \eqn{\delta} values starting at \eqn{\delta=0}. Graphs are plotted for all pairwise list combinations. 
 }
 \usage{
-deltaplot(lists, mind=0, maxd=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory=NULL, plotpdf=FALSE) 
+deltaplot(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory=NULL, plotpdf=FALSE) 
 }
 \arguments{
   \item{lists}{
 A data frame cotaining two or more columns that represent lists of ordered objects to be compared
 }
-  \item{mind}{
-Minimal \eqn{\delta} value to be examined; default is 0
-}
-  \item{maxd}{
-Maximal \eqn{\delta} value to be examined, defaults to NULL. If not specified or if \code{maxd} is larger than \code{nrow(lists)}, then \code{maxd=nrow(lists)*0.25}
+   \item{deltas}{
+The range of \eqn{\delta} values to be examined, defaults to NULL. If not specified then \code{delta=c(1:nrow(lists)*0.25)}. If \code{max(deltas)} is larger than \code{nrow(lists)}, then \code{deltas=deltas[which(deltas<nrow(lists)*0.25)]}, 
 }
 \item{subset.lists}{
 Specifies the subset of the input lists, which is used for calculating zero counts for the deltaplot. The value contained in 'subset.lists' specifies which elements are taken for the calculation from each input list, e.g. a value of 100 would use the first 100 elements of each input list. Default in NULL, in which case the all elements of each list are used. 
+If specified and \code{max(deltas)} is larger than \code{subset.lists}, then \code{deltas=deltas[which(deltas<subset.lists*0.25)]}, 
 }
+
 \item{subplot}{
 Logical: if TRUE an additional deltaplot is generated containing a detail subplot placed in the top right corner of the plot. The detail subplot plots a configurable subset of the values found in the delatplot. This percentage value can be specified using the perc.subplot parameter. Defaults to FALSE
 }

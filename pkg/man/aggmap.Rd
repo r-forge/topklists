@@ -11,30 +11,12 @@ The aggregation information per item and group consists of three measures repres
 }
 
 \usage{
-aggmap(truncated.lists, N, L, d, v, threshold, lists)
+aggmap(truncated.lists)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{truncated.lists}{
 Object resulting from the \code{calculateDataSet} function
-}
-  \item{N}{
-Maximal number of objects in the list
-}
-  \item{L}{
-Number of lists that are compared (consolidated)
-}
-  \item{d}{
-Maximal distance between object ranks used for j0 estimation
-}
-  \item{v}{
-Value nu used for j0 estimation
-}
-  \item{threshold}{
-A percentage of list comparisons in which an object should be present in the top-\emph{k} selection in order to be greyshaded in the \code{aggmap}
-}
-  \item{lists}{
-Data frame cotaining two or more columns that represent lists of ordered objects for comparison (consolidation)
 }
 }
 \author{
@@ -52,7 +34,7 @@ set.seed(1234)
 data(TopKGUISampleInput)
 truncated.lists = calculateDataSet(lists, d=10, v=10, L=3, threshold=50)
 \dontrun{
-aggmap(truncated.lists, N=80, L=3, d=10, v=10, lists=lists, threshold=50)
+aggmap(truncated.lists)
 }
 }
 \keyword{ hplot }
