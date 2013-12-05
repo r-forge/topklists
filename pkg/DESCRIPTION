@@ -11,3 +11,4 @@ Imports:
 Depends: Hmisc, grid, RGtk2, gWidgets, gWidgetsRGtk2, gplots
 URL: http://topklists.r-forge.r-project.org
 LazyLoad: yes
+Packaged: 2013-12-05 11:44:17 UTC; eva
