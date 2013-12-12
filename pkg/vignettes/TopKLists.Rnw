@@ -122,11 +122,70 @@ res
 In our example, \texttt{maxK=12}  and, as expected, no overlap was found with list L3.
 
 \section{Usage of the TopKGraphics}
-\subsection{Introduction and background}
 
+The \texttt{TopKGraphics} module comprises three graphics - Deltaplot, Aggregation map and Venn-diagram.\\
+
+The \textbf{deltaplot} is an exploratory graph, designed to help the user with selection of the distance parameter $\delta$ in the \texttt{TopKListsGUI} interface. 
+The input for the moderate deviation-based inference procedure is a sequence of $I$'s, taking
+either zero or one, forming a data stream representing the concordance of the paired ranks of an
+object $o$. The data stream depends on some distance $\delta$. The parameter $\delta$ is defined by the shift in
+index positions of a particular object $o$ in one list, say $L_i$, with respect to the other list, say $L_j$. This
+means that we assume concordance (i.e. $I = 1$) for an arbitrary object characterized by rank positions
+in $L_i$ versus $L_j$ , maximal $\delta$ index values apart.
+For the identification of an appropriate $\delta$ in real data analysis, we use the following strategy: Compute all data streams for $\delta \in [0,1,2,\ldots,N-1]$.
+Order the data stream vectors column-wise according to increasing $\delta$ values. In this way, we obtain a $N\times N$ matrix $\Delta$. The ordered sequence
+of column sums (i.e. the $\sharp(0)$ for $\delta \in [0,1,2,\ldots,N-1]$) is the information we take advantage of in
+the so-called \texttt{deltaplot}. It represents the reduction of discordance as a function of $\delta$. When all column
+sums remain zero, complete concordance is attained. A reasonable choice of the distance parameter
+is associated with a distinct decline of the $\sharp(0)$'s. Generally one should choose the $\delta$ where the rate of \texttt{deltaplot}'s decrease begins to slow noticeably. But of course, prior information about the ranking
+mechanisms involved and the nature of the data is also relevant for the selection of $\delta$. 
+
+From the \texttt{deltaplot} for the first two lists of the breast cancer dataset (Figure \ref{deltaplot_complete}), we cannot clearly see what $\delta$ should be used, because there is no visible point where \texttt{deltaplot}'s decrease changes.
+
+<<fig=F>>=
+data(breast)
+a=deltaplot(breast) 
+@
+
+\begin{figure}[H]
+\centering
+\includegraphics{deltaplot_completedataset.png}\\
+\caption{Deltaplot for lists TransBig vs. MDCC} 
+\label{deltaplot_complete}
+\end{figure}
+
+To decide about the suitable choice of $\delta$, we have to limit the \texttt{deltaplot} calculation on a smaller subset of the investigated lists, let's say first 200 objects.
+
+<<fig=F>>=
+a=deltaplot(breast, subset.lists=200)
+@
+
+\begin{figure}[H]
+\centering
+\includegraphics{deltaplot_subsetlists200_3.png}\\
+\caption{Deltaplot for lists TransBig vs. MDCC for first 200 objects} 
+\label{deltaplot_subset200}
+\end{figure}
+
+From the Figure \ref{deltaplot_subset200} we can already see, that after let's say $\delta=5$ the decrease of \texttt{deltaplot} is not as dramatical as for lower values of $\delta$. Therefore we should concentrate on results with $\delta$ set between 4 and 10. 
+
+The \textbf{aggregation map} can be characterized as follows: We define an index $p=1,2,\ldots$ and combine $\ell-1$ aggregation levels (groupings of truncated lists) in one display: 
+For each group of $\ell-p$ truncated lists down to the smallest group consisting of just one pair of lists, we (i) select an arbitrary reference list $L^0$ under the condition that it 
+comprises $\max_i(\hat{k}_i)$ items among all pairwise comparisons in the group of rankings, (ii) print the symbols of its $\max_i(\hat{k}_i)$ items vertically from the highest 
+to the lowest rank position, and (iii) add the aggregation information for all remaining $\ell-p$ rankings (pairwise list combinations) in the group, ordered according to descending list length.
+
+The aggregation information per symbol, item, and group consists of three measures represented by colored triangles and rectangles, respectively, outlined in array format: 
+(a) The \textbf{membership} of an individual item in the top-$k$ lists, \textit{yes} is denoted by the color `grey' and \textit{no} by the color `white'. 
+(b) The \textbf{distance} $d$ of the rank of an individual item $o\in L^0$ from its position in the other list, is denoted by a triangle color scaled from `red' \textit{identical} to 
+`yellow' \textit{far distant}. An additional integer value gives the numerical distance between the item's rank positions, a negative sign means ranked lower, and a positive sign means 
+ranked higher in $L$ with respect to $L^0$. (c) The rectangular of a symbol takes on the color `grey' when the \textbf{percentage} of $d \leq \delta$ across the columns of a group is above 
+some prespecified threshold, and `white' otherwise.
+
+
+The \textbf{Venn diagram}
 
 \section{Usage of the TopKListsGUI}
-\subsection{Introduction and background}
+
 
 The package \texttt{TopKLists} comprises a graphical user interface \texttt{TopKGUI} that offers applied researchers easy and straightforward access to all the functionality of \texttt{TopKInference} as well as access to the \texttt{aggmap} graphical aggregation tool contained in \texttt{TopKGraphics}. Moreover, Venn-diagrams and Venn-tables for the summary of rank aggregation results are available. 
 
