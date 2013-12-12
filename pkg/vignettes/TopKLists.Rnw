@@ -140,7 +140,7 @@ sums remain zero, complete concordance is attained. A reasonable choice of the d
 is associated with a distinct decline of the $\sharp(0)$'s. Generally one should choose the $\delta$ where the rate of \texttt{deltaplot}'s decrease begins to slow noticeably. But of course, prior information about the ranking
 mechanisms involved and the nature of the data is also relevant for the selection of $\delta$. 
 
-From the \texttt{deltaplot} for the first two lists of the breast cancer dataset (Figure \ref{deltaplot_complete}), we cannot clearly see what $\delta$ should be used, because there is no visible point where \texttt{deltaplot}'s decrease changes.
+By observing the deltaplot for the first two breast cancer dataset lists (Figure \ref{deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used. This is because there is no visible point where the \texttt{deltaplot}'s decrease changes. 
 
 <<fig=F>>=
 data(breast)
@@ -154,7 +154,7 @@ a=deltaplot(breast)
 \label{deltaplot_complete}
 \end{figure}
 
-To decide about the suitable choice of $\delta$, we have to limit the \texttt{deltaplot} calculation on a smaller subset of the investigated lists, let's say first 200 objects.
+In order to decide about a suitable value for $\delta$, we must limit the \texttt{deltaplot} calculation to a smaller subset of the investigated lists, for example the first 200 objects.
 
 <<fig=F>>=
 a=deltaplot(breast, subset.lists=200)
