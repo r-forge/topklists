@@ -484,10 +484,10 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
             if (i!=j){
               x11()
               par(mar=c(5,5,1,1))
-              plot(deltas,xxs[[paste("L",i,"L",j,sep="")]], xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste("L",i, " vs L",j, sep=""))			
+              plot(deltas,as.vector(xxs[[paste(names(lists)[i],"_",names(lists)[j], sep="")]]), xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste(names(lists)[i],"_",names(lists)[j], sep=""))			
               extremes = par("usr")
               dimen = par("pin")					   
-              subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],xxs[[paste("L",i,"L",j,sep="")]][1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
+              subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],as.vector(xxs[[paste(names(lists)[i],"_",names(lists)[j], sep="")]])[1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
             }
           }
       }
