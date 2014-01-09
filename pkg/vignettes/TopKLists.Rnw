@@ -12,6 +12,8 @@
 
 \maketitle
 
+\tableofcontents
+\newpage
 \section{Introduction and background}
 
 The ranking of distinct items has become mainstream in recent years. Examples are Web search engine results for query terms, institution league tables in higher education, preference rankings of brands, betting results in sports, results from microarray platforms in biotechnology, meta-analysis of multiple study findings in medicine, among many others. The rank position of an object or institution might be the result of measuring the strength of evidence or of assessment based on expert knowledge or preference. The assessor can be a human person or a technical device. Typically, such lists comprise thousands up to tens of thousands of items. However, only a comparably small subset of \emph{k} top-ranked items is usually informative. These are characterized by a strong overlap of their rank positions when they are ranked by several independent assessors.
@@ -38,7 +40,7 @@ The algorithmic solution of \texttt{TopKInference} for the case of more than two
 
 \begin{figure}
 \centering
-\includegraphics[width=0.7\textwidth]{TopKInferenceFlowmap.pdf}\\
+\includegraphics[width=0.5\textwidth]{TopKInferenceFlowmap.pdf}\\
 \caption{The inference concept to obtain $\ell$ truncated consensual lists $T_i$ from $\ell$ full ranked lists $L_i$}
 \label{topkinference}
 \end{figure}
@@ -82,12 +84,22 @@ table(resF[,2])
 
 The following plot summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. 
 
-<<fig=T>>=
+<<label=truncPlot, include=FALSE>>=
 plot(resF[,1], resF[,2], pch=19, ylim=c(0, length(x)), 
 xlab=substitute(nu), ylab=substitute(paste(hat(j)[0])))
 abline(a=31, b=0, col="red")
 lines(resF[,1], resF[,2])
 @
+
+\begin{figure}
+\begin{center}
+<<label=trunc,fig=TRUE,echo=FALSE>>=
+<<truncPlot>>
+@
+\end{center}
+\caption{Estimation of $j_0$ for different values of $\nu$}
+\label{j0est}
+\end{figure}
 
 \section{Usage of the TopKGraphics}
 
@@ -98,15 +110,15 @@ The \texttt{TopKGraphics} module comprises three graphics - Deltaplot, Aggregati
 
 The example dataset comprises three lists of microarray results (differential gene expression) from three breast cancer studies: 
 \begin{itemize}
-    \item MicroArray Quality Control Phase II Project (2010) - data called \textit{MDACC}
-    \item Strong Time Dependence of the 76-Gene Prognostic Signature (2007) - data called \textit{TransBig}
-    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011) - data called \textit{Pusztai}
+    \item MicroArray Quality Control Phase II Project (2010)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194} - data called \textit{MDACC}
+    \item Strong Time Dependence of the 76-Gene Prognostic Signature (2007)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=gse7390} - data called \textit{TransBig}
+    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE31519} - data called \textit{Pusztai}
 \end{itemize}
 Only genes (unique gene symbols) common to all studies are analyzed, therefore each of the three lists has the length of $N=917$.
 
 <<>>=
 data(breast)
-str(breast)
+head(breast)
 @
 
 
@@ -165,7 +177,7 @@ sapply(res, head)
 In our example, for $\delta=6$ and $\nu=10$, the estimated $k$ is \texttt{maxK=14}.
  
 \subsection{Aggregation map} 
-The aggregation map can only be accessible via \texttt{TopKListsGUI} (see Figure~\ref{aggmap}) and can be characterized as follows: We define an index $p=1,2,\ldots$ and combine $\ell-1$ aggregation levels (groupings of truncated lists) in one display: 
+The aggregation map can only be accessible via \texttt{TopKListsGUI} (see Section~\ref{subsec:resultspanel}) and can be characterized as follows: We define an index $p=1,2,\ldots$ and combine $\ell-1$ aggregation levels (groupings of truncated lists) in one display: 
 For each group of $\ell-p$ truncated lists down to the smallest group consisting of just one pair of lists, we (i) select an arbitrary reference list $L^0$ under the condition that it 
 comprises $\max_i(\hat{k}_i)$ items among all pairwise comparisons in the group of rankings, (ii) print the symbols of its $\max_i(\hat{k}_i)$ items vertically from the highest 
 to the lowest rank position, and (iii) add the aggregation information for all remaining $\ell-p$ rankings (pairwise list combinations) in the group, ordered according to descending list length.
@@ -179,7 +191,7 @@ some prespecified threshold, and `white' otherwise.
 
 
 \subsection{Venn diagram}
-The Venn diagram can only be accessible via \texttt{TopKListsGUI} (see Figure~\ref{venn}).
+The Venn diagram can only be accessible via \texttt{TopKListsGUI} (see Section~\ref{subsec:resultspanel}).
 
 \section{Usage of the TopKListsGUI}
 
@@ -237,6 +249,7 @@ Once the analysis is completed, the delta-slider allows to switch between result
 
 
 \subsubsection{Results panel}
+\label{subsec:resultspanel}
 After the analysis is completed, this part serves for the visualization of the results for the selected $\delta$ value (position of the delta-slider). Three tabs show the results as follows:
 
 \begin{itemize}
@@ -297,11 +310,6 @@ The first two consist of heuristic algorithms which do not directly optimize the
 \label{topkspace}
 \end{figure}
 
-In order to run the examples in this vignette, the TopKLists package must first be loaded:
-
-<<eval=TRUE>>=
-library(TopKLists)
-@
 
 \subsection{Construction of three input lists and a common space}
 Let us produce the following three ranked lists of different length and their common space.
@@ -325,7 +333,8 @@ bb2=Borda(input,input)
 @
 
 \subsection{Plotting Borda's scores}
-<<fig=T>>=
+
+<<label=bordaPlot, include=FALSE>>=
 plot(1:30,bb1[[2]][1:30,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
 ylab="Borda's score", sub=("(a)"))
 lines(1:30,bb1[[2]][1:30,2], type="o", col="red", pch=2,lty=2)
@@ -337,6 +346,17 @@ legend(18,10,legend=c("Platform depend.", "Top-k spaces"), col=c("red","blue"),
 lty=c(2,4))
 legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
 @
+
+\begin{figure}
+\begin{center}
+<<label=borda,fig=TRUE,echo=FALSE>>=
+<<bordaPlot>>
+@
+\end{center}
+\caption{Borda scores}
+\label{borda}
+\end{figure}
+
 
 The difference in the Borda scores can be clearly seen in the resulting graph.
 
@@ -364,7 +384,7 @@ probMC31=rev(sort(MC31[[2]]))[1:30]
 @
 
 Generation of the plot of the equilibrium probabilities
-<<fig=T>>=
+<<label=equil, include=FALSE>>=
 plot(1:30,probMC1, type="o", col="red", lty=2, pch=1, xlab="Ranking",
 ylab="Stationary probability", sub=("(b)"))
 lines(1:30,probMC2, type="o", col="red", pch=2, lty=2)
@@ -376,6 +396,17 @@ legend(18,0.14,legend=c("Platform depend.", "Top-k space"), col=c("red","blue"),
 lty=c(2,4))
 legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 @
+
+
+\begin{figure}
+\begin{center}
+<<label=equil,fig=TRUE,echo=FALSE>>=
+<<equil>>
+@
+\end{center}
+\caption{Equilibrium probabilities}
+\label{equil}
+\end{figure}
 
 \subsection{Run the CEMC algorithm}
 Call with platform dependence assumption
