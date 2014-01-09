@@ -89,43 +89,29 @@ abline(a=31, b=0, col="red")
 lines(resF[,1], resF[,2])
 @
 
-\subsection{Specification of $\delta$ and calculation of \texttt{maxK} for multiple ranked lists}
-
-Two overlapping ranked lists, $L1$ and $L2$, and a third one, $L3$, as random sample are constructed.
-<<>>=
-lists <- data.frame(L1=c("A","B","C","D","E","F","G","H","J","I","K","L","M","N"))
-lists$L2 <- c("B","C","A","E","G","F","G","J","K","L","M","N","I","H")
-lists$L3 <- sample(LETTERS[1:14])
-@
-Specification of the $\delta$-values for all possible pairs of the three input lists, $L1$, $L2$, and $L3$ is possible by inspecting \texttt{deltaplot}. 
-
-<<fig=F>>=
-a=deltaplot(lists, deltas= c(1:nrow(lists)))
-@
-The parameter \texttt{subplot} magnifies a selected range of small $\delta$-values in a subplot, defined by parameter \texttt{perc.subplot}.
-
-<<fig=F>>=
-a=deltaplot(lists, deltas=c(1:nrow(lists)), subplot=TRUE, perc.subplot=50)
-@
-To see the results for a subset of the original list data, specify the length using the parameter \texttt{subset.lists}:
-<<fig=F>>=
-a=deltaplot(lists, deltas=c(0:2), subset.lists=5)
-@
-In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. $L1$ to $L2$ or vice versa, has little impact on the graph. What can be clearly seen are differences in the point configurations (functions) when one of the lists ($L3$) is a random sample, all of length $N$=14. 
-
-Calculation of the overall truncation index \texttt{maxK} for prespecified values of $\delta$ and $\nu$ is performed using the function \texttt{j0.multi}. This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's and estimates the $j_0$. Finally, the \texttt{maxK} is estimated as maximum of all pairwise $k$ values. 
-
-<<>>=
-res = j0.multi(lists, d=2, v=4)
-res
-@
-In our example, \texttt{maxK=12}  and, as expected, no overlap was found with list L3.
-
 \section{Usage of the TopKGraphics}
 
 The \texttt{TopKGraphics} module comprises three graphics - Deltaplot, Aggregation map and Venn-diagram.\\
 
-The \textbf{deltaplot} is an exploratory graph, designed to help the user with selection of the distance parameter $\delta$ in the \texttt{TopKListsGUI} interface. 
+\subsection{Example dataset}
+\label{subsec:breastExample}
+
+The example dataset comprises three lists of microarray results (differential gene expression) from three breast cancer studies: 
+\begin{itemize}
+    \item MicroArray Quality Control Phase II Project (2010) - data called \textit{MDACC}
+    \item Strong Time Dependence of the 76-Gene Prognostic Signature (2007) - data called \textit{TransBig}
+    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011) - data called \textit{Pusztai}
+\end{itemize}
+Only genes (unique gene symbols) common to all studies are analyzed, therefore each of the three lists has the length of $N=917$.
+
+<<>>=
+data(breast)
+str(breast)
+@
+
+
+\subsection{Deltaplot}
+The deltaplot is an exploratory graph, designed to help the user with selection of the distance parameter $\delta$ in the \texttt{TopKListsGUI} interface. 
 The input for the moderate deviation-based inference procedure is a sequence of $I$'s, taking
 either zero or one, forming a data stream representing the concordance of the paired ranks of an
 object $o$. The data stream depends on some distance $\delta$. The parameter $\delta$ is defined by the shift in
@@ -143,7 +129,6 @@ mechanisms involved and the nature of the data is also relevant for the selectio
 By observing the deltaplot for the first two breast cancer dataset lists (Figure \ref{deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used. This is because there is no visible point where the \texttt{deltaplot}'s decrease changes. 
 
 <<fig=F>>=
-data(breast)
 a=deltaplot(breast) 
 @
 
@@ -154,22 +139,33 @@ a=deltaplot(breast)
 \label{deltaplot_complete}
 \end{figure}
 
-In order to decide about a suitable value for $\delta$, we must limit the \texttt{deltaplot} calculation to a smaller subset of the investigated lists, for example the first 200 objects.
+In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. \texttt{TransBig} to \texttt{MDCC} or vice versa, has little impact on the graph.
+In order to decide about a suitable value for $\delta$, we must limit the \texttt{deltaplot} calculation to a smaller subset of the investigated lists, for example the first 200 objects. Additionally we can use the parameter \texttt{subplot}, which magnifies a selected range of small $\delta$-values in a subplot, defined by parameter \texttt{perc.subplot}.
 
 <<fig=F>>=
-a=deltaplot(breast, subset.lists=200)
+a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50)
 @
 
 \begin{figure}[H]
 \centering
-\includegraphics{deltaplot_subsetlists200_3.png}\\
+\includegraphics{deltaplot_subsetlists200.png}\\
 \caption{Deltaplot for lists TransBig vs. MDCC for first 200 objects} 
 \label{deltaplot_subset200}
 \end{figure}
 
-From the Figure \ref{deltaplot_subset200} we can already see, that after let's say $\delta=5$ the decrease of \texttt{deltaplot} is not as dramatical as for lower values of $\delta$. Therefore we should concentrate on results with $\delta$ set between 4 and 10. 
+From the Figure \ref{deltaplot_subset200} we can already see, that after let's say $\delta=6$ the decrease of \texttt{deltaplot} is not as dramatical as for lower values of $\delta$. Therefore we should concentrate on results with $\delta$ set between 4 and 10. 
 
-The \textbf{aggregation map} can be characterized as follows: We define an index $p=1,2,\ldots$ and combine $\ell-1$ aggregation levels (groupings of truncated lists) in one display: 
+Calculation of the overall truncation index \texttt{maxK} for prespecified values of $\delta$ and $\nu$ is performed using the function \texttt{j0.multi}. This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's and estimates the $j_0$. Finally, the \texttt{maxK} is estimated as maximum of all pairwise $k$ values. 
+
+<<>>=
+res = j0.multi(breast, d=6, v=10)
+sapply(res, head)
+@
+
+In our example, for $\delta=6$ and $\nu=10$, the estimated $k$ is \texttt{maxK=14}.
+ 
+\subsection{Aggregation map} 
+The aggregation map can only be accessible via \texttt{TopKListsGUI} (see Figure~\ref{aggmap}) and can be characterized as follows: We define an index $p=1,2,\ldots$ and combine $\ell-1$ aggregation levels (groupings of truncated lists) in one display: 
 For each group of $\ell-p$ truncated lists down to the smallest group consisting of just one pair of lists, we (i) select an arbitrary reference list $L^0$ under the condition that it 
 comprises $\max_i(\hat{k}_i)$ items among all pairwise comparisons in the group of rankings, (ii) print the symbols of its $\max_i(\hat{k}_i)$ items vertically from the highest 
 to the lowest rank position, and (iii) add the aggregation information for all remaining $\ell-p$ rankings (pairwise list combinations) in the group, ordered according to descending list length.
@@ -182,7 +178,8 @@ ranked higher in $L$ with respect to $L^0$. (c) The rectangular of a symbol take
 some prespecified threshold, and `white' otherwise.
 
 
-The \textbf{Venn diagram}
+\subsection{Venn diagram}
+The Venn diagram can only be accessible via \texttt{TopKListsGUI} (see Figure~\ref{venn}).
 
 \section{Usage of the TopKListsGUI}
 
@@ -197,13 +194,6 @@ In order to run the examples in this vignette, the \texttt{TopKLists} package mu
 library(TopKLists)
 @
 
-\subsection{Introduction of the example dataset}
-
-The example dataset comprises three lists of microarray results (differential gene expression) from breast cancer studies. 
-<<>>=
-data(breast)
-str(breast)
-@
 
 \newpage
 
@@ -256,7 +246,7 @@ After the analysis is completed, this part serves for the visualization of the r
 \centering
 \includegraphics{TopKListsGUI-2-Results.png}\\
 \caption{Aggregation map result tab of \texttt{TopKListsGUI}
-\label{topkgui}}
+\label{aggmap}}
 \end{figure}
 
 For $\delta$ =6, the best overlap was found when comparing MDCC and Transbig to Pusztai list. The estimated k is 13, with 12 genes in top-$k$ lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (distance 0 in both MDCC and TransBig from Pusztai).
@@ -278,7 +268,7 @@ The table is ordered in ascending order of the sum of ranks of the objects in th
 \centering
 \includegraphics{TopKListsGUI-2-Venn.png}\\
 \caption{Venn-diagram and Venn-table result tab of \texttt{TopKListsGUI}
-\label{topkgui}}
+\label{venn}}
 \end{figure}
 
 \end{itemize}
@@ -419,8 +409,15 @@ p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 *
 (20 - 1))))
 @
 
-
-
+\subsection{CEMC on breast cancer example dataset}
+Cross Entropy Monte Carlo method applied on the breast cancer dataset (introduced in Section~\ref{subsec:breastExample}):
+<<>>=
+data(breast)
+res = j0.multi(breast, d=6, v=10)
+t = as.list(breast[1:res$maxK, ])
+pd = CEMC(t, res$maxK, t)
+pd$topK
+@
 
 \begin{thebibliography}{}
 
@@ -446,3 +443,4 @@ sessionInfo()
 
 
 \end{document}
+
