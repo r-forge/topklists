@@ -431,8 +431,6 @@ pd$topK
 
 \bibitem[Schimek, My\v{s}i\v{c}kov\'{a} and Budinsk\'{a}, 2012]{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166. 
 
-\bibitem[Schimek et al., 2012]{schietal} Schimek, M. G., Budinsk\'{a}, E., Kugler, K. and Lin, S. (2011). Package ``TopKLists'' for rank-based genomic data integration. \emph{Proceedings of the IASTED International Conference Computational Bioscience (CompBio 2011)}, 434-440, DOI: 10.2316/P.2011.742-032.
-
 \end{thebibliography}
 
 
