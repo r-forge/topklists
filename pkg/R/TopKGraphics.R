@@ -189,7 +189,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
 	
        					 #draw the Delta-plot and save it as pdf-image in the destination directory
-        Mdelta = deltaplot(lists, directory=directory, plotpdf=TRUE)
+        Mdelta = suppressWarnings(deltaplot(lists, directory=directory, plotpdf=TRUE))
 
         save(Mdelta, file=paste(directory, "/Mdelta.rdata", sep=""))
         for (aname in names(Mdelta))
@@ -431,11 +431,11 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
 {
 
   if (is.null(deltas)) {
-    cat(paste("The vector of delta values was not specified, using range from 0 to ", floor(nrow(lists)*0.25), "by 1"), "\n")
+    warning(paste("The vector of delta values was not specified, using range from 0 to ", floor(nrow(lists)*0.25), "by 1"), "\n")
     deltas=c(0:(floor(nrow(lists)*0.25)))
   }
   if (max(deltas)>nrow(lists)) {
-    cat(paste("The maximum for delta you specified is larger than the number of objects in your lists. The vector of deltas was truncated,","\n","so that max(delta)<",nrow(lists)*0.25), "\n")
+    warning(paste("The maximum for delta you specified is larger than the number of objects in your lists. The vector of deltas was truncated,","\n","so that max(delta)<",nrow(lists)*0.25), "\n")
     deltas=deltas[which(deltas<nrow(lists)*0.25)]
   }
   if(is.null(names(lists)) | any(names(lists)=="")){
