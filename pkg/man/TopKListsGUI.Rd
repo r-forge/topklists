@@ -12,7 +12,7 @@ The consolidated top-\emph{k} list results can be displayed in three different f
 (3) 'Venn-diagram & Venn-table': A Venn-diagram and a Venn-table of the overlapping objects based on all truncated input lists. 
 }
 \usage{
-TopKListsGUI(lists, autorange.delta = FALSE, override.errors = TRUE, venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100, maxd = 500)
+TopKListsGUI(lists, autorange.delta = FALSE, override.errors = TRUE, venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100)
 }
 \arguments{
   \item{lists}{A data frame of ordered lists of objects - rows represent the objects, columns represent the individual input lists
@@ -33,8 +33,6 @@ TopKListsGUI(lists, autorange.delta = FALSE, override.errors = TRUE, venndiag.pd
 }
 \item{aggmap.res}{A number defining the resolution of the \code{aggmap} plot - this argument is passed to the \code{res = argument} of the \code{png()} function saving the plot, but affects also the RGUI display; defaults to 100
 }
-\item{maxd}{Specification of the maximal \eqn{\delta}-value to be explored in the delta plot; defaults to 500
-}
 }
 \value{
 RGUI window with three tabs:
@@ -49,9 +47,9 @@ These tabs automatically save all plots and tables into the selected directory.
 
 The following additional exploratory features are implemented:
 
-'Delta-plot' (see \code{deltaplot}): For a preselected maxd (\eqn{\delta} ranges from zero to maxd in steps of one) and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window).
+'Delta-plot' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window).
 
-'Mdelta' (see \code{deltaplot}): For a preselected maxd (\eqn{\delta} ranges from zero to maxd in steps of one) and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt} file.
+'Mdelta' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt} file.
 }
 \author{
 Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <karl@eigenlab.net>, Michael G. Schimek <michael.schimek@medunigraz.at>
