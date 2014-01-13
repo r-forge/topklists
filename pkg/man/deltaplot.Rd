@@ -50,10 +50,10 @@ If TRUE, the basic deltaplots (not the subplots) are printed into pdf. Defaults 
 set.seed(1234)
 data(TopKGUISampleInput)
 ##plot subplot
-a = deltaplot(lists, mind=0, maxd=50, subplot=TRUE)
+a = deltaplot(lists, deltas = 1:50, subplot=TRUE)
 
 ##don't plot subplot (default)
-a = deltaplot(lists, mind=0, maxd=50, subplot = FALSE)
+a = deltaplot(lists, deltas=1:50, subplot = FALSE)
 }
 \keyword{ list}
 
