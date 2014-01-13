@@ -14,7 +14,6 @@ each of the three lists has the length of N = 917.
 \source{MDACC: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194
 TransBig: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=gse7390
 Pusztai: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE31519}
-\references{
-}
+
 \keyword{datasets}
 
