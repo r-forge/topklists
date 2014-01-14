@@ -37,6 +37,14 @@ A named list of the following content:
  \item{v}{Selected pilot sample size (tuning parameter) nu}
  \item{Ntoplot}{Number of columns to be plotted in the \code{aggmap}}
  \item{Idata}{Data frame of Idata vectors (see \code{compute.stream}) for each pair of input lists and the associated delta's}
+ \item{d}{selected delta}
+ \item{threshold}{selected threshold}
+ \item{threshold}{number of lists}
+ \item{N}{number of items in data frame (lists)}
+ \item{lists}{data frame of lists that entered the analysis}
+ \item{maxK}{maximal estimate of K (for all pariwise comparisons)}
+ \item{topkspace}{the final list of top genes as result of application of the CEMC algorithm on maxK truncated lists}
+ 
 }
 \author{
  Eva Budinska <budinska@iba.muni.cz>, Michael G. Schimek <michael.schimek@medunigraz.at>
