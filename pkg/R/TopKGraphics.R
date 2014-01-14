@@ -513,8 +513,6 @@ threshold=truncated.lists$threshold
 L=truncated.lists$L
                                        #delta_symbol = substitute(delta)
                                         #nu_symbol = expression(nu)
-
-      require(grid)
       wid <- 1
       hei <- 1
                                         #create list of background colours to shade the distance-polygons  

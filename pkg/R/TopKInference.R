@@ -21,7 +21,7 @@ calculateDataSet <- function(lists, L, d, v, threshold=50) {
   maxK <- res.j0.temp$maxK
   
   tl=as.list(lists[1:maxK,]) #truncating lists on max K
-  tli = as.character(unique(unlist(tl)))
+  tli = as.character(unique(unlist(tl))) #unique genes in truncated lists
   
   
   resS = CEMC(tl,maxK, space=tl)
@@ -188,32 +188,43 @@ calculateDataSet <- function(lists, L, d, v, threshold=50) {
               }
             }
 
-            #calculate Venn table
-            temp.sumtrunclists.vect <- sapply(temp.sumtrunclists,as.vector, simplify=FALSE)
-            names(temp.sumtrunclists.vect) <- names(temp.sumtrunclists)
-            all.entries <- unique(unlist(as.vector(temp.sumtrunclists.vect)))
-            #check for each object if entry is present in lists
-            venn.table <- data.frame(do.call(cbind, lapply(na.exclude(names(temp.sumtrunclists.vect)), function(nn){
-              ifelse(all.entries %in% as.vector(temp.sumtrunclists.vect[[nn]]),nn,NA)
-            })), stringsAsFactors=FALSE)
-            rownames(venn.table) <- all.entries
-            venn.table$listname <-apply(venn.table, 1, function(x){paste(sort(x[!is.na(x)]), sep="", collapse="_")})
-            venn.list <- split(rownames(venn.table),venn.table$listname)
-            venn.list <- venn.list[order(-sapply(names(venn.list), nchar), names(venn.list))]
-            venntable <- data.frame(t(sapply(names(venn.list), function(nn){
-              data.frame(intersection=nn,objects=paste(sort(venn.list[[nn]]), sep="",collapse=", "), stringsAsFactors=FALSE)
-            })))
-            rownames(venntable) <- NULL
-                   
             #add the calculated row (of the current object) to the summary-table
             cg_temp = c(cg_temp, cg)
             summarytable <- rbind(summarytable, c(temp.positions, temp.ranksum, temp.freqinput, temp.freqtrunc))
           }# end for j
           
+        ## calculate Venn table
+
+        # changing into vectors of characters
+        temp.sumtrunclists.vect <- sapply(temp.sumtrunclists,as.vector, simplify=FALSE)
+        names(temp.sumtrunclists.vect) <- names(temp.sumtrunclists)
+       
+        #check for each object if entry is present in lists
+        venn.table <- data.frame(do.call(cbind, lapply(na.exclude(names(temp.sumtrunclists.vect)), function(nn){
+         ifelse(tli %in% as.vector(temp.sumtrunclists.vect[[nn]]),nn,NA)
+        })), stringsAsFactors=FALSE)
+        rownames(venn.table) <- tli
+        venn.table$listname <-apply(venn.table, 1, function(x){paste(sort(x[!is.na(x)]), sep="", collapse="_")})
+        venn.temp <- split(rownames(venn.table),venn.table$listname)
+        # adding stars to those that were in the CEMC final list
+        venn.list <- lapply(venn.temp, function(x)  {a = rep("*",length(x))[match(x,resS$topK)>0]; a[which(is.na(a))]=""; paste(a,x,sep="")})
+        venn.list <- venn.list[order(-sapply(names(venn.list), nchar), names(venn.list))]
+        venntable <- data.frame(t(sapply(names(venn.list), function(nn){
+        data.frame(intersection=nn,objects=paste(sort(venn.list[[nn]]), sep="",collapse=", "), stringsAsFactors=FALSE)
+        })))
+rownames(venntable) <- NULL
+
+
+
+
+
                                         #conversion of the summary table into a data frame so that the rankings are given as numbers, not as characters, otherwise the ordering is wrong
           
-          summarytable.temp = data.frame(Object=cg_temp,summarytable, stringsAsFactors=FALSE)
-	  summarytable.final = summarytable.temp[order(summarytable.temp[,L+2]),]
+    summarytable.temp = data.frame(Object=cg_temp,summarytable, stringsAsFactors=FALSE)
+	  summarytable.temp2 = summarytable.temp[order(summarytable.temp[,L+2]),]
+    CEMCres =  rep("",nrow(summarytable.temp2))
+    CEMCres[match(resS$topK,summarytable.temp2$Object)] = "YES"
+    summarytable.final = data.frame(Final.selection.CEMC = CEMCres, summarytable.temp2)
           
                   
                                         #calculate the Venn-lists (to view the Venn-diagram) and the Venn-table
