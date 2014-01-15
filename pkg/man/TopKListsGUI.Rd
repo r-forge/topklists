@@ -52,7 +52,7 @@ The following additional exploratory features are implemented:
 'Mdelta' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt} file.
 }
 \author{
-Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <karl@eigenlab.net>, Michael G. Schimek <michael.schimek@medunigraz.at>
+Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <kg.kugler@gmail.com>, Michael G. Schimek <michael.schimek@medunigraz.at>
 }
 \examples{
 ##using a GUI

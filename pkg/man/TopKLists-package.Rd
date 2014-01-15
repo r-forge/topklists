@@ -23,7 +23,7 @@ Most convenient is a new aggregation mapping tool called \code{aggmap} in \verb{
 \author{
 Michael G. Schimek, Eva Budinska, Jie Ding, Karl G. Kugler and Shili Lin. 
 
-Maintainers: Karl G. Kugler <karl@eigenlab.net>
+Maintainers: Karl G. Kugler <kg.kugler@gmail.com>
 }
 \seealso{
 Project homepage: \url{http://topklists.r-forge.r-project.org}
