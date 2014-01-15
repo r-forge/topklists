@@ -436,12 +436,14 @@ The modified Kendall's $\tau$ distance between the aggregate list and the input 
 <<>>=
 kc.ARM=KendallCriterion(input, space, bb1[[1]][, 1], p = 0.5,
 w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 * (20 -+ 1))))
+kc.ARM
 @
 
 <<>>=
 kc.MC3=KendallCriterion(input, input, MC31[[3]],
 p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 *
 (20 - 1))))
+kc.MC3
 @
 
 \subsection{CEMC on breast cancer example dataset}
