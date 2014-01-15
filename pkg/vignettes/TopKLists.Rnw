@@ -264,7 +264,7 @@ After the analysis is completed, this part serves for the visualization of the r
 
 For $\delta$ =6, the best overlap was found when comparing MDCC and Transbig to Pusztai list. The estimated k is 13, with 12 genes in top-$k$ lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (distance 0 in both MDCC and TransBig from Pusztai).
 
-\item{\texttt{Summary table} Displays table of objects present in at least one of the top-$k$ lists, as shown in the aggregation map. The table contains object name, position of the object in each of the lists, sum of ranks, frequency in he input lists and frequency in the truncated lists. Highlighted are genes that form the final aggregate list as resulted from the \texttt{TopKSpace}}.
+\item{\texttt{Summary table} Displays table of objects present in at least one of the top-$k$ lists, as shown in the aggregation map. The table contains object name, position of the object in each of the lists, sum of ranks, frequency in he input lists and frequency in the truncated lists. Objects with assigned 'YES' in the first column were in the final selection by \texttt{CEMC} of the \texttt{TopKSpace}} (See section \ref{sec:topkspace}).
 
 \begin{figure}[H]
 \centering
@@ -273,9 +273,9 @@ For $\delta$ =6, the best overlap was found when comparing MDCC and Transbig to 
 \label{topkgui}}
 \end{figure}
 
-The table is ordered in ascending order of the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes EVL, SCUBE2, CIRBP and FBP1 are also consistenly present in the top-$k$ truncated lists, but at different positions. Genes FUT8 and RHOB are found ...
+The table is ordered in ascending order of the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes SCUBE2, EVL, FBP1, CIRBP and BTG2 are also consistenly present in the top-$k$ truncated lists, but at different positions. Genes FUT8, C1orf106 and QDPR are found in only two of the truncated lists and at different positions. Analogically for the rest of the genes.
 
-\item{\texttt{Venn-diagram and Venn-table}: They show overlaps of objects in the top-$k$ lists of all input lists in the analysis. Highlighted are genes that form the final aggregate list as resulted from the \texttt{TopKSpace}.}
+\item{\texttt{Venn-diagram and Venn-table}: They show overlaps of objects in the top-$k$ lists of all input lists in the analysis. Asterisk highlighted genes are genes that form the final aggregate list as resulted from the \texttt{TopKSpace}.}
 
 \begin{figure}[H]
 \centering
@@ -292,6 +292,7 @@ The very bottom part of the \texttt{TopKListsGUI} shows the status of the analys
 
 
 \section{Usage of TopKSpace}
+\label{sec:topkspace}
 
 The idea of the module \texttt{TopKSpace} is to consolidate information from the $l$ top-\emph{k} lists to arrive at an aggregate list ($AL$). 
 As shown in Figure \ref{topkspace}, not only that the top-\emph{k} lists
