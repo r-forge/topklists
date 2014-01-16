@@ -19,7 +19,7 @@ A list of several TopKLists, may have different length
 Desired length of combined list
 }
   \item{space}{
-Underlying spaces for the lists, NULL means all lists share a common space
+A list of the same structure as the topK list. Contains underlying spaces for the topK lists. NULL means all lists share a common space.
 }
   \item{dm}{
 Distance measure, "s" for spearman, "k" for kendall(p=0)
