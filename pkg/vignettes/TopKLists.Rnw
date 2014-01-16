@@ -108,13 +108,12 @@ The \texttt{TopKGraphics} module comprises three graphics - Deltaplot, Aggregati
 \subsection{Example dataset}
 \label{subsec:breastExample}
 
-The example dataset comprises three lists of microarray results (differential gene expression) from three breast cancer studies (for accession numbers see Table \ref{tab:data}):
+As our example, we selected three breast cancer microarray datasets (MDACC, TransBig and Pusztai) with available information on estrogen receptor positivity (ER+ vs ER-), which is one of the prognostic markers (for accession numbers see Table \ref{tab:data}):
 \begin{itemize}
     \item MicroArray Quality Control Phase II Project (2010)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194} - data called \textit{MDACC} \cite{shi}
     \item Strong Time Dependence of the 76-Gene Prognostic Signature (2007)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=gse7390} - data called \textit{TransBig} \cite{desmedt}
-    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE31519} - data called \textit{Pusztai} \cite{rody}
+    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20271} - data called \textit{Pusztai} \cite{tabchy}
 \end{itemize}
-
 
 \begin{table}[h!]
 \begin{center}
@@ -125,14 +124,15 @@ The example dataset comprises three lists of microarray results (differential ge
   NAME & PubMed ID & GEO \\ \hline
   MDACC & 20676074 & GSE20194 \\
   TransBig & 17545524 & GSE7390 \\
-  Pusztai & 21978456 & GSE21978456 \\
+  Pusztai & 20829329 & GSE20271 \\
   \hline
 \end{tabular}
 \caption{Example dataset: names, PubMed IDs and GEO accession numbers}
 \end{center}
 \end{table}
 
-Only genes (unique gene symbols) common to all studies are analyzed, therefore each of the three lists has the length of $N=917$.
+Each dataset was RMA normalized and a probeset with the largest variability was selected as representative of a gene symbol. Using limma, we compared differential gene expression between ER+ and ER- groups. We ordered lists according to the p-value in increasing order and selected only genes present in all three datasets, giving 917 gene symbols.
+We expect ESR1 gene (gene for estrogen receptor) to be on first place between differentially expressed genes. Since ER positivity denotes two very different breast cancer groups, we expect to find similar genes in top k lists for all three datasets.
 
 <<>>=
 data(breast)
@@ -494,17 +494,19 @@ Resulting top-k genes are ordered according to their probability.
 
 \bibitem[Lin, 2010b]{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
 
-\bibitem[Rody et al. 2011]{rody} Rody A., Karn T., Liedtke C., Pusztai L. et al. (2011). A clinically relevant gene signature in triple negative and basal-like breast cancer. \emph{Breast Cancer Res} 6;13(5):R97. PMID: 21978456.
-
 \bibitem[Schimek, My\v{s}i\v{c}kov\'{a} and Budinsk\'{a}, 2012]{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
 \bibitem[Shi et al. 2010]{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol};28(8):827-38. PMID: 20676074.
 
+\bibitem[Tabchy et al. 2010]{tabchy} Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. \emph{Clin Cancer Res} 1;16(21):5351-61. PMID: 20829329
+ 
 %% \bibitem[Karn et al. 2011]{karn2011} Karn T., Pusztai L., Holtrich U., Iwamoto T. et al. (2011). Homogeneous datasets of triple negative breast cancers enable the identification of novel prognostic and predictive signatures. \emph{PLoS One}; 6(12):e28403. PMID: 22220191.
 
 %% \bibitem[Karn et al. 2012]{karn2012} Karn T., Pusztai L., Ruckhäberle E., Liedtke C. et al. (2012). Melanoma antigen family A identified by the bimodality index defines a subset of triple negative breast cancers as candidates for immune response augmentation. \emph{Eur J Cancer}; 48(1):12-23. PMID: 21741824.
 
 %% \bibitem[Popovici et al. 2010]{popovici} Popovici V., Chen W., Gallas B.G., Hatzis C. et al. (2010). Effect of training-sample size and classification difficulty on the accuracy of genomic predictors. \emph{Breast Cancer Res};12(1):R5. PMID: 20064235.
+
+%% \bibitem[Rody et al. 2011]{rody} Rody A., Karn T., Liedtke C., Pusztai L. et al. (2011). A clinically relevant gene signature in triple negative and basal-like breast cancer. \emph{Breast Cancer Res} 6;13(5):R97. PMID: 21978456.
 
 \end{thebibliography}
 
