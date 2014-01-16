@@ -108,12 +108,27 @@ The \texttt{TopKGraphics} module comprises three graphics - Deltaplot, Aggregati
 \subsection{Example dataset}
 \label{subsec:breastExample}
 
-The example dataset comprises three lists of microarray results (differential gene expression) from three breast cancer studies: 
+The example dataset comprises three lists of microarray results (differential gene expression) from three breast cancer studies:
 \begin{itemize}
-    \item MicroArray Quality Control Phase II Project (2010)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194} - data called \textit{MDACC}
-    \item Strong Time Dependence of the 76-Gene Prognostic Signature (2007)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=gse7390} - data called \textit{TransBig}
-    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE31519} - data called \textit{Pusztai}
+    \item MicroArray Quality Control Phase II Project (2010)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194} - data called \textit{MDACC} \cite{popovici,shi}
+    \item Strong Time Dependence of the 76-Gene Prognostic Signature (2007)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=gse7390} - data called \textit{TransBig} \cite{desmedt}
+    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE31519} - data called \textit{Pusztai} \cite{karn2011,karn2012,rody}
 \end{itemize}
+
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  NAME & PMID & GEO \\ \hline
+  MDACC & 20676074 & GSE20194 \\
+  TransBig & 17545524 & GSE7390 \\
+  Pusztai & 21978456 & GSE21978456 \\
+  \hline
+\end{tabular}
+\end{center}
+
+
 Only genes (unique gene symbols) common to all studies are analyzed, therefore each of the three lists has the length of $N=917$.
 
 <<>>=
@@ -458,15 +473,27 @@ pd$topK
 
 \begin{thebibliography}{}
 
+\bibitem[Desmedt et al. 2007]{desmedt} Desmedt C., Piette F., Loi S., Wang Y. et al. (2007). Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. \emph{Clin Cancer Res} 1;13(11):3207-14. PMID: 17545524.
+
+\bibitem[Hall and Schimek, 2012]{haschi} Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. \emph{J. Amer. Statist. Assoc.}, \textbf{107}, 661-672.
+
+\bibitem[Karn et al. 2011]{karn2011} Karn T., Pusztai L., Holtrich U., Iwamoto T. et al. (2011). Homogeneous datasets of triple negative breast cancers enable the identification of novel prognostic and predictive signatures. \emph{PLoS One}; 6(12):e28403. PMID: 22220191.
+
+\bibitem[Karn et al. 2012]{karn2012} Karn T., Pusztai L., Ruckhäberle E., Liedtke C. et al. (2012). Melanoma antigen family A identified by the bimodality index defines a subset of triple negative breast cancers as candidates for immune response augmentation. \emph{Eur J Cancer}; 48(1):12-23. PMID: 21741824.
+
+\bibitem[Lin and Ding, 2009]{linding} Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. \emph{Biometrics}, \textbf{65}, 9-18.
+
 \bibitem[Lin, 2010a]{lin2010} Lin, S. (2010a). Space oriented rank-based data integration. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{9}, Article 20.
 
 \bibitem[Lin, 2010b]{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
 
-\bibitem[Lin and Ding, 2009]{linding} Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. \emph{Biometrics}, \textbf{65}, 9-18.
+\bibitem[Popovici et al. 2010]{popovici} Popovici V., Chen W., Gallas B.G., Hatzis C. et al. (2010). Effect of training-sample size and classification difficulty on the accuracy of genomic predictors. \emph{Breast Cancer Res};12(1):R5. PMID: 20064235.
 
-\bibitem[Hall and Schimek, 2012]{haschi} Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. \emph{J. Amer. Statist. Assoc.}, \textbf{107}, 661-672.
+\bibitem[Rody et al. 2011]{rody} Rody A., Karn T., Liedtke C., Pusztai L. et al. (2011). A clinically relevant gene signature in triple negative and basal-like breast cancer. \emph{Breast Cancer Res} 6;13(5):R97. PMID: 21978456.
 
-\bibitem[Schimek, My\v{s}i\v{c}kov\'{a} and Budinsk\'{a}, 2012]{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166. 
+\bibitem[Schimek, My\v{s}i\v{c}kov\'{a} and Budinsk\'{a}, 2012]{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
+
+\bibitem[Shi et al. 2010]{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol};28(8):827-38. PMID: 20676074.
 
 \end{thebibliography}
 
