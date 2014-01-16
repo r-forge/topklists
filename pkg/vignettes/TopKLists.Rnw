@@ -283,7 +283,7 @@ After the analysis is completed, this part serves for the visualization of the r
 \label{aggmap}}
 \end{figure}
 
-For $\delta$ =6, the best overlap was found when comparing MDCC and Transbig to Pusztai list. The estimated k is 13, with 12 genes in top-$k$ lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (distance 0 in both MDCC and TransBig from Pusztai).
+For $\delta$ =6, the best overlap was found when comparing MDCC and Transbig to Pusztai list. The estimated k is 14, with 12 genes in top-$k$ lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (distance 0 in both MDCC and TransBig from Pusztai).
 
 \item{\texttt{Summary table} Displays table of objects present in at least one of the top-$k$ lists, as shown in the aggregation map. The table contains object name, position of the object in each of the lists, sum of ranks, frequency in the input lists and frequency in the truncated lists. Objects with assigned `YES' in the first column were in the final selection by \texttt{CEMC} of the \texttt{TopKSpace}} (See section \ref{sec:topkspace}).
 
