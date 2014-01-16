@@ -468,11 +468,19 @@ kc.MC3
 Cross Entropy Monte Carlo method applied on the breast cancer dataset (introduced in Section~\ref{subsec:breastExample}):
 <<>>=
 data(breast)
+@
+Calculate the \texttt{k} using function \texttt{j0.multi}
+<<>>=
 res = j0.multi(breast, d=6, v=10)
-t = as.list(breast[1:res$maxK, ])
-pd = CEMC(t, res$maxK, t)
+res$maxK
+@
+The example dataset contains no missing values, i.e. all three lists share the same genes. Therefore the underlying space is identical to  the original dataset and \texttt{space} can be set to NULL.
+<<>>=
+topK = as.list(breast[1:res$maxK, ])
+pd = CEMC(topK, res$maxK, space=NULL)
 pd$topK
 @
+Resulting top-k genes are ordered according to their probability.
 
 \begin{thebibliography}{}
 
