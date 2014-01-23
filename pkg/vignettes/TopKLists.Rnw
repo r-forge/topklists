@@ -9,6 +9,7 @@
 \author{Michael G. Schimek, Eva Budinska, Jie Ding, \\ Karl G. Kugler, Shili Lin and Vendula Svendova}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 \maketitle
 
@@ -82,7 +83,7 @@ table(resF[,2])
 
 \subsection{Visualization of the truncation results}
 
-The following plot summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. 
+The following plot (Figure~\ref{j0est}) summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. 
 
 <<label=truncPlot, include=FALSE>>=
 plot(resF[,1], resF[,2], pch=19, ylim=c(0, length(x)), 
@@ -109,27 +110,25 @@ The \texttt{TopKGraphics} module comprises three graphics - Deltaplot, Aggregati
 \label{subsec:breastExample}
 
 As our example, we selected three breast cancer microarray datasets (MDACC, TransBig and Pusztai) with available information on estrogen receptor positivity (ER+ vs ER-), which is one of the prognostic markers (for accession numbers see Table \ref{tab:data}):
-\begin{itemize}
-    \item MicroArray Quality Control Phase II Project (2010)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194} - data called \textit{MDACC} \cite{shi}
-    \item Strong Time Dependence of the 76-Gene Prognostic Signature (2007)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=gse7390} - data called \textit{TransBig} \cite{desmedt}
-    \item A Clinically Relevant Gene Signature in Triple-Negative and Basal-Like Breast Cancer (2011)\footnote{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20271} - data called \textit{Pusztai} \cite{tabchy}
-\end{itemize}
+
+
 
 \begin{table}[h!]
 \begin{center}
 \label{tab:data}
-\begin{tabular}{|c|c|c|}
+\begin{tabular}{|c|c|c|c|}
   \hline
   % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-  NAME & PubMed ID & GEO \\ \hline
-  MDACC & 20676074 & GSE20194 \\
-  TransBig & 17545524 & GSE7390 \\
-  Pusztai & 20829329 & GSE20271 \\
+  NAME & PubMed ID & GEO & Reference\\ \hline
+  MDACC & 20676074 & GSE20194 & \cite{shi}\\
+  TransBig & 17545524 & GSE7390 & \cite{desmedt} \\
+  Pusztai & 20829329 & GSE20271 & \cite{tabchy}\\
   \hline
 \end{tabular}
-\caption{Example dataset: names, PubMed IDs and GEO accession numbers}
+\caption{Example dataset: names, PubMed IDs, GEO accession numbers and reference}
 \end{center}
 \end{table}
+
 
 Each dataset was RMA normalized and a probeset with the largest variability was selected as representative of a gene symbol. Using limma, we compared differential gene expression between ER+ and ER- groups. We ordered lists according to the p-value in increasing order and selected only genes present in all three datasets, giving 917 gene symbols.
 We expect ESR1 gene (gene for estrogen receptor) to be on first place between differentially expressed genes. Since ER positivity denotes two very different breast cancer groups, we expect to find similar genes in top k lists for all three datasets.
@@ -311,19 +310,21 @@ The table is ordered in ascending order of the sum of ranks of the objects in th
 \subsubsection{Analysis status panel}
 The very bottom part of the \texttt{TopKListsGUI} shows the status of the analysis. 
 
-
 \section{Usage of TopKSpace}
 \label{sec:topkspace}
 
-The idea of the module \texttt{TopKSpace} is to consolidate information from the $l$ top-\emph{k} lists to arrive at an aggregate list ($AL$). 
+
+
+The idea of the module \texttt{TopKSpace} is to consolidate information from
+the $l$ top-\emph{k} lists to arrive at an aggregate list ($AL$). 
 As shown in Figure \ref{topkspace}, not only that the top-\emph{k} lists
 ($L_1, L_2, \ldots, L_l$) may be of different lengths, they may come from studies or assessments that consider different sets of objects, hence the underlying spaces ($S_1, S_2, \ldots, S_l$) from which the top-\emph{k} lists were derived may be different. The goal of the inference in \texttt{TopKSpace} is therefore to find the top-\emph{k} list, $AL$, from the aggregate new space ($\cup_{i=1}^l L_i$), such that the weighted sum of distances between each of the input lists and $AL$ will be the minimum among lists of the same length.
-Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. In both distance measures possible differences in the underlying spaces can be taken into account (see \cite{lin2010}). 
+Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. Both take the differences in the underlying spaces into account \cite{lin2010}. Three common assumptions about the underlying spaces are: {\em common-space} (all top-k lists come from a single common space), {\em platform-dependent} (using the known spaces from which the top-k lists were generated), and {\em top-k-space} (treating each top-k list as its own space). Since platform-dependent represents the true underlying scenario, it is recommended if such information is available.
 
 There are three classes of algorithms implemented in \texttt{TopKSpace}, namely
 Borda's method, Markov chain (MC) algorithms \cite{lin}, 
 and a Cross Entropy Monte Carlo (CEMC) method taking advantage of the new Order Explicit Algorithm (OEA) due to \cite{linding}.
-The first two consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the third class employs a Monte Carlo search procedure to accomplish the optimization. Borda and Markov chain algorithms run much faster than Cross Entropy Monte Carlo, but the latter usually achieves a better result. Nevertheless, simulation studies (unpublished material) indicate that taking the underlying space into consideration has much greater impact on the aggregation result than using different algorithms.
+The first two consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the third class employs a Monte Carlo search procedure for achieving the optimization. Borda and Markov chain algorithms run much faster than Cross Entropy Monte Carlo, but the latter usually achieves a better result. Nevertheless, simulation studies (unpublished material)  indicate that taking the underlying space into consideration has much greater impact than using different algorithms.
 
 \begin{figure}
 \centering
@@ -343,18 +344,32 @@ input=list(L1,L2,L3)
 space=list(1:40,1:40,1:40)
 @
 
-\subsection{Run three Borda algorithms}
-all with platform dependence assumption:
+\subsection{Calling the functions}
+\subsubsection{Run four Borda algorithms}
+Four Borda's scores are implemented in the Borda function in TopKSpace: arithmetic mean (ARM),median (MED),
+geometric mean (GEO), and l2-norm (l2N). The output is a list with two elements, one
+gives the aggregate rankings and the other provides the corresponding scores. \\
+\\[2ex]
+\textbf{Call with platform dependent assumption}
 <<>>=
 bb1=Borda(input,space)
 @
-
-Call with top-$k$ assumption:
+\textbf{Call with top-\emph{k}-space assumption}
 <<>>=
 bb2=Borda(input,input)
 @
 
-\subsection{Plotting Borda's scores}
+The results from these two runs are expected to be different because the assumed 
+underlying spaces are different.
+\\[2ex]
+\textbf{Plotting Borda's scores}\\
+Plotting Borda's scores against ranking can frequently reveal when information for
+ranking starts to diminish. For example, in Figure 12, we can see that, for the
+platform-dependent approach, there is a big gap in the Borda score in the rankings
+from 10-11,
+and the changes of scores also slow down (this can be similarly observed
+ for the scores under the top-k space assumption) for the lowly ranked items, 
+signaling degradation of information.
 
 <<label=bordaPlot, include=FALSE>>=
 plot(1:30,bb1[[2]][1:30,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
@@ -380,10 +395,21 @@ legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
 \end{figure}
 
 
-The difference in the Borda scores can be clearly seen in the resulting graph.
-
-\subsection{Run three MC algorithms}
-Call with platform dependence assumption
+The difference in the Borda scores can be clearly seen in the resulting graph (Figure~\ref{borda}).
+\\[2ex]
+\textbf{Run three MC algorithms}\\
+Three Markov Chain (MC) algorithms are implemented in the function trans.matrix in
+TopKSpace: MC1 (spam sensitive), 
+MC2 (majority rule), and MC3 (proportional). Among them, MC3 may be more appropriate 
+for multi-platform omics problems given the potential unique features of each 
+data type. 
+The output of trans.matrix is a list, with the last three elements being the transition matrices
+for MC1, MC2, and MC3. The output for each MC 
+can then be used as input to the MC.ranks function,
+which returns the stationary probability and the rankings, as shown in
+the following examples.
+\\[2ex] 
+\textbf{Call with platform dependence assumption}
 <<>>=
 mm=trans.matrix(input,space)
 MC1=MC.ranks(mm[[2]],mm[[4]])
@@ -393,8 +419,7 @@ probMC2=rev(sort(MC2[[2]]))[1:30]
 MC3=MC.ranks(mm[[2]],mm[[6]])
 probMC3=rev(sort(MC3[[2]]))[1:30]
 @
-
-Call with the top-$k$ space assumption
+\textbf{Call with the top-$k$ space assumption}
 <<>>=
 mm=trans.matrix(input,input)
 MC11=MC.ranks(mm[[2]],mm[[4]])
@@ -404,8 +429,13 @@ probMC21=rev(sort(MC21[[2]]))[1:30]
 MC31=MC.ranks(mm[[2]],mm[[6]])
 probMC31=rev(sort(MC31[[2]]))[1:30]
 @
-
-Generation of the plot of the equilibrium probabilities
+\textbf{Generating the plot of equilibrium probabilities}\\
+Plot of the ordered stationary probabilities versus ranking contains useful information
+regarding the relative rankings of elements. 
+ For example, in Figure 13, we can see that, other than MC2 under 
+the platform-dependent assumption, there appears to be limited information for 
+ranking elements beyond the top 10, fairly consistent with what we saw in the Borda 
+plot.
 <<label=equil, include=FALSE>>=
 plot(1:30,probMC1, type="o", col="red", lty=2, pch=1, xlab="Ranking",
 ylab="Stationary probability", sub=("(b)"))
@@ -430,8 +460,18 @@ legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 \label{equil}
 \end{figure}
 
-\subsection{Run the CEMC algorithm}
-Call with platform dependence assumption
+
+\subsubsection{Run CEMC algorithm}
+There are a number of tuning parameters that can be set to run the OEA efficiently.
+The default in the CEMC function in TopKSpace constitutes a generic set of 
+values that seem to work well for a couple of examples, but it is always a good idea
+to run OEA with multiple sets of tuning parameters to increase the chance of finding 
+the global maximum; see \cite{linding} for some recommendations on how to set these 
+parameters. The output of CEMC contains the input tuning parameter for checking 
+purposes. It also contains the aggregate top-k ranking and the probability matrix
+from which the top-k ranking is obtained.  
+\\[2ex]
+\textbf{Call with platform dependence assumption}
 <<>>=
 set.seed(1234)
 pd = CEMC(input, 30, space=space, N=2000)
@@ -440,14 +480,19 @@ pd$p[1:5,1:5]
 pd$input.par
 @
 
-Call with top-$k$ space assumption
+\textbf{Call with top-\emph{k} assumption}
 <<>>=
 pd = CEMC(input, 30, space=input, N=2000)
 pd$topK
 pd$p[1:5,1:5]
 @
 
+
+
 \subsection{Comparison of the performance of the different algorithms}
+The modified Kendall's $\tau$ distance between the aggregate list and the input lists can be used to evaluate the relative performance of the algorithms.
+In the following we give two examples: the first one is under the assumption of 
+platform-dependent and Borda ARM algorithm; the second one is under the assumption of top-\emph{k} space and MC3.  
 
 The modified Kendall's $\tau$ distance between the aggregate list and the input lists can be used to evaluate the relative performance of the algorithms. In the following we give two examples: the first one is under the assumption of platform dependence and the second one is under the assumption of top-\emph{k} space.  
 
@@ -464,6 +509,8 @@ p = 0.5, w = c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 *
 kc.MC3
 @
 
+
+
 \subsection{CEMC on breast cancer example dataset}
 Cross Entropy Monte Carlo method applied on the breast cancer dataset (introduced in Section~\ref{subsec:breastExample}):
 <<>>=
@@ -474,13 +521,18 @@ Calculate the \texttt{k} using function \texttt{j0.multi}
 res = j0.multi(breast, d=6, v=10)
 res$maxK
 @
-The example dataset contains no missing values, i.e. all three lists share the same genes. Therefore the underlying space is identical to  the original dataset and \texttt{space} can be set to NULL.
+Each of the three lists is truncated to the 14 mostly highly ranked genes. The set of genes contained in each list is not identical and each list can contain a different set of 14 top genes. Therefore the underlying space will be a set of all the genes present in these 3 trucated lists. In our case there are 22 unique genes.
 <<>>=
 topK = as.list(breast[1:res$maxK, ])
-pd = CEMC(topK, res$maxK, space=NULL)
+topK
+uniq=unique(factor(c(as.character(topK$TransBig), as.character(topK$MDCC), as.character(topK$Pusztai))))
+length(uniq)
+space = list(uniq, uniq, uniq)
+pd = CEMC(topK, res$maxK, space)
 pd$topK
 @
 Resulting top-k genes are ordered according to their probability.
+
 
 \begin{thebibliography}{}
 
