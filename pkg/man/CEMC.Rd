@@ -8,7 +8,9 @@ CEMC combination of (top-\emph{k}) ranked lists
 Performs cross-entropy Monte Carlo simluations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists
 }
 \usage{
-CEMC(topK, k, space = NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL, rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0, d.w = NULL, input.par = NULL, extra=0)
+CEMC(topK, k, space = NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
+rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0,
+d.w = NULL, input.par = NULL, extra=0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

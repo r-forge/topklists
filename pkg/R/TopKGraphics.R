@@ -466,7 +466,9 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
 				MdeltaXxs=.prepareDeltaplot(lists,j,i,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
 				dev.off()
 				}else {
-				x11()
+                                    ##the next line need to be fixed in order to be more generic (dev.new did not work so far)
+                                    if( .Platform$OS.type =="unix" ) { X11() } else { windows() }
+                                
 				par(mfrow=c(1,2))
 				MdeltaXxs=.prepareDeltaplot(lists,i,j,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
 				MdeltaXxs=.prepareDeltaplot(lists,j,i,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
@@ -482,12 +484,13 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
         for (j in 1:ncol(lists))
           {
             if (i!=j){
-              x11()
-              par(mar=c(5,5,1,1))
+              ##the next line need to be fixed in order to be more generic (dev.new did not work so far)
+                if( .Platform$OS.type =="unix" ) { X11() } else { windows() }
+                par(mar=c(5,5,1,1))
               plot(deltas,as.vector(xxs[[paste(names(lists)[i],"_",names(lists)[j], sep="")]]), xlab=expression(delta), ylab="# of 0's", las=1,cex.axis=0.7, main=paste(names(lists)[i]," vs ",names(lists)[j], sep=""))			
               extremes = par("usr")
               dimen = par("pin")					   
-              subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],as.vector(xxs[[paste(names(lists)[i],"_",names(lists)[j], sep="")]])[1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
+                subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],as.vector(xxs[[paste(names(lists)[i],"_",names(lists)[j], sep="")]])[1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))   
             }
           }
       }

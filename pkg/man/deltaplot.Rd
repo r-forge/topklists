@@ -7,7 +7,8 @@ An exploratory plot of discordance for delta selection.
 Returns a graph of non-overlap (discordance) of rankings represented by the sum of zeros across all objects in the \eqn{\delta}-dependent Idata vector (see \code{compute.stream}) for a suitable range of \eqn{\delta} values starting at \eqn{\delta=0}. Graphs are plotted for all pairwise list combinations. 
 }
 \usage{
-deltaplot(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory=NULL, plotpdf=FALSE) 
+deltaplot(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE,
+perc.subplot=50, directory=NULL, plotpdf=FALSE) 
 }
 \arguments{
   \item{lists}{

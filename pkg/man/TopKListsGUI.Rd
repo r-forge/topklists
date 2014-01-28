@@ -12,7 +12,9 @@ The consolidated top-\emph{k} list results can be displayed in three different f
 (3) 'Venn-diagram & Venn-table': A Venn-diagram and a Venn-table of the overlapping objects based on all truncated input lists. 
 }
 \usage{
-TopKListsGUI(lists, autorange.delta = FALSE, override.errors = TRUE, venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100)
+TopKListsGUI(lists, autorange.delta = FALSE, override.errors = TRUE,
+venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420),
+gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100)
 }
 \arguments{
   \item{lists}{A data frame of ordered lists of objects - rows represent the objects, columns represent the individual input lists
