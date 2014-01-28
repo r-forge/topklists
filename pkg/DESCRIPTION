@@ -1,14 +1,15 @@
 Package: TopKLists
 Type: Package
 Title: Inference, aggregation and visualization for TopKLists
-Date: 2013-12-05
-Version: 0.9.18
+Date: 2014-04-27
+Version: 0.9.19
 Author: Michael G. Schimek, Medical University of Graz, Austria; Eva Budinska, Masaryk Universit, Brno, Czech Republic; Jie Ding, Harvard University, Vendula Svendova, Medical University of Graz, Austria; USA; Karl G. Kugler, Helmholtz Centre Munich (HMGU), Germany; Shili Lin, Ohio State University, USA.
 Maintainer: Karl G. Kugler <kg.kugler@gmail.com>
 Description: For multiple full ranked (input) lists representing the same set of N objects, the package \verb{TopKLists} offers (1) statistical inference on the lengths of informative (top-k) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization.
 License: GPL (>= 2)
 Imports:
-Depends: Hmisc, grid, RGtk2, gWidgets, gWidgetsRGtk2, gplots
+Depends: R (>= 3.0.0), Hmisc, grid, RGtk2, gWidgets, gWidgetsRGtk2, gplots
+Suggests: knitr
 URL: http://topklists.r-forge.r-project.org
 LazyLoad: yes
-Packaged: 2013-12-05 11:44:17 UTC; eva
+VignetteBuilder: knitr
