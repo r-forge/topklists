@@ -17,8 +17,8 @@
 
 <<echo=FALSE, results='hide', eval=TRUE, message=FALSE, warning=FALSE>>=
 require(knitr)
-  options(width=60)
-
+options(width=60)
+#options(global.device=TRUE)
 #  listing <- function(x, options) {
 #    paste("\\begin{lstlisting}[basicstyle=\\ttfamily,breaklines=true]\n",
 #      x, "\\end{lstlisting}\n", sep = "")
@@ -174,18 +174,35 @@ mechanisms involved and the nature of the data is also relevant for the selectio
 
 By observing the deltaplot for the first two breast cancer dataset lists (Figure \ref{fig:deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used. This is because there is no visible point where the \texttt{deltaplot}'s decrease changes. 
 
-<<deltaplot_complete, fig.keep='first', out.width='8cm', out.height='8cm', fig.cap="Deltaplot for lists Pusztai vs. MDCC", fig.pos="H", fig.align="center">>=
-a=deltaplot(breast) 
-@
+
+<<mydelta>>=
+a=deltaplot(breast, plotpdf=TRUE, directory=tempdir()) 
+@ 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.35]{\Sexpr{tempdir()}/deltaplotL1-2.pdf}\\
+\caption{Deltaplot for lists TransBig vs MDCC}
+\label{fig:deltaplot_complete}
+\end{figure}
+
 
 In the obtained \texttt{deltaplot} it can be observed that the switching of the reference list from, e.g. \texttt{TransBig} to \texttt{MDCC} or vice versa, has little impact on the graph.
 In order to decide about a suitable value for $\delta$, we must limit the \texttt{deltaplot} calculation to a smaller subset of the investigated lists, for example the first 200 objects. Additionally we can use the parameter \texttt{subplot}, which magnifies a selected range of small $\delta$-values in a subplot, defined by parameter \texttt{perc.subplot}.
 
-<<deltaplot_subset200, fig.keep='first', out.width='8cm', out.height= '8cm', fig.cap="Deltaplot for lists Pusztai vs. MDCC for first 200 objects", fig.pos="H", fig.align="center">>=
-a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50)
+<<mydelta2>>=
+a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50, plotpdf=TRUE, directory=tempdir())
 @
 
 From the Figure \ref{fig:deltaplot_subset200} we can already see, that after let's say $\delta=6$ the decrease of \texttt{deltaplot} is not as dramatical as for lower values of $\delta$. Therefore we should concentrate on results with $\delta$ set between 4 and 10. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.35]{\Sexpr{tempdir()}/subplotL1-2.pdf}\\
+\caption{Deltaplot for lists TransBig vs. MDCC for first 200 objects}
+\label{fig:deltaplot_subset200}
+\end{figure}
+
 
 Calculation of the overall truncation index \texttt{maxK} for prespecified values of $\delta$ and $\nu$ is performed using the function \texttt{j0.multi}. This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's and estimates the $j_0$. Finally, the \texttt{maxK} is estimated as maximum of all pairwise $k$ values. 
 
