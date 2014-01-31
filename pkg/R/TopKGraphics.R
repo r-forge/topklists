@@ -189,7 +189,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
 	
        					 #draw the Delta-plot and save it as pdf-image in the destination directory
-        Mdelta = suppressWarnings(deltaplot(lists, directory=directory, plotpdf=TRUE))
+        Mdelta = suppressWarnings(deltaplot(lists, directory=directory))
 
         save(Mdelta, file=paste(directory, "/Mdelta.rdata", sep=""))
         for (aname in names(Mdelta))
@@ -427,7 +427,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
 ###function that generates Delta-plot and Delta-matrix
 ##if subset.plotted is NA no subplots are created
-deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory = NULL, plotpdf=FALSE)
+deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc.subplot=50, directory = NULL)
 {
 
   if (is.null(deltas)) {
@@ -451,7 +451,7 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
      }
 
   }
-  if(!is.null(directory) && !file.exists(directory)){
+  if(!is.null(directory) && (!file.exists(directory) || !file.info(directory)$isdir)){
     stop("The given directory does not exist")
   }
   
@@ -462,7 +462,8 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
     {
       for (j in (i+1):ncol(lists))
         {
-			if (plotpdf) {
+            ##create a pdf
+			if (!is.null(directory)) {
 				pdf(file=paste(directory,'/deltaplotL',i,"-" ,j,'.pdf',sep=''), width=16)
 				par(mfrow=c(1,2))
 				MdeltaXxs=.prepareDeltaplot(lists,i,j,deltas,Mdelta=MdeltaXxs$Mdelta, xxs=MdeltaXxs$xxs)
@@ -489,7 +490,8 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
             if (i!=j){
               ##the next line need to be fixed in order to be more generic (dev.new did not work so far)
                 ##if( .Platform$OS.type =="unix" ) { X11() } else { windows() }
-              if(plotpdf){
+                ##print pdf
+                if(!is.null(directory)){
                 pdf(file=paste(directory,'/subplotL',i,"-" ,j,'.pdf',sep=''), width=16)
               } else {
                 dev.new()
@@ -499,7 +501,7 @@ deltaplot<-function(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE, perc
               extremes = par("usr")
               dimen = par("pin")					   
               subplot(plot(deltas[1:((perc.subplot/100)*length(deltas))],as.vector(xxs[[paste(names(lists)[i],"_",names(lists)[j], sep="")]])[1:((perc.subplot/100)*length(deltas))], xlab="", ylab="", las=1, cex.axis=0.7) , extremes[2], extremes[4], size = c(dimen[1]*0.5, dimen[2]*0.4),hadj=1, vadj=1, pars=list(col="black", mar=c(5,5,1,1)))
-              if(plotpdf)
+              if(!is.null(directory))
                 dev.off()
             }
           }

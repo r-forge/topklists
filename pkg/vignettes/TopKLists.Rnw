@@ -176,7 +176,7 @@ By observing the deltaplot for the first two breast cancer dataset lists (Figure
 
 
 <<mydelta>>=
-a=deltaplot(breast, plotpdf=TRUE, directory=tempdir()) 
+a=deltaplot(breast, directory=tempdir()) 
 @ 
 
 \begin{figure}[H]
@@ -191,7 +191,7 @@ In the obtained \texttt{deltaplot} it can be observed that the switching of the 
 In order to decide about a suitable value for $\delta$, we must limit the \texttt{deltaplot} calculation to a smaller subset of the investigated lists, for example the first 200 objects. Additionally we can use the parameter \texttt{subplot}, which magnifies a selected range of small $\delta$-values in a subplot, defined by parameter \texttt{perc.subplot}.
 
 <<mydelta2>>=
-a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50, plotpdf=TRUE, directory=tempdir())
+a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50, directory=tempdir())
 @
 
 From the Figure \ref{fig:deltaplot_subset200} we can already see, that after let's say $\delta=6$ the decrease of \texttt{deltaplot} is not as dramatical as for lower values of $\delta$. Therefore we should concentrate on results with $\delta$ set between 4 and 10. 

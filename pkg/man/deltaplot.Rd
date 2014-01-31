@@ -8,7 +8,7 @@ Returns a graph of non-overlap (discordance) of rankings represented by the sum 
 }
 \usage{
 deltaplot(lists, deltas=NULL, subset.lists=NULL, subplot = FALSE,
-perc.subplot=50, directory=NULL, plotpdf=FALSE) 
+perc.subplot=50, directory=NULL) 
 }
 \arguments{
   \item{lists}{
@@ -29,12 +29,10 @@ Logical: if TRUE an additional deltaplot is generated containing a detail subplo
 Percentage of the range of the main plot used for creating a subplot in the top right corner, default is 50(\%). Subplot provides a detailed view of the main plot
 }
 \item{directory}{
-Specifies the directory in which to save the generated deltaplots in PDF format.
+Specifies the directory in which to save the generated deltaplots in PDF
+format. In case this is \code{NULL} (default) no pdf is created, but a
+new device will be opened.
 }
-\item{plotpdf}{
-If TRUE, the basic deltaplots (not the subplots) are printed into pdf. Defaults to FALSE.
-}
-
 
 
 }

@@ -450,9 +450,10 @@ return(pj.plus)
 
 prepareIdata <- function(x, d)
 {
-if(ncol(x)<2){cat("You need a minimum of two lists to compare. Execution halted.","\n")
+if(ncol(x)<2){
+    warning("You need a minimum of two lists to compare. Execution halted.","\n")
 }else{
-if(ncol(x)>2){cat("The data matrix you have submitted contains more than two lists (columns). Only first two will be used.","\n")}
+    if(ncol(x)>2){warning("The data matrix you have submitted contains more than two lists (columns). Only first two will be used.","\n")}
 rank.diff = c(1:nrow(x))-match(x[,1],x[,2])
 Idata = as.numeric(abs(rank.diff)<=d)
 Idata[is.na(Idata)] = 0
