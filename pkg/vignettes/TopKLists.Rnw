@@ -384,16 +384,7 @@ and the changes of scores also slow down (this can be similarly observed
 signaling degradation of information.
 
 <<label=bordaPlot, include=FALSE>>=
-plot(1:30,bb1[[2]][1:30,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
-ylab="Borda's score", sub=("(a)"))
-lines(1:30,bb1[[2]][1:30,2], type="o", col="red", pch=2,lty=2)
-lines(1:30,bb1[[2]][1:30,3], type="o", col="red", pch=3,lty=2)
-lines(1:30,bb2[[2]][1:30,1], type="o", col="blue", pch=1,lty=4)
-lines(1:30,bb2[[2]][1:30,2], type="o", col="blue", pch=2,lty=4)
-lines(1:30,bb2[[2]][1:30,3], type="o", col="blue", pch=3,lty=4)
-legend(18,10,legend=c("Platform-depend.", "Top-k spaces"), col=c("red","blue"),
-lty=c(2,4))
-legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
+plotBorda(input, space)
 @
 
 \begin{figure}[h]
@@ -419,6 +410,7 @@ which returns the stationary probability and the rankings, as shown in
 the following examples.
 \\[2ex] 
 \textbf{Call with platform-dependence assumption}
+NOTE: Rename mm to be more clear and not duplicated
 <<>>=
 mm=trans.matrix(input,space)
 MC1=MC.ranks(mm[[2]],mm[[4]])
@@ -446,16 +438,7 @@ the platform-dependent assumption, there appears to be limited information for
 ranking elements beyond the top 10, fairly consistent with what we saw in the Borda 
 plot.
 <<label=equil, include=FALSE>>=
-plot(1:30,probMC1, type="o", col="red", lty=2, pch=1, xlab="Ranking",
-ylab="Stationary probability", sub=("(b)"))
-lines(1:30,probMC2, type="o", col="red", pch=2, lty=2)
-lines(1:30,probMC3, type="o", col="red", pch=3, lty=2)
-lines(1:30,probMC11, type="o", col="blue", pch=1, lty=4)
-lines(1:30,probMC21, type="o", col="blue", pch=2, lty=4)
-lines(1:30,probMC31, type="o", col="blue", pch=3, lty=4)
-legend(18,0.14,legend=c("Platform-depend.", "Top-k space"), col=c("red","blue"),
-lty=c(2,4))
-legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=1:3)
+plotMC(input, space)
 @
 
 

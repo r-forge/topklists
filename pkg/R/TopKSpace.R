@@ -211,3 +211,59 @@ trans.matrix <- function(input, space){
         return(list(e.Topk,L,N,MC1,MC2,MC3))
 }
 
+################### plotting functions
+
+plotBorda <- function(input, space, brange){
+   if(missing(input))
+        stop("You did not provide The borda scores objects")
+   if(missing(space))
+       stop("You did not provide The borda scores objects")
+   if(missing(brange))
+       brange=seq(1,max(sapply(input, length)))
+
+   ##calculate borda scores for both assumptions
+    bb1=Borda(input,space) #platform-dependet
+    bb2=Borda(input,input) #top-k space
+
+   ##plot it
+   par(las=1)
+   plot(brange,bb1[[2]][brange,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
+        ylab="Borda's score", sub=("(a)"))
+   lines(1:30,bb1[[2]][brange,2], type="o", col="red", pch=2,lty=2)
+   lines(1:30,bb1[[2]][brange,3], type="o", col="red", pch=3,lty=2)
+   lines(1:30,bb2[[2]][brange,1], type="o", col="blue", pch=1,lty=4)
+   lines(1:30,bb2[[2]][brange,2], type="o", col="blue", pch=2,lty=4)
+   lines(1:30,bb2[[2]][brange,3], type="o", col="blue", pch=3,lty=4)
+   legend(18,10,legend=c("Platform-depend.", "Top-k spaces"), col=c("red","blue"),
+          lty=c(2,4))
+   legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
+}
+
+plotMC <- function(input, space, prob.range){
+   if(missing(input))
+        stop("You did not provide The borda scores objects")
+   if(missing(space))
+       stop("You did not provide The borda scores objects")
+   if(missing(prob.range))
+       prob.range=seq(1,max(sapply(input, length)))
+
+   ##calculate probs scores for platform-dependence assumption
+   mm.platform <- trans.matrix(input,space)
+   ranks.platform <- lapply(mm.platform[4:6], function(x){MC.ranks(mm.platform[[2]], x)})
+   probs.platform <- lapply(ranks.platform, function(x){rev(sort(x[[2]]))[prob.range]})
+
+   ##calculate probs scores for topk-dependence assumption
+   mm.topk <- trans.matrix(input,input)
+   ranks.topk <- lapply(mm.topk[4:6], function(x){MC.ranks(mm.topk[[2]], x)})
+   probs.topk <- lapply(ranks.topk, function(x){rev(sort(x[[2]]))[prob.range]})
+
+   ##plot it
+   pchs=1:3
+   colos=c("firebrick","navyblue")
+   ltys=c(2,4)
+   par(las=1)
+   matplot(do.call(cbind, c(probs.platform, probs.topk)), xlab="Ranking", ylab="Stationary probability", sub=("(b)"), col=c(rep(colos[1], 3), rep(colos[2], 3)), pch=pchs, type="b", lty=c(rep(ltys[1], 3), rep(ltys[2], 3)))
+   legend(18,0.14,legend=c("Platform-depend.", "Top-k spaces"), col=colos,lty=ltys)
+   legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=pchs)
+}
+
