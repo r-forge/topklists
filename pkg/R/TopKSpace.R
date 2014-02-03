@@ -234,7 +234,7 @@ plotBorda <- function(input, space, brange){
    lines(1:30,bb2[[2]][brange,1], type="o", col="blue", pch=1,lty=4)
    lines(1:30,bb2[[2]][brange,2], type="o", col="blue", pch=2,lty=4)
    lines(1:30,bb2[[2]][brange,3], type="o", col="blue", pch=3,lty=4)
-   legend(18,10,legend=c("Platform-depend.", "Top-k spaces"), col=c("red","blue"),
+   legend(18,10,legend=c("Platform-depend.", "Top-k space"), col=c("red","blue"),
           lty=c(2,4))
    legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
 }
