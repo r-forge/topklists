@@ -1,4 +1,13 @@
-Borda <- function(input,space){
+Borda <- function(input,space=NULL,K=NULL){
+#l2norm is the square root of l2norm to make its unit more comparable with the rest
+	if (missing(input))
+	stop("You need to input the top-k lists to be aggregated")
+	if (is.null(space)==TRUE){ #Will treat it as a common space problem
+                common=sort(unique(unlist(input)))
+                space=vector("list",length(input))
+                for (i in 1:length(input))
+                space[[i]]=common
+                }
 #Compute Borda scores and ranks based on four aggregation function
         nList=length(input)
         e.Topk=space #create extended topk lists of same length as corresp space
@@ -10,8 +19,8 @@ Borda <- function(input,space){
                         temp[index,2]=i
                         }
                 temp[temp[,2]==0,2]=n+1
-                e.Topk[[l]]=temp
-                }
+                e.Topk[[l]]=temp }
+
 
         vec=input[[1]]
         for (l in 2:nList) vec=c(vec,input[[l]])
@@ -20,10 +29,10 @@ Borda <- function(input,space){
 
         rank=matrix(0,nrow=N,ncol=nList)
 
-        for (i in 1:N){
-                #Find the name of the ith element in L
-                a=L[i]
-                #Find the rank in each list or set it to NA
+
+        for (i in 1:N){#Find the name of the ith element in L
+
+                a=L[i]#Find the rank in each list or set it to NA
                 for (l in 1:nList){
                         present=sum(space[[l]]==a)
                         if (present==1){ #element found
@@ -45,14 +54,38 @@ Borda <- function(input,space){
             allfun[,k]=sort(apply(rank,1,aggreg.function[k], na.rm = TRUE))
             allranks[,k]=L[order(apply(rank,1,aggreg.function[k], na.rm = TRUE))]
                 }
-        results=list(allranks,allfun)
-        names(results)=c("RankedObjects", "BordaScores")
+	if (is.null(K)==TRUE) K=N
+	else {if (K>N) K=N}
+        results=list(allranks[1:K,],allfun)
+        names(results)=c("TopK", "Scores")
         return(results)
         }
 
 geomean <- function(x, na.rm=TRUE){
         return(exp(mean(log(x),na.rm=TRUE)))
         }
+
+l2norm <- function(x, na.rm=TRUE){
+        return(sqrt(mean(abs(x)^2,na.rm=TRUE)))
+        }
+
+plotBorda <- function(outBorda, K=NULL, xlab="Ranking",
+ylab="Borda Score",main="",sub=""){
+        if (missing(outBorda))
+        stop("Borda scores missing; need to run Borda first to obtain the scores")
+        scores=outBorda[[2]]
+        if (is.null(K)==TRUE) K=nrow(scores)
+        else {if (K > nrow(scores)) K=nrow(scores)}
+   ##plot it
+   par(las=1)
+   plot(1:K, scores[1:K,1], type="o", col="red", pch=1, lty=1,xlab=xlab,
+        ylab=ylab, main=main, sub=sub,ylim=c(min(scores[1:K,]),max(scores[1:K,])))
+   lines(1:K,scores[1:K,2], type="o", col="blue", pch=2,lty=2)
+   lines(1:K,scores[1:K,3], type="o", col="green", pch=3,lty=3)
+   lines(1:K,scores[1:K,4], type="o", col="magenta", pch=4,lty=4)
+    legend(2*K/3,min(scores[1:K,])+(max(scores[1:K,])-min(scores))/2,
+	legend=c("ARM", "MED", "GEO", "L2Norm"), pch=1:4)
+}      
 
 KendallCriterion <- 
 function(input,space,aggregate,p,w){
@@ -130,11 +163,11 @@ function(input,space,aggregate,p,w){
         return(dall)
 }
 
-l2norm <- function(x, na.rm=TRUE){
-        return(mean(abs(x)^2,na.rm=TRUE))
-        }
 
-MC.ranks <- function(elements, trans, a=0.15, delta=10^-15){
+
+
+
+MC.ranks <- function(elements, trans, a, delta){
 #Compute rankings based on the transition matrix from a MC algorithm
         n=nrow(trans)
         trans=trans*(1-a)+a/n
@@ -149,7 +182,8 @@ MC.ranks <- function(elements, trans, a=0.15, delta=10^-15){
                 count=count+1
                 }
         results=list(count, rev(sort(A[1,])), elements[rev(order(A[1,]))])
-        names(results)=c("Iterations", "StationaryProbabilities", "RankedObjects")
+        #names(results)=c("Iteration", "StationaryProbability", "RankedObject")
+
         return(results)
         }
 
@@ -208,62 +242,97 @@ trans.matrix <- function(input, space){
                 MC2[i,i]=1-sum(MC2[i,-i])
                 MC3[i,i]=1-sum(MC3[i,-i])
                 }
-        return(list(e.Topk,L,N,MC1,MC2,MC3))
+        #return(list(e.Topk,L,N,MC1,MC2,MC3))
+	return(list(L,MC1,MC2,MC3))
 }
 
-################### plotting functions
 
-plotBorda <- function(input, space, brange){
-   if(missing(input))
-        stop("You did not provide The borda scores objects")
-   if(missing(space))
-       stop("You did not provide The borda scores objects")
-   if(missing(brange))
-       brange=seq(1,max(sapply(input, length)))
 
-   ##calculate borda scores for both assumptions
-    bb1=Borda(input,space) #platform-dependet
-    bb2=Borda(input,input) #top-k space
+MC=function(input,space=NULL,K=NULL,a=0.15, delta=10^-15){
+	if (missing(input))
+		stop("You need to input the top-k lists to be aggregated")
+	if (is.null(space)==TRUE){ #Will treat it as a common space problem
+		common=sort(unique(unlist(input)))
+		space=vector("list",length(input))
+		for (i in 1:length(input))
+		space[[i]]=common
+		}
+	out.trans=trans.matrix(input,space)
+	N=length(out.trans[[1]])
+	MC1=MC.ranks(out.trans[[1]], out.trans[[2]],a, delta)
+	MC2=MC.ranks(out.trans[[1]], out.trans[[3]],a, delta)
+	MC3=MC.ranks(out.trans[[1]], out.trans[[4]],a, delta)
+	if (is.null(K)==TRUE) K=N
+	else {if (K>N) K=N}
+	results=list(MC1[[3]][1:K],MC1[[2]],
+		     MC2[[3]][1:K],MC2[[2]],
+		     MC3[[3]][1:K],MC3[[2]])
+	names(results)=c("MC1.TopK", "MC1.Prob",
+			 "MC2.TopK", "MC2.Prob",
+			 "MC3.TopK", "MC3.Prob")
+	return(results)
 
-   ##plot it
-   par(las=1)
-   plot(brange,bb1[[2]][brange,1], type="o", col="red", pch=1, lty=2,xlab="Ranking",
-        ylab="Borda's score", sub=("(a)"))
-   lines(1:30,bb1[[2]][brange,2], type="o", col="red", pch=2,lty=2)
-   lines(1:30,bb1[[2]][brange,3], type="o", col="red", pch=3,lty=2)
-   lines(1:30,bb2[[2]][brange,1], type="o", col="blue", pch=1,lty=4)
-   lines(1:30,bb2[[2]][brange,2], type="o", col="blue", pch=2,lty=4)
-   lines(1:30,bb2[[2]][brange,3], type="o", col="blue", pch=3,lty=4)
-   legend(18,10,legend=c("Platform-depend.", "Top-k space"), col=c("red","blue"),
-          lty=c(2,4))
-   legend(22,6,legend=c("ARM", "MED", "GEO"), pch=1:3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
-plotMC <- function(input, space, prob.range){
-   if(missing(input))
-        stop("You did not provide The borda scores objects")
-   if(missing(space))
-       stop("You did not provide The borda scores objects")
-   if(missing(prob.range))
-       prob.range=seq(1,max(sapply(input, length)))
+plotMC <- function(outMC, K, xlab="Ranking", ylab="MC Stationary Probability",
+main=""){
 
-   ##calculate probs scores for platform-dependence assumption
-   mm.platform <- trans.matrix(input,space)
-   ranks.platform <- lapply(mm.platform[4:6], function(x){MC.ranks(mm.platform[[2]], x)})
-   probs.platform <- lapply(ranks.platform, function(x){rev(sort(x[[2]]))[prob.range]})
 
-   ##calculate probs scores for topk-dependence assumption
-   mm.topk <- trans.matrix(input,input)
-   ranks.topk <- lapply(mm.topk[4:6], function(x){MC.ranks(mm.topk[[2]], x)})
-   probs.topk <- lapply(ranks.topk, function(x){rev(sort(x[[2]]))[prob.range]})
 
-   ##plot it
-   pchs=1:3
-   colos=c("firebrick","navyblue")
-   ltys=c(2,4)
+	if (missing(outMC))
+	stop("MC stationary probabilities missing; need to run MC first to obtain the probabilities")
+	N=length(outMC[[2]])
+	if (missing(K)) K=N
+	else {if (K>N) K=N}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	   ##plot it
+
+
+
    par(las=1)
-   matplot(do.call(cbind, c(probs.platform, probs.topk)), xlab="Ranking", ylab="Stationary probability", sub=("(b)"), col=c(rep(colos[1], 3), rep(colos[2], 3)), pch=pchs, type="b", lty=c(rep(ltys[1], 3), rep(ltys[2], 3)))
-   legend(18,0.14,legend=c("Platform-depend.", "Top-k spaces"), col=colos,lty=ltys)
-   legend(22,0.115,legend=c("MC1", "MC2", "MC3"), pch=pchs)
+	ymin=min(c(unlist(outMC[[2]][1:K]),unlist(outMC[[4]][1:K]),unlist(outMC[[6]][1:K])))
+	ymax=max(c(unlist(outMC[[2]][1:K]),unlist(outMC[[4]][1:K]),unlist(outMC[[6]][1:K])))
+   plot(1:K, outMC[[2]][1:K], type="n", col="red", pch=1, lty=1,xlab=xlab,
+        ylab=ylab, main=main, ylim=c(ymin,ymax))
+   lines(1:K,outMC[[2]][1:K], type="o", col="red", pch=1,lty=1)
+   lines(1:K,outMC[[4]][1:K], type="o", col="blue", pch=2,lty=2)
+   lines(1:K,outMC[[6]][1:K], type="o", col="green", pch=3,lty=3)
+
+
+    legend(2*K/3,ymin+(ymax-ymin)/2,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 }
 
