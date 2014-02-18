@@ -3,7 +3,7 @@
 ###Last modified: 04/28/10
 
 `CEMC` <-
-function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
+function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  
 
@@ -25,6 +25,8 @@ function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
   ##d.w: weights for distances from different input lists
   ##input.par: input parameters in a dataframe
 
+if (missing(input))
+	stop("You need to input the top-k lists to be aggregated")
   if (!is.null(input.par)) {
     for (p.n in names(input.par))
       assign(p.n,input.par[1,p.n])
@@ -32,15 +34,18 @@ function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
 
   time.start <- proc.time()
 
-  topK.input <- topK
+  topK.input <- input
   space.input <- space
   
-  a <- length(topK) # number of input top K lists
+  a <- length(input) # number of input top K lists
   k.a <- numeric(a) # lengths of input lists
   for (i in 1:a)
-    k.a[i] <- length(topK[[i]])
-  item <- sort(unique(unlist(topK))) # all items in the input top K lists
+    k.a[i] <- length(input[[i]])
+  item <- sort(unique(unlist(input))) # all items in the input top K lists
   n <- length(item)
+#added to allow for k to be NULL
+if (is.null(k)==TRUE) k=n
+        else {if (k>n) k=n}
   if (extra > 0) {
     n <- n + extra
     k <- k + extra
@@ -49,17 +54,17 @@ function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
   rank.a <- matrix(0,nrow=n,ncol=a)
   if (is.null(space)) { 
     for (i in 1:a) {
-      topK[[i]] <- match(topK[[i]],item) # recode items from 1 to n
+      input[[i]] <- match(input[[i]],item) # recode items from 1 to n
       rank.a[,i] <- 1+k.a[i]
-      rank.a[topK[[i]],i] <- 1:k.a[i]
+      rank.a[input[[i]],i] <- 1:k.a[i]
     }
   }
   else {
     for (i in 1:a) {
-      topK[[i]] <- match(topK[[i]],item) # recode items from 1 to n
+      input[[i]] <- match(input[[i]],item) # recode items from 1 to n
       space[[i]] <- match(space[[i]],item) 
       rank.a[space[[i]],i] <- 1+k.a[i]
-      rank.a[topK[[i]],i] <- 1:k.a[i]
+      rank.a[input[[i]],i] <- 1:k.a[i]
     }
   }
   
@@ -69,7 +74,7 @@ function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
   if (is.null(N1))
     N1 <- round(0.1 * N)
 
-  p <- init.p(topK,n,k,init.m,init.w)
+  p <- init.p(input,n,k,init.m,init.w)
   p2 <- p
   y <- 0
   samp2 <- TopKSample.c(.blur(p,b),N1)
@@ -137,10 +142,10 @@ function(topK,k,space=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
   time.end <- proc.time()
   time.use <- sum((time.end-time.start)[-3])
   
-  list(topK=result.ori,p=p,
-       output.other=data.frame(diff.p=diff.p, uc=uc,dist.s=dist.s,
-       dist.k=dist.k, iter=iter, time=time.use),
-       input.list=topK.input,input.space=space.input,d.w=d.w,
+  list(TopK=result.ori,ProbMatrix=p,
+       #output.other=data.frame(diff.p=diff.p, uc=uc,dist.s=dist.s,
+       #dist.k=dist.k, iter=iter, time=time.use),
+       #input.list=topK.input,input.space=space.input,d.w=d.w,
        input.par=data.frame(k=k,dm=I(dm),kp=kp,N=N,N1=N1,extra=extra,
        rho=rho,e1=e1,e2=e2,w=w,b=b,init.m=I(init.m),init.w=init.w))
 }
