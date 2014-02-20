@@ -3,7 +3,7 @@
 ###Last modified: 04/28/10
 
 `CEMC` <-
-function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL,N1=NULL,rho=0.1,
+function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  
 
@@ -70,7 +70,8 @@ if (is.null(k)==TRUE) k=n
   
   ##set default values for N and N1
   if (is.null(N))
-    N <- 10 * n
+    N <- 50 * n
+
   if (is.null(N1))
     N1 <- round(0.1 * N)
 

@@ -12,37 +12,45 @@ Borda <- function(input,space=NULL,K=NULL){
         nList=length(input)
         e.Topk=space #create extended topk lists of same length as corresp space
         for (l in 1:nList){
-                temp=matrix(c(space[[l]],rep(0,length(space[[l]]))),ncol=2)
+
                 n=length(input[[l]])
-                for (i in 1:n){
-                        index=rev(order(input[[l]][i]==temp[,1]))[1]
-                        temp[index,2]=i
-                        }
-                temp[temp[,2]==0,2]=n+1
-                e.Topk[[l]]=temp }
+                e.Topkl=rep(n+1,length(space[[l]]))
+                e.Topkl[match(input[[l]], space[[l]])]=1:n
 
 
-        vec=input[[1]]
-        for (l in 2:nList) vec=c(vec,input[[l]])
-        L=unique(vec)
+
+
+
+                e.Topk[[l]]=e.Topkl
+                }
+
+	#Find common elements
+        L=unique(unlist(input))
+
+
+
+
         N=length(L)
 
+	#Build a matrix with each column being a ranked list NA if not in space
         rank=matrix(0,nrow=N,ncol=nList)
+        for (i in 1:nList)
+		rank[,i]=e.Topk[[i]][match(L,space[[i]])]
 
 
-        for (i in 1:N){#Find the name of the ith element in L
 
-                a=L[i]#Find the rank in each list or set it to NA
-                for (l in 1:nList){
-                        present=sum(space[[l]]==a)
-                        if (present==1){ #element found
-                                index=rev(order(space[[l]]==a))[1]
-                                rank[i,l]=e.Topk[[l]][index,2]
-                                }
-                        if (present==0) #element not found
-                                rank[i,l]=NA
-                        }
-                }
+
+
+
+
+
+
+
+
+
+
+
+
 
         #Aggregate results
         aggreg.function=c("mean","median","geomean","l2norm")
@@ -87,81 +95,81 @@ ylab="Borda Score",main="",sub=""){
 	legend=c("ARM", "MED", "GEO", "L2Norm"), pch=1:4)
 }      
 
-KendallCriterion <- 
-function(input,space,aggregate,p,w){
-#Compute Kenall's criterion
-        nList=length(input)
-        scale=rep(0,nList)
-        for (l in 1:nList)
-                scale[l]=length(input[[l]])*(length(input[[l]])-1)/2
-        e.Topk=space #create extended topk lists of same length as corresp space
-        for (l in 1:nList){
-                temp=matrix(c(space[[l]],rep(0,length(space[[l]]))),ncol=2)
-                n=length(input[[l]])
-                for (i in 1:n){
-                        index=rev(order(input[[l]][i]==temp[,1]))[1]
-                        temp[index,2]=i
-                        }
-                temp[temp[,2]==0,2]=n+1
-                e.Topk[[l]]=temp
-                }
-        vec=input[[1]]
-        for (l in 2:nList) vec=c(vec,input[[l]])
-        L=unique(vec)
-        N=length(L)
-        #create extended aggregate list of same length as union of topk lists
-        e.aggregate=matrix(0,nrow=N,ncol=2)
-        e.aggregate[,1]=L
-        for (i in 1:(length(aggregate))){
-                index=rev(order(aggregate[i]==e.aggregate[,1]))[1]
-                e.aggregate[index,2]=i
-                }
-        e.aggregate[e.aggregate[,2]==0,2]=length(aggregate)+1
-        dall=0
-        for (l in 1:nList){
-                #find S_1 U S_2 where S_1 is e.Topk[[l]][,1] and S_2 is
-                # e.aggregate[,1]
-                newSpace=unique(c(e.Topk[[l]][,1],e.aggregate[,1]))
-                M=length(newSpace)
-                e.newSpace=matrix(0,nrow=M,ncol=3)
-                e.newSpace[,1]=newSpace
-                for (i in 1:(nrow(e.Topk[[l]]))){
-                        index=rev(order(e.Topk[[l]][i,1]==e.newSpace[,1]))[1]
-                        e.newSpace[index,2]=e.Topk[[l]][i,2]
-                        }
-                e.newSpace[e.newSpace[,2]==0,2]=99999
-                for (i in 1:(nrow(e.aggregate))){
-                        index=rev(order(e.aggregate[i,1]==e.newSpace[,1]))[1]
-                        e.newSpace[index,3]=e.aggregate[i,2]
-                        }
-                e.newSpace[e.newSpace[,3]==0,3]=99999
-                #Now we have a matrix with 3 columns
-                #1st col is names of elements in the union of the two spaces
-                #2nd col is the rank (including k+1 and NA) of input list
-                #3rd col is the rank (including k+1 and NA) of aggregate list
-                d=0
-                for (u in 1:(M-1))
-                for (v in (u+1):M){
-                        done=0
-                if (sum(c(e.newSpace[u,2]==99999,e.newSpace[u,3]==99999,e.newSpace[v,2]==99999,e.newSpace[v,3]==99999))>0){
-                        #not in one of the spaces
-                        d=d+p
-                        done=1
-                        }
-                        if ((done==0) && (((e.newSpace[u,2]-e.newSpace[v,2])*(e.newSpace[u,3]-e.newSpace[v,3]))==0)){
-                        #both elements not ranked in one list
-                        d=d+p
-                        done==1
-                        }
-                        if ((done==0) && (((e.newSpace[u,2]-e.newSpace[v,2])*(e.newSpace[u,3]-e.newSpace[v,3]))!=0))
-                        #at least one is ranked in each list
-                        d=d+(((e.newSpace[u,2]-e.newSpace[v,2])*(e.newSpace[u,3]-e.newSpace[v,3]))<0)
-                        }
-                d=w[l]*d/scale[l]
-                dall=dall+d
-                }
-        return(dall)
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -192,21 +200,27 @@ trans.matrix <- function(input, space){
         #Both input and space are lists of the same length=nList
         nList=length(input)
         e.Topk=space #create extended topk lists of same length as corresp space
-        for (l in 1:nList){
-                temp=matrix(c(space[[l]],rep(0,length(space[[l]]))),ncol=2)
+	for (l in 1:nList){
+
                 n=length(input[[l]])
-                for (i in 1:n){
-                        index=rev(order(input[[l]][i]==temp[,1]))[1]
-                        temp[index,2]=i
-                        }
-                temp[temp[,2]==0,2]=n+1
-                e.Topk[[l]]=temp
+                e.Topkl=rep(n+1,length(space[[l]]))
+                e.Topkl[match(input[[l]], space[[l]])]=1:n
+
+
+
+
+
+                e.Topk[[l]]=e.Topkl
                 }
-        vec=input[[1]]
-        for (l in 2:nList) vec=c(vec,input[[l]])
-        L=unique(vec)
+
+	#Union of all top-k lists
+        L=unique(unlist(input))
+
+
+
         N=length(L)
-        MC1=MC2=MC3=matrix(0,nrow=N, ncol=N)
+        
+	MC1=MC2=MC3=matrix(0,nrow=N, ncol=N)
 
         #Build lookup table
         lookup=matrix(c(rep(L,rep(N,N)),rep(L,N)),ncol=2)
@@ -217,22 +231,27 @@ trans.matrix <- function(input, space){
                 a=lookup[i,1]
                 b=lookup[i,2]
                 found=0; nn=0;
-                for (l in 1:nList){
-                        present=sum(space[[l]]==a)+sum(space[[l]]==b)
-                        if (present==2){ #both elements in list
-                        found=found+1
-                        index1=rev(order(space[[l]]==a))[1]
-                        index2=rev(order(space[[l]]==b))[1]
-                        nn=nn+sum(e.Topk[[l]][index1,2]>e.Topk[[l]][index2,2])
-                        }
-                        }
-                index1=rev(order(L==a))[1]
-                index2=rev(order(L==b))[1]
-                if (found!=0){MC1[index1,index2]=ceiling(nn/found)
-                              MC2[index1,index2]=floor(nn/found+0.5)
-                              MC3[index1,index2]=nn/found
-                             }
-                if (found==0) MC1[index1,index2]=MC2[index1,index2]=MC3[index1,index2]=0.5
+		for (l in 1:nList){
+			found=found+(a %in% space[[l]])*(b %in% space[[l]])
+
+
+
+
+
+			nn=nn+sum(e.Topk[[l]][match(a,space[[l]])]>
+				e.Topk[[l]][match(b,space[[l]])],na.rm=TRUE)
+		}
+
+
+		index1=match(a,L)
+		index2=match(b,L)
+		MC1[index1,index2]=ceiling(nn/(found*(found!=0)+(found+1)*(found==0))*
+			(found!=0)+0.5*(found==0))
+                MC2[index1,index2]=floor(nn/found+0.5)*(found!=0)+0.5*(found==0)
+                MC3[index1,index2]=nn/(found*(found!=0)+(found+1)*(found==0))*
+
+
+			(found!=0)+0.5*(found==0)
                 }
         MC1=MC1/N
         MC2=MC2/N
@@ -331,8 +350,104 @@ main=""){
    lines(1:K,outMC[[2]][1:K], type="o", col="red", pch=1,lty=1)
    lines(1:K,outMC[[4]][1:K], type="o", col="blue", pch=2,lty=2)
    lines(1:K,outMC[[6]][1:K], type="o", col="green", pch=3,lty=3)
-
-
     legend(2*K/3,ymin+(ymax-ymin)/2,legend=c("MC1", "MC2", "MC3"), pch=1:3)
+}
+
+Kendall <-function(input,aggregate,space=NULL,p=0.5,w=NULL){
+if (missing(input))
+        stop("You need to input the individual top-k lists")
+if (missing(aggregate))
+        stop("You need to have the aggregate top-k list")
+if (is.null(space)==TRUE){ #Will treat it as a common space problem
+                common=sort(unique(unlist(input)))
+                space=vector("list",length(input))
+                for (i in 1:length(input))
+                space[[i]]=common
+                }
+
+        nList=length(input)
+        if (is.null(w)==TRUE) w=rep(1,nList) #Set weights if not provided
+
+#create extended topk lists of same length as corresp space
+        e.Topk=space
+        for (l in 1:nList){
+                n=length(input[[l]])
+                e.Topkl=rep(n+1,length(space[[l]]))
+                e.Topkl[match(input[[l]], space[[l]])]=1:n
+                e.Topk[[l]]=e.Topkl
+                }
+
+#create extended aggergate list for the union of all input lists
+        L=unique(unlist(input))
+        N=length(L)
+        e.aggregate=matrix(0,nrow=N,ncol=2)
+        e.aggregate[,1]=L
+        e.aggregate[,2]=length(aggregate)+1
+        e.aggregate[match(aggregate,e.aggregate),2]=1:length(aggregate)
+
+#Now compute Kendall's distance
+        dall=0
+        for (l in 1:nList){#build a matrix that contains the ranking for the 
+#specific space and the aggregate list  
+        newSpace=unique(c(space[[l]],e.aggregate[,1]))
+        M=length(newSpace)
+        scale=M*(M-1)/2 #scale to normalize the length
+        e.newSpace=as.data.frame(matrix(0,nrow=M,ncol=3))
+        e.newSpace[,1]=newSpace
+        e.newSpace[,2:3]=99999
+        e.newSpace[match(space[[l]],newSpace),2]=e.Topk[[l]]
+        e.newSpace[match(e.aggregate[,1],newSpace),3]=e.aggregate[,2]
+        #build long vectors (matrix)
+        n=nrow(e.newSpace)
+        long=rep(as.numeric(e.newSpace[1:(n-1),2]),(n-1):1)
+        allranks=matrix(0,nrow=length(long),ncol=4)
+        allranks[,1]=long
+        allranks[,3]=rep(as.numeric(e.newSpace[1:(n-1),3]),(n-1):1)
+        for (i in 1:(n-1)) {allranks[((i-1)*n-i*(i-1)/2+1):(i*n-i*(i+1)/2),2]=
+                as.numeric(e.newSpace[(i+1):n,2])
+                allranks[((i-1)*n-i*(i-1)/2+1):(i*n-i*(i+1)/2),4]=
+                as.numeric(e.newSpace[(i+1):n,3])}
+        #compute distance
+        notmissing=(allranks[,1]!=99999)*(allranks[,2]!=99999)*
+                (allranks[,3]!=99999)*(allranks[,4]!=99999)
+dall=dall+(sum(((allranks[,1]-allranks[,2])*(allranks[,3]-(allranks[,4]))<0)*notmissing+
+                ((allranks[,1]-allranks[,2])*(allranks[,3]-(allranks[,4]))==0)*notmissing
+*p
+                +(1-notmissing)*p))/scale
+        }
+        names(dall)="Modified Kendall Distance"
+        return(dall)
+}
+
+plotKendall=function(input, all.aggregates, space=NULL, algorithm=NULL, p=0.5, w=NULL){
+if (missing(input))
+        stop("You need to input the individual top-k lists")
+if (missing(all.aggregates))
+        stop("You need to have the aggregate top-k lists for comparison")
+if (is.null(space)==TRUE){ #Will treat it as a common space problem
+                common=sort(unique(unlist(input)))
+                space=vector("list",length(input))
+                for (i in 1:length(input))
+                space[[i]]=common
+                }
+
+nList=length(input)
+        if (is.null(w)==TRUE) w=rep(1,nList) #Set weights if not provided
+
+n=length(all.aggregates)
+
+if (is.null(algorithm)==TRUE)
+        algorithm=paste(rep("alg",n),1:n)
+
+kd=rep(0,n)
+for (i in 1:n)
+        kd[i]=Kendall(input, all.aggregates[[i]], space,p,w)
+names(kd)=algorithm
+plot(1:n,kd,type="o",xaxt="n",xlab="Algorithm",ylab="Modified Kendall Distance")
+axis(1, at = 1:n, labels =algorithm)
+kdl=list(kd)
+names(kdl)="Modified Kendall Distance"
+return(kdl)
+
 }
 
