@@ -12,45 +12,20 @@ Borda <- function(input,space=NULL,K=NULL){
         nList=length(input)
         e.Topk=space #create extended topk lists of same length as corresp space
         for (l in 1:nList){
-
                 n=length(input[[l]])
                 e.Topkl=rep(n+1,length(space[[l]]))
                 e.Topkl[match(input[[l]], space[[l]])]=1:n
-
-
-
-
-
                 e.Topk[[l]]=e.Topkl
                 }
 
 	#Find common elements
         L=unique(unlist(input))
-
-
-
-
         N=length(L)
 
 	#Build a matrix with each column being a ranked list NA if not in space
         rank=matrix(0,nrow=N,ncol=nList)
         for (i in 1:nList)
 		rank[,i]=e.Topk[[i]][match(L,space[[i]])]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         #Aggregate results
         aggreg.function=c("mean","median","geomean","l2norm")
@@ -95,86 +70,6 @@ ylab="Borda Score",main="",sub=""){
 	legend=c("ARM", "MED", "GEO", "L2Norm"), pch=1:4)
 }      
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 MC.ranks <- function(elements, trans, a, delta){
 #Compute rankings based on the transition matrix from a MC algorithm
         n=nrow(trans)
@@ -191,7 +86,6 @@ MC.ranks <- function(elements, trans, a, delta){
                 }
         results=list(count, rev(sort(A[1,])), elements[rev(order(A[1,]))])
         #names(results)=c("Iteration", "StationaryProbability", "RankedObject")
-
         return(results)
         }
 
@@ -201,23 +95,14 @@ trans.matrix <- function(input, space){
         nList=length(input)
         e.Topk=space #create extended topk lists of same length as corresp space
 	for (l in 1:nList){
-
                 n=length(input[[l]])
                 e.Topkl=rep(n+1,length(space[[l]]))
                 e.Topkl[match(input[[l]], space[[l]])]=1:n
-
-
-
-
-
                 e.Topk[[l]]=e.Topkl
                 }
 
 	#Union of all top-k lists
         L=unique(unlist(input))
-
-
-
         N=length(L)
         
 	MC1=MC2=MC3=matrix(0,nrow=N, ncol=N)
@@ -233,24 +118,15 @@ trans.matrix <- function(input, space){
                 found=0; nn=0;
 		for (l in 1:nList){
 			found=found+(a %in% space[[l]])*(b %in% space[[l]])
-
-
-
-
-
 			nn=nn+sum(e.Topk[[l]][match(a,space[[l]])]>
 				e.Topk[[l]][match(b,space[[l]])],na.rm=TRUE)
 		}
-
-
 		index1=match(a,L)
 		index2=match(b,L)
 		MC1[index1,index2]=ceiling(nn/(found*(found!=0)+(found+1)*(found==0))*
-			(found!=0)+0.5*(found==0))
-                MC2[index1,index2]=floor(nn/found+0.5)*(found!=0)+0.5*(found==0)
+			(found!=0))+0.5*(found==0)
+                MC2[index1,index2]=floor(nn/(found*(found!=0)+(found+1)*(found==0))+0.5)*(found!=0)+0.5*(found==0)
                 MC3[index1,index2]=nn/(found*(found!=0)+(found+1)*(found==0))*
-
-
 			(found!=0)+0.5*(found==0)
                 }
         MC1=MC1/N
@@ -264,8 +140,6 @@ trans.matrix <- function(input, space){
         #return(list(e.Topk,L,N,MC1,MC2,MC3))
 	return(list(L,MC1,MC2,MC3))
 }
-
-
 
 MC=function(input,space=NULL,K=NULL,a=0.15, delta=10^-15){
 	if (missing(input))
@@ -290,58 +164,16 @@ MC=function(input,space=NULL,K=NULL,a=0.15, delta=10^-15){
 			 "MC2.TopK", "MC2.Prob",
 			 "MC3.TopK", "MC3.Prob")
 	return(results)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 plotMC <- function(outMC, K, xlab="Ranking", ylab="MC Stationary Probability",
 main=""){
-
-
-
 	if (missing(outMC))
 	stop("MC stationary probabilities missing; need to run MC first to obtain the probabilities")
 	N=length(outMC[[2]])
 	if (missing(K)) K=N
 	else {if (K>N) K=N}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	   ##plot it
-
-
-
    par(las=1)
 	ymin=min(c(unlist(outMC[[2]][1:K]),unlist(outMC[[4]][1:K]),unlist(outMC[[6]][1:K])))
 	ymax=max(c(unlist(outMC[[2]][1:K]),unlist(outMC[[4]][1:K]),unlist(outMC[[6]][1:K])))
@@ -448,6 +280,5 @@ axis(1, at = 1:n, labels =algorithm)
 kdl=list(kd)
 names(kdl)="Modified Kendall Distance"
 return(kdl)
-
 }
 
