@@ -2,10 +2,10 @@
 \alias{MC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+TBD
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+TBD
 }
 \usage{
 MC(input, space = NULL, K = NULL, a = 0.15, delta = 10^-15)

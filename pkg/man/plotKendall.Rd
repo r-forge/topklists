@@ -2,10 +2,10 @@
 \alias{plotKendall}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+TBD
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+TBD
 }
 \usage{
 plotKendall(input, all.aggregates, space = NULL, algorithm = NULL, p = 0.5, w = NULL)
