@@ -9,39 +9,50 @@ Plot of the ordered stationary probabilities versus ranking contains useful info
 regarding the relative rankings of elements. 
 }
 \usage{
-plotMC(input, space, prob.range)
+
+plotMC(outMC, K, xlab="Ranking", ylab="MC Stationary Probability", main="")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{input}{
-A list containing individual ranked lists
+  \item{outMC}{
+
+Output (a list) from running the MC algorithm 
 }
-  \item{space}{
-A list containing the underlying spaces
+  \item{K}{
+
+Number of stationary probabilities to be plotted. If missing, all stationary probabilities contained in the MC output will be plotted
 }
-  \item{prob.range}{
-The range to be plotted. Set to the max length of \code{input} lists by default.
+  \item{xlab}{
+
+Text for x-label
 }
+  \item{ylab}{
+Text for y-label
+}
+  \item{main}{
+Text for title of plot, if desire
 }
 \details{
-TODO
+
 }
 \value{
 A plot of ordered stationary probabilities versus ranking.
 }
 \references{
-TODO
+
 }
 \author{
-Shili Lin
+Shili Lin <shili@stat.osu.edu}
 }
 
 \seealso{
-\code{\link{trans.matrix}}, \code{\link{MC.ranks}} 
+
+\code{\link{MC}} 
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-plotMC(input, space)
+outMC=MC(input,space)
+plotMC(outMC)
 }
 

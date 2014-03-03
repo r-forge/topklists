@@ -46,20 +46,21 @@ Shili Lin <shili@stat.osu.edu>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-trans.matrix
+
+MC
 }
-\examples{
-#get sample data
-data(TopKSpaceSampleInput)
 
-mm=trans.matrix(input,space) #platform dependent
-MC1=MC.ranks(mm[[2]],mm[[4]])
-MC2=MC.ranks(mm[[2]],mm[[5]])
-MC3=MC.ranks(mm[[2]],mm[[6]])
 
-mm1=trans.matrix(input,input) #top-k spaces
-MC11=MC.ranks(mm1[[2]],mm1[[4]])
-MC21=MC.ranks(mm1[[2]],mm1[[5]])
-MC31=MC.ranks(mm1[[2]],mm1[[6]])
+
+
+
+
+
+
+
+
+
+
+
 }
 

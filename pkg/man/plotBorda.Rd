@@ -8,28 +8,39 @@ Function to plot Borda's scores and ranks
 ranking starts to diminish. This function function plots scores and ranks after aggregation.
 }
 \usage{
-plotBorda(input, space, brange)
+plotBorda(outBorda,K,xlab,ylab,main,sub)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{input}{
-A list containing individual ranked lists
+  \item{outBorda}{
+A list containing the output from runing the Borda function
 }
-  \item{space}{
-A list containing the underlying spaces
+  \item{K}{
+
+The number of scores to be plotted. If not supplied, all the scores in the output from Borda will be plotted.
 }
-  \item{brange}{
-The range to be plotted. Set to the max length of \code{input} lists by default.
+  \item{xlab}{
+
+Desired text for x-label
+}
+  \item{ylab}{
+Desired text for y-label
+}
+  \item{main}{
+Desired text for title
+}
+  \item{sub}{
+Desired text for sub in plotting function - useful if there are multiple plots in a single figure
 }
 }
 \value{
-A plot of Borda's scores and ranks
+A plot of Borda's scores versus ranks
 }
 \references{
-TODO
+
 }
 \author{
- SHili Lin
+ SHili Lin <shili@stat.osu.edu>
 }
 \seealso{
 \code{\link{Borda}}
@@ -37,6 +48,7 @@ TODO
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-plotBorda(input, space)
+outBorda=Borda(input,space,K=40)
+plotBorda(outBorda, K=40)
 }
 

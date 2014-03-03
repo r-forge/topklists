@@ -24,11 +24,13 @@ Both input and space are lists of the same \code{length = nList}
 }
 \value{
 The output is a list: 
-\item{comp1 }{A list with three components - each component is an extended top-\emph{k} list of the same length as the corresponding space}
-\item{comp2 }{Unique elements of the union of all input ranked lists}
-\item{comp3 }{The number of unique elements, i.e., length of component 2}
-\item{Comp4-6 }{All three components form the transition matrix constructed from one of the three Markov chain algorithms
-}
+
+\item{L }{Unique elements of the union of all input ranked lists}
+
+
+\item{MC1 }{The transition matrix constructed from the MC1 algorithm}
+\item{MC2 }{The transition matrix constructed from the MC2 algorithm}
+\item{MC3 }{The transition matrix constructed from the MC3 algorithm}
 }
 \references{
 Lin, S. (2010)
@@ -41,13 +43,14 @@ Shili Lin <shili@stat.osu.edu>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-MC.ranks
+
+MC
 }
 \examples{
 #get sample data
-data(TopKSpaceSampleInput)
 
-trans.matrix(input, space)
+
+
 }
 
 

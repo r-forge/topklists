@@ -8,7 +8,7 @@ CEMC combination of (top-\emph{k}) ranked lists
 Performs cross-entropy Monte Carlo simluations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists
 }
 \usage{
-CEMC(topK, k, space = NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
+CEMC(topK, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
 rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0,
 d.w = NULL, input.par = NULL, extra=0)
 }
@@ -17,12 +17,15 @@ d.w = NULL, input.par = NULL, extra=0)
   \item{topK}{
 A list of several TopKLists, may have different length
 }
+  \item{space}{
+A list of the same structure as the topK list. Contains underlying spaces for the top-K lists. NULL means all lists share a common space, which is taken to be the union of all input lists
+}
   \item{k}{
 Desired length of combined list
 }
-  \item{space}{
-A list of the same structure as the topK list. Contains underlying spaces for the topK lists. NULL means all lists share a common space.
-}
+
+
+
   \item{dm}{
 Distance measure, "s" for spearman, "k" for kendall(p=0)
 }
@@ -81,13 +84,16 @@ Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte
 Jie Ding <jding@jimmy.harvard.edu>, Shili Lin <shili@stat.osu.edu>
 }
 \examples{
+#get sample data
+data(TopKSpaceSampleInput)
 set.seed(1234)
-a <- LETTERS[sample(1:20, 10)]
-b <- LETTERS[sample(1:20, 10)]
-c <- LETTERS[sample(1:20, 10)]
 
-myin <- list(a, b, c)
 
-CEMC(myin, 10, init.m= "p")
+
+
+
+
+
+outCEMC=CEMC(input, space)
 }
 
