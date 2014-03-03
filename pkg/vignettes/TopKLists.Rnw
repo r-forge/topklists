@@ -549,7 +549,7 @@ pd = CEMC(topK, space, res$maxK)
 
 Finally we obtain the following optimized aggregation result:
 <<>>=
-pd$topK
+pd$TopK
 @
 
 
@@ -573,14 +573,24 @@ the so-called \textit{deltaplot}. It represents the reduction of discordance as 
 sums remain zero, complete concordance is attained. A reasonable choice for the distance parameter
 is associated with a distinct decline in the number of 0's. Generally one should choose a value for $\delta$ where the rate of the \textit{deltaplot}'s decrease begins to slow noticeably. Of course, prior information about the ranking mechanisms involved and the nature of the data is also relevant for the selection of $\delta$. 
 
-%<<setup, cache = FALSE>>=
-%opts_knit$set(eval.after = 'fig.cap') # evaluate fig.cap after the chunk
-%@
 
-<<deltaplot_complete, echo=TRUE, include=TRUE, pdf=TRUE, fig.pos="H", fig.keep='first', fig.align="center", tidy=TRUE, out.width='9cm', out.height='9cm', fig.cap="Deltaplot for lists MDCC vs. Pusztai">>=
-a=deltaplot(breast, deltas = seq(0,300, by=5)) 
+<<>>=
+deltaplot.dir <- paste0(tempdir(), "/deltaplot")
+dir.create(deltaplot.dir, showWarnings = FALSE)
+subplot.dir <- paste0(tempdir(), "/subplot")
+dir.create(subplot.dir, showWarnings = FALSE)
 @ 
 
+<<fig.show='hide'>>=
+a=deltaplot(breast, deltas = seq(0,300, by=5), directory=deltaplot.dir) 
+@ 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.35]{\Sexpr{gsub("\\\\", replacement="/", deltaplot.dir)}/deltaplotL2-3.pdf}\\
+\caption{Deltaplot for lists MDCC vs. Pusztai}
+\label{fig:deltaplot_complete}
+\end{figure}
 
 When observing the \textit{deltaplot} for the first two breast cancer dataset lists (Figure \ref{fig:deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used. This is because there is no visible point where the \texttt{deltaplot}'s decrease changes its direction. 
 
@@ -588,18 +598,17 @@ When observing the \textit{deltaplot} for the first two breast cancer dataset li
 It can also be observed from the Figure~\ref{fig:deltaplot_complete} that switching the reference list from, for example \texttt{Putsztai} to \texttt{MDCC} or vice versa, has little impact on the graph.
 In order to choose a suitable value for $\delta$, we must limit the \textit{deltaplot} calculation to a smaller subset of the investigated lists, for example the first 200 objects. Additionally, the \texttt{subplot} parameter can be used, which magnifies a selected range of small $\delta$-values in a subplot, defined by the \texttt{perc.subplot} parameter.
 
-<<mydelta2, echo=TRUE, out.width='9cm', out.height='9cm'>>=
-a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50, directory=tempdir())
+<<fig.show='hide'>>=
+a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50, directory=subplot.dir)
 @
 
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.35]{\Sexpr{gsub("\\\\", replacement="/", tempdir())}/subplotL2-3.pdf}\\
+\includegraphics[scale=0.35]{\Sexpr{gsub("\\\\", replacement="/", subplot.dir)}/subplotL2-3.pdf}\\
 \caption{Deltaplot for lists MDCC vs. Pusztai for first 200 objects}
 \label{fig:deltaplot_subset200}
 \end{figure}
-
 In Figure \ref{fig:deltaplot_subset200} it can be seen that after, say, $\delta=6$ the decrease of \textit{deltaplot} is not as pronounced as for lower values of $\delta$. Therefore, it would be logical to concentrate on those results where $\delta$ is set to between 4 and 10. 
 
 The calculation of the overall truncation index \texttt{maxK} for pre-specified values of $\delta$ and $\nu$ is performed using the \texttt{j0.multi} function. 
