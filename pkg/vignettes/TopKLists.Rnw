@@ -41,8 +41,8 @@ options(width=60)
 
 \tableofcontents
 \newpage
-\section{Introduction and background}
-
+\section{Introduction and example dataset}
+\label{sec:introduction}
 The ranking of distinct items has become mainstream in recent years. Examples include Web search engine results for query terms, institution league tables in higher education, preference rankings of brands, betting results in sports, results from microarray platforms in biotechnology, and meta-analysis of multiple study findings in medicine, among many others. The rank position of an object or institution might be the result of measuring the strength of evidence or of assessment based on expert knowledge or preference. The assessor can be a person or a technical device. Typically, such lists are between several thousand and several tens of thousands of items in length. However, only a comparably small subset of \emph{k} top-ranked items is usually informative. These are characterized by a strong overlap of their rank positions when they are ranked by several independent assessors.
 
 There are two basic statistical tasks: (i) Identification of the top-\emph{k} most conforming items. For this task, two lists are analyzed together (multiple lists in a pairwise manner). (ii) Calculation of a consolidated top-\emph{k} sublist with a new optimized ordering of the conforming items from two or more lists. For long ranked lists, (i) is a prerequisite of (ii) because for any kind of rank aggregation the top-$k$ list lengths of the individual top-$k$ lists need to be specified.
@@ -54,6 +54,39 @@ For these two tasks this package offers several options which can be selected fr
 \item \texttt{TopKGraphics} provides a collection of graphical tools for the visualization of the inputs to, and the outputs from, the other modules.
 In the following sections, we illustrate the usage of these modules.
 \end{enumerate}
+
+
+For our example, we selected three breast cancer microarray datasets (MDCC, TransBig and Pusztai) that include information on estrogen receptor positivity (ER+ vs ER-), which is one of the prognostic markers for breast cancer (for the accession numbers see Table \ref{tab:data}):
+
+
+
+\begin{table}[h!]
+\begin{center}
+\label{tab:data}
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  NAME & PubMed ID & GEO & Reference\\ \hline
+  MDCC & 20676074 & \href{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194}{GSE20194} & \cite{shi}\\
+  TransBig & 17545524 & \href{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE7390}{GSE7390} & \cite{desmedt} \\
+  Pusztai & 20829329 & \href{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20271}{GSE20271} & \cite{tabchy}\\
+  \hline
+\end{tabular}
+\caption{Example dataset: names, PubMed IDs, GEO accession numbers and reference}
+\end{center}
+\end{table}
+
+
+Each dataset was RMA normalized and the probe set with the largest variability was selected. In this way each gene symbol is represented by a corresponding value. Using limma, we compared the differential gene expressions between ER+ and ER- groups. The lists were ordered according to the p-value in increasing order and we selected only those genes present in all three datasets, yielding 917 gene symbols.\\
+We expected the ESR1 gene (the estrogen receptor gene) to be in first place among the differentially expressed genes. Since ER positivity denotes two very different breast cancer groups, we also expected to find similar genes in the top-\textit{k} lists of all three datasets.\\
+We begin by loading the data set and displaying the first part of the data frame, as described below.
+
+<<>>=
+library(TopKLists)
+data(breast)
+head(breast)
+@
+
 
 \section{Using TopKInference}
 
@@ -255,6 +288,9 @@ plotBorda(outBorda2, sub="(b)")
 @
 plots scores from top-k space analysis
 
+
+
+
 Note that the first argument of the plotBorda function is the output from the Borda function, which is 
 mandatory. If the number of ranked objects (second argument) is not specified, the plot will show 
 scores for all objects in the union set. 
@@ -415,7 +451,7 @@ sum(abs(outCEMC$TopK[1:30]- outCEMC2$TopK[1:30]))
 @
 
 Comment 1: If we set the same random seed for running the first two examples, then their results should
-be identical. On the other hand, the common-space results are different from those assuming top-k
+be identical (apart from potential rounding errors). On the other hand, the common-space results are different from those assuming top-k
 space. 
 
 <<>>=
@@ -493,7 +529,7 @@ better than the rest, confirming our heuristic interpretation of the results.
 
 
 \subsection{CEMC on the breast cancer example dataset}
-Here the Cross Entropy Monte Carlo method on the breast cancer dataset is applied (introduced in Section~\ref{subsec:breastExample}):
+Here the Cross Entropy Monte Carlo method on the breast cancer dataset is applied (introduced in Section~\ref{sec:introduction}):
 <<>>=
 data(breast)
 @
@@ -522,39 +558,6 @@ pd$topK
 
 The \texttt{TopKGraphics} module comprises three graphical tools: namely, the deltaplot, the aggregation map, and the Venn diagram. All are introduced in the following sections and illustrated using example data.
 
-\subsection{Example dataset}
-\label{subsec:breastExample}
-
-For our example, we selected three breast cancer microarray datasets (MDCC, TransBig and Pusztai) that include information on estrogen receptor positivity (ER+ vs ER-), which is one of the prognostic markers for breast cancer (for the accession numbers see Table \ref{tab:data}):
-
-
-
-\begin{table}[h!]
-\begin{center}
-\label{tab:data}
-\begin{tabular}{|c|c|c|c|}
-  \hline
-  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
-  NAME & PubMed ID & GEO & Reference\\ \hline
-  MDCC & 20676074 & \href{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20194}{GSE20194} & \cite{shi}\\
-  TransBig & 17545524 & \href{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE7390}{GSE7390} & \cite{desmedt} \\
-  Pusztai & 20829329 & \href{http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE20271}{GSE20271} & \cite{tabchy}\\
-  \hline
-\end{tabular}
-\caption{Example dataset: names, PubMed IDs, GEO accession numbers and reference}
-\end{center}
-\end{table}
-
-
-Each dataset was RMA normalized and the probe set with the largest variability was selected. In this way each gene symbol is represented by a corresponding value. Using limma, we compared the differential gene expressions between ER+ and ER- groups. The lists were ordered according to the p-value in increasing order and we selected only those genes present in all three datasets, yielding 917 gene symbols.\\
-We expected the ESR1 gene (the estrogen receptor gene) to be in first place among the differentially expressed genes. Since ER positivity denotes two very different breast cancer groups, we also expected to find similar genes in the top-\textit{k} lists of all three datasets.\\
-We begin by loading the data set and displaying the first part of the data frame, as described below.
-
-<<>>=
-data(breast)
-head(breast)
-@
-
 
 \subsection{Deltaplot}
 The \textit{deltaplot} is an exploratory graph, designed to help the user with selecting the distance parameter $\delta$ in the \texttt{TopKListsGUI} interface. 
@@ -571,8 +574,12 @@ the so-called \textit{deltaplot}. It represents the reduction of discordance as 
 sums remain zero, complete concordance is attained. A reasonable choice for the distance parameter
 is associated with a distinct decline in the number of 0's. Generally one should choose a value for $\delta$ where the rate of the \textit{deltaplot}'s decrease begins to slow noticeably. Of course, prior information about the ranking mechanisms involved and the nature of the data is also relevant for the selection of $\delta$. 
 
-<<deltaplot_complete, echo=TRUE, include=TRUE, fig.pos="H", fig.keep='first',  fig.align="center", tidy=TRUE, out.width='9cm', out.height='9cm',fig.cap="Deltaplot for lists MDCC vs. Pusztai">>=
-a=deltaplot(breast, deltas = seq(0,300, by=5), directory=tempdir()) 
+<<setup, cache = FALSE>>=
+opts_knit$set(eval.after = 'fig.cap') # evaluate fig.cap after the chunk
+@
+
+<<deltaplot_complete, echo=TRUE, include=TRUE, pdf=TRUE, fig.pos="H", fig.keep='first', fig.align="center", tidy=TRUE, out.width='9cm', out.height='9cm', fig.cap="Deltaplot for lists MDCC vs. Pusztai">>=
+a=deltaplot(breast, deltas = seq(0,300, by=5)) 
 @ 
 
 
@@ -582,7 +589,7 @@ When observing the \textit{deltaplot} for the first two breast cancer dataset li
 It can also be observed from the Figure~\ref{fig:deltaplot_complete} that switching the reference list from, for example \texttt{Putsztai} to \texttt{MDCC} or vice versa, has little impact on the graph.
 In order to choose a suitable value for $\delta$, we must limit the \textit{deltaplot} calculation to a smaller subset of the investigated lists, for example the first 200 objects. Additionally, the \texttt{subplot} parameter can be used, which magnifies a selected range of small $\delta$-values in a subplot, defined by the \texttt{perc.subplot} parameter.
 
-<<mydelta2, echo=TRUE, >>=
+<<mydelta2, echo=TRUE, out.width='9cm', out.height='9cm'>>=
 a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50, directory=tempdir())
 @
 
@@ -637,7 +644,7 @@ The suite of functions supported by \texttt{TopKGUI} facilitates the exploratory
 Interactive input facilities (such as a slider for the dynamic specification of the distance $\delta$) allow for the real-time analysis and visualization of results. These results correspond to the distance $\delta$ or the pilot sample size $\nu$ (note that, for large list lengths of $N$, many numbers of calculations must be performed and longer waiting times should be expected). 
 
 \subsection{The graphical user interface}
-To open the GUI using the breast cancer example data introduced in \ref{subsec:breastExample}, run
+To open the GUI using the breast cancer example data introduced in \ref{sec:introduction}, run
 <<eval=FALSE>>=
 TopKListsGUI(breast)
 @ 
@@ -694,7 +701,7 @@ Once the analysis phase is complete, this section serves as the visualization fo
 \label{aggmap}}
 \end{figure}
 
-As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the MDCC and Transbig lists against the Pusztai list, for $\delta = 6$ (see Section~\ref{subsec:breastExample} for a description of the example datasets). The estimated $\hat{k}$ is 14, with 12 genes in the top-$k$ lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (with a distance of 0 in both MDCC and TransBig compared to Pusztai).\\
+As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the MDCC and Transbig lists against the Pusztai list, for $\delta = 6$ (see Section~\ref{sec:introduction} for a description of the example datasets). The estimated $\hat{k}$ is 14, with 12 genes in the top-$k$ lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (with a distance of 0 in both MDCC and TransBig compared to Pusztai).\\
 
 
 \item{\texttt{Summary table}}:\\ The summary table displays a table of objects present in at least one of the top-$k$ lists, as shown in the aggregation map. The table describes each object name, position of the object in each of the lists, sum of ranks, frequency in the input lists, and frequency in the truncated lists. Please note, that the objects assigned the value `YES' in the first column are in the top-$k$ (as selected by the CEMC function explained in Section~\ref{sec:topkspace}).
