@@ -231,19 +231,18 @@ the top-k lists is treated as the common space. If argument {\em K} is not speci
  
 
 <<>>=
-outBorda=Borda(input,space,K=50) 
+outBorda=Borda(input,space,K=50) # "space" is explicitly specified; platform-dependent
 @
-``space'' is explicitly specified; platform-dependent
 
 <<>>=
-outBorda1=Borda(input) 
+outBorda1=Borda(input) #"space" is not specified; all lists are assumed to come from the common space (objects 1-40)
+
 @
-``space'' is not specified; all lists are assumed to come from the common space (objects 1-40)
 
 <<>>=
-outBorda2=Borda(input,space=input) 
+outBorda2=Borda(input,space=input) # "space = input" indicates that this is the top-K space
 @
-``space = input'' indicates that this is the top-K space
+
 <<>>=
 sum(outBorda$Scores-outBorda1$Scores)
 sum(outBorda$Scores-outBorda2$Scores)
@@ -279,14 +278,14 @@ top-$k$ space assumption (Figure~\ref{borda}(b)). \\
 
 
 <<label=bordaPlot1, include=FALSE>>=
-plotBorda(outBorda, K=40, sub="(a)") 
+plotBorda(outBorda, K=40, sub="(a)") # plots scores from platform-dependent analysis
 @
-plots scores from platform-dependent analysis
+
 
 <<label=bordaPlot2, include=FALSE>>=
-plotBorda(outBorda2, sub="(b)") 
+plotBorda(outBorda2, sub="(b)") # plots scores from top-k space analysis
 @
-plots scores from top-k space analysis
+
 
 
 
@@ -330,19 +329,19 @@ values are shown to work well in a number of examples.
 
 
 <<>>=
-outMC=MC(input,space)
+outMC=MC(input,space) # "space" is explicitly specified; platform-dependent
 @
-``space'' is explicitly specified; platform-dependent
+
 
 <<>>=
-outMCa=MC(input,K=30) 
+outMCa=MC(input,K=30) # "space" is not specified, so it is the same as common space (1-40)
 @
-``space'' is not specified, so it is the same as common space (1-40)
+
 
 <<>>=
-outMCb=MC(input,space=input) 
+outMCb=MC(input,space=input) # "space = input" indicates that this is the top-K space
 @
-``space = input'' indicates that this is the top-K space
+
 <<>>=
 sum(outMC$MC2.Prob-outMCa$MC2.Prob)
 sum(abs(outMC$MC2.TopK-outMCb$MC2.TopK))
@@ -430,21 +429,21 @@ errors), from which the aggregate top-k list is determined.
 
 <<>>=
 set.seed(1234)
-outCEMC=CEMC(input, space)  
+outCEMC=CEMC(input, space)  # "space" is explicitly specified; platform-dependent
 @
-''space" is explicitly specified; platform-dependent
+
 
 <<>>=
 set.seed(1234)
-outCEMC1 = CEMC(input, k=30) 
+outCEMC1 = CEMC(input, k=30) # "space" is not specified, so it is the same as common space (1-40)
 @
-''space" is not specified, so it is the same as common space (1-40)
+
 
 <<>>=
 set.seed(1234)
-outCEMC2 = CEMC(input, space=input) 
+outCEMC2 = CEMC(input, space=input) # "space=input" indicates that this is the top-k space.
 @
-"space=input" indicates that this is the top-k space.
+
 <<>>=
 sum(outCEMC$ProbMatrix[,1:5]- outCEMC1$ProbMatrix[,1:5])
 sum(abs(outCEMC$TopK[1:30]- outCEMC2$TopK[1:30]))
@@ -574,9 +573,9 @@ the so-called \textit{deltaplot}. It represents the reduction of discordance as 
 sums remain zero, complete concordance is attained. A reasonable choice for the distance parameter
 is associated with a distinct decline in the number of 0's. Generally one should choose a value for $\delta$ where the rate of the \textit{deltaplot}'s decrease begins to slow noticeably. Of course, prior information about the ranking mechanisms involved and the nature of the data is also relevant for the selection of $\delta$. 
 
-<<setup, cache = FALSE>>=
-opts_knit$set(eval.after = 'fig.cap') # evaluate fig.cap after the chunk
-@
+%<<setup, cache = FALSE>>=
+%opts_knit$set(eval.after = 'fig.cap') # evaluate fig.cap after the chunk
+%@
 
 <<deltaplot_complete, echo=TRUE, include=TRUE, pdf=TRUE, fig.pos="H", fig.keep='first', fig.align="center", tidy=TRUE, out.width='9cm', out.height='9cm', fig.cap="Deltaplot for lists MDCC vs. Pusztai">>=
 a=deltaplot(breast, deltas = seq(0,300, by=5)) 
