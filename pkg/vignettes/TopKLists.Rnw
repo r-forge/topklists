@@ -5,6 +5,7 @@
 \usepackage{listings}
 \usepackage{inconsolata}
 \usepackage{hyperref}
+\usepackage{subfig}
 \renewcommand*{\familydefault}{\sfdefault}
 \addtolength{\oddsidemargin}{-.875in}
 \addtolength{\evensidemargin}{-.875in}
@@ -55,8 +56,9 @@ For these two tasks this package offers several options which can be selected fr
 In the following sections, we illustrate the usage of these modules.
 \end{enumerate}
 
+\subsection{Example data}
 
-For our example, we selected three breast cancer microarray datasets (MDCC, TransBig and Pusztai) that include information on estrogen receptor positivity (ER+ vs ER-), which is one of the prognostic markers for breast cancer (for the accession numbers see Table \ref{tab:data}):
+For illustrating the usage of this package, we selected three breast cancer microarray datasets (MDCC, TransBig and Pusztai) that include information on estrogen receptor positivity (ER+ vs ER-), which is one of the prognostic markers for breast cancer (for the accession numbers see Table \ref{tab:data}):
 
 
 
@@ -73,6 +75,7 @@ For our example, we selected three breast cancer microarray datasets (MDCC, Tran
   \hline
 \end{tabular}
 \caption{Example dataset: names, PubMed IDs, GEO accession numbers and reference}
+\label{tab:data}
 \end{center}
 \end{table}
 
@@ -145,7 +148,7 @@ table(resF[,2])
 
 The following plot (Figure~\ref{fig:truncPlot}) summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. Small values of $\nu$ (i.e. $\nu<8$) are the most appropriate here.
 
-<<truncPlot, include=TRUE, tidy=TRUE, echo=FALSE, out.width='8cm', out.height='8cm', fig.pos="H", fig.cap="Estimation of $j_0$ for different values of $v$", fig.align="center">>=
+<<truncPlot, include=TRUE, tidy=TRUE, echo=FALSE, out.width='8cm', out.height='8cm', fig.pos="H", fig.cap="Estimation of $j_0$ for different values of $v$", fig.align='center'>>=
 plot(resF[,1], resF[,2], pch=19, ylim=c(0, length(x)), 
 xlab=substitute(nu), ylab=substitute(paste(hat(j)[0])))
 abline(a=31, b=0, col="red")
@@ -159,7 +162,7 @@ lines(resF[,1], resF[,2])
 
 The principle of the \texttt{TopKSpace} module is to consolidate information from
 the $l$ top-\emph{k} lists to arrive at an aggregate list, $AL$. 
-As shown in Figure \ref{topkspace}, the top-\emph{k} lists
+As shown in Figure \ref{fig:topkspace}, the top-\emph{k} lists
 ($L_1, L_2, \ldots, L_l$) may not only be of different lengths, they may also come from studies or assessments that consider different sets of objects, hence the underlying spaces ($S_1, S_2, \ldots, S_l$) from which the top-$k$ lists are derived may actually be different. The goal of the inference in \texttt{TopKSpace} is to therefore find the top-\emph{k} list, $AL$, from the aggregate new space ($\cup_{i=1}^l L_i$), 
 such that the weighted sum of distances between each of the input lists and $AL$ will be the minimum among lists of the same length.
 Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. Both take the differences in the underlying spaces into account \cite{lin2010}. There are three common assumptions about the underlying spaces: {\em common-space} (all top-k lists come from a single common space), {\em platform-dependent} (using the known spaces from which the top-$k$ lists were generated), and {\em top-k-space} 
@@ -177,7 +180,7 @@ and compare the results.
 \centering
 \includegraphics[width=0.5\textwidth]{TopKSpaceSchema.pdf}\\
 \caption{The optimization concept for the aggregation of $\ell$ full ranked lists $L_i$ into one list $AL$ under space consideration}
-\label{topkspace}
+\label{fig:topkspace}
 \end{figure}
 
 
@@ -270,42 +273,35 @@ Borda scores as described in the following.
 \\[2ex]
 \textbf{Plotting Borda's scores}\\
 Plotting the Borda scores against the ranking can frequently reveal when information for
-ranking starts to diminish. For example, Figure~\ref{borda}(a) shows that for the
+ranking starts to diminish. For example, Figure~\ref{fig:borda}(a) shows that for the
 platform-dependence approach, a large gap appears between the Borda scores 
 at rankings 10--11, and that the changes of the scores also slow down after this point.
 This can be similarly observed for the scores under the 
-top-$k$ space assumption (Figure~\ref{borda}(b)). \\
+top-$k$ space assumption (Figure~\ref{fig:borda}(b)). \\
 
 
-<<label=bordaPlot1, include=FALSE>>=
-plotBorda(outBorda, K=40, sub="(a)") # plots scores from platform-dependent analysis
+<<borda, fig.cap='Plotting Borda\'s scores', fig.subcap=c('platform-dependent analysis','top-k space analysis'), out.width='.49\\linewidth', fig.pos='ht!', fig.align='center'>>=
+plotBorda(outBorda, K=40) #plot scores from platform-dependent analysis
+plotBorda(outBorda2) # plot scores from top-k space analysis
 @
-
-
-<<label=bordaPlot2, include=FALSE>>=
-plotBorda(outBorda2, sub="(b)") # plots scores from top-k space analysis
-@
-
-
-
 
 
 Note that the first argument of the plotBorda function is the output from the Borda function, which is 
 mandatory. If the number of ranked objects (second argument) is not specified, the plot will show 
 scores for all objects in the union set. 
  
-\begin{figure}[h]
+%% \begin{figure}[h]
 
-\begin{center}
+%% \begin{center}
 
-%@
-	\includegraphics[scale=0.6]{bordaPlot.pdf}\\
-\end{center}
-\caption{Plot of Borda scores against ranking: (a) results from platform-dependent 
-analysis; (b) results from top-k space analysis.}
+%% %@
+%% 	\includegraphics[scale=0.6]{bordaPlot.pdf}\\
+%% \end{center}
+%% \caption{Plot of Borda scores against ranking: (a) results from platform-dependent 
+%% analysis; (b) results from top-k space analysis.}
 
-\label{borda}
-\end{figure}
+%% \label{borda}
+%% \end{figure}
 
 \subsubsection{Three MC algorithms}
 Three Markov Chain (MC) algorithms are implemented in the \textit{MC} function in
@@ -372,12 +368,12 @@ the following), which can be used to detect information degradation heuristicall
 \\[2ex]
 \textbf{Plotting the stationary probabilities}\\
 
-<<include=FALSE>>=
+<<equil, include=TRUE, fig.cap='Equilibrium probabilities', fig.pos='ht!', out.width='9cm', out.height='9cm', fig.align='center'>>=
 plotMC(outMC)
 @
 A plot of the ordered stationary probabilities versus the ranking using the above command can contain useful information
 regarding the relative rankings of objects. 
-For example, Figure~\ref{equil} shows that 
+For example, Figure~\ref{fig:equil} shows that 
 for MC2, there was considerable information for ranking objects in the top 20,
 but there was practically no information ranking any object after that (all 
 stationary probabilities are the same). This was the reason why the rankings for objects
@@ -390,13 +386,13 @@ list.
 
 
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[scale=0.8]{equil.pdf}\\
-\end{center}
-\caption{Equilibrium probabilities}
-\label{equil}
-\end{figure}
+%% \begin{figure}[h]
+%% \begin{center}
+%% \includegraphics[scale=0.8]{equil.pdf}\\
+%% \end{center}
+%% \caption{Equilibrium probabilities}
+%% \label{equil}
+%% \end{figure}
 
 Note that the first argument of the plotMC function is the output from the MC function, which is
 mandatory. If the number of ranked objects (second argument) is not specified, the plot will show
@@ -509,7 +505,7 @@ Borda algorithm "ARM".
 Kendall(input,outBorda$TopK[,1],space)
 all.aggregates=list(outBorda$TopK[,1],outBorda$TopK[,2],outBorda$TopK[,3],outBorda$TopK[,4],outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK)
 @
-<<plotKendall, include=TRUE, tidy=TRUE, echo=TRUE, out.width='8cm', out.height='8cm', fig.pos='H',fig.cap="Comparison of the modified Kendall distances across several algorithms", fig.align="center">>=
+<<plotKendall, include=TRUE, tidy=TRUE, echo=TRUE, out.width='8cm', out.height='8cm', fig.pos='H',fig.cap="Comparison of the modified Kendall distances across several algorithms", fig.align='center'>>=
 plotKendall(input,all.aggregates,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3"))
 @
 Runing the Kendall function returns the MKD for the aggregate list from the
@@ -736,24 +732,24 @@ The table is ordered in ascending order with regard to the sum of ranks of the o
 
 
 
-
+\bibliographystyle{plain}
 \begin{thebibliography}{}
 
-\bibitem[Desmedt et al. 2007]{desmedt} Desmedt C., Piette F., Loi S., Wang Y. et al. (2007). Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. \emph{Clin Cancer Res} 1;13(11):3207-14. PMID: 17545524.
+\bibitem{desmedt} Desmedt C., Piette F., Loi S., Wang Y. et al. (2007). Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. \emph{Clin Cancer Res} 1;13(11):3207-14. PMID: 17545524.
 
-\bibitem[Hall and Schimek, 2012]{haschi} Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. \emph{J. Amer. Statist. Assoc.}, \textbf{107}, 661-672.
+\bibitem{haschi} Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. \emph{J. Amer. Statist. Assoc.}, \textbf{107}, 661-672.
 
-\bibitem[Lin and Ding, 2009]{linding} Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. \emph{Biometrics}, \textbf{65}, 9-18.
+\bibitem{linding} Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. \emph{Biometrics}, \textbf{65}, 9-18.
 
-\bibitem[Lin, 2010a]{lin2010} Lin, S. (2010a). Space oriented rank-based data integration. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{9}, Article 20.
+\bibitem{lin2010} Lin, S. (2010a). Space oriented rank-based data integration. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{9}, Article 20.
 
-\bibitem[Lin, 2010b]{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
+\bibitem{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
 
-\bibitem[Schimek, My\v{s}i\v{c}kov\'{a} and Budinsk\'{a}, 2012]{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
+\bibitem{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
-\bibitem[Shi et al. 2010]{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol};28(8):827-38. PMID: 20676074.
+\bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol};28(8):827-38. PMID: 20676074.
 
-\bibitem[Tabchy et al. 2010]{tabchy} Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. \emph{Clin Cancer Res} 1;16(21):5351-61. PMID: 20829329
+\bibitem{tabchy} Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. \emph{Clin Cancer Res} 1;16(21):5351-61. PMID: 20829329
  
 %% \bibitem[Karn et al. 2011]{karn2011} Karn T., Pusztai L., Holtrich U., Iwamoto T. et al. (2011). Homogeneous datasets of triple negative breast cancers enable the identification of novel prognostic and predictive signatures. \emph{PLoS One}; 6(12):e28403. PMID: 22220191.
 
