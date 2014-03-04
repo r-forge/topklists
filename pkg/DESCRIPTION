@@ -8,8 +8,8 @@ Maintainer: Karl G. Kugler <kg.kugler@gmail.com>; Vendula Svendova <vendula.sven
 Description: For multiple full ranked (input) lists representing the same set of N objects, the package \verb{TopKLists} offers (1) statistical inference on the lengths of informative (top-k) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization.
 License: LGPL-3
 Imports:
-Depends: R (>= 3.0.0), Hmisc, grid, RGtk2, gWidgets, gWidgetsRGtk2, gplots
-
+Depends: R (>= 3.0.0), Hmisc, grid, gplots
+Suggests: RGtk2, gWidgets, gWidgetsRGtk2
 URL: http://topklists.r-forge.r-project.org
 LazyLoad: yes
 VignetteBuilder: knitr

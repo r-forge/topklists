@@ -1,9 +1,12 @@
 TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,  venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100) {
+  require(RGtk2)
+  require(gWidgets)
+  require(gWidgetsRGtk2)
   options("guiToolkit"="RGtk2")
 
   ##setting up the directory
   if(is.null(directory)) {
-    directory <- paste(getwd(), "/TopKLists-temp",sep="")
+    directory <- paste(tempdir(), "/TopKLists-temp",sep="")
     if(!file.exists(directory)) dir.create(directory)
   }
   message(paste("Writing files to", directory))

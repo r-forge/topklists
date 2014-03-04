@@ -148,7 +148,7 @@ table(resF[,2])
 
 The following plot (Figure~\ref{fig:truncPlot}) summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. Small values of $\nu$ (i.e. $\nu<8$) are the most appropriate here.
 
-<<truncPlot, include=TRUE, tidy=TRUE, echo=FALSE, out.width='8cm', out.height='8cm', fig.pos="H", fig.cap="Estimation of $j_0$ for different values of $v$", fig.align='center'>>=
+<<truncPlot, out.width='8cm', out.height='8cm', fig.pos="ht!", fig.cap="Estimation of $j_0$ for different values of $v$", fig.align='center'>>=
 plot(resF[,1], resF[,2], pch=19, ylim=c(0, length(x)), 
 xlab=substitute(nu), ylab=substitute(paste(hat(j)[0])))
 abline(a=31, b=0, col="red")
