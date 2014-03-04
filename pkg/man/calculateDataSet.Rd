@@ -4,7 +4,7 @@
 The main function for TopKInference
 }
 \description{
-Returns a complex object named truncated.lists containing the Idata vector (see \code{prepareIdata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-\emph{k} estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}. 
+Returns a complex object named truncated.lists containing the Idata vector (see \code{prepareIdata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-\emph{k} estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}
 }
 \usage{
 calculateDataSet(lists, L, d, v, threshold) 
@@ -23,7 +23,7 @@ The maximal distance delta between object ranks required for the estimation of j
 The pilot sample size (tuning parameter) nu required for the estimation of j0
 }
   \item{threshold}{
-The percentage of occurencies of an object in the top-\emph{k} selection among all comparisons in order to be gray-shaded in the \code{aggmap} as a consolidated object.
+The percentage of occurencies of an object in the top-\emph{k} selection among all comparisons in order to be gray-shaded in the \code{aggmap} as a consolidated object
 }
 }
 \value{
@@ -42,8 +42,8 @@ A named list of the following content:
  \item{threshold}{number of lists}
  \item{N}{number of items in data frame (lists)}
  \item{lists}{data frame of lists that entered the analysis}
- \item{maxK}{maximal estimate of K (for all pariwise comparisons)}
- \item{topkspace}{the final list of top genes as result of application of the CEMC algorithm on maxK truncated lists}
+ \item{maxK}{maximal estimate of the top-\emph{k}'s (for all pariwise comparisons)}
+ \item{topkspace}{the final integrated list of objects as result of the CEMC algorithm applied to the maxK truncated lists}
  
 }
 \author{

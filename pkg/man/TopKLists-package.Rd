@@ -15,15 +15,15 @@ For multiple full ranked (input) lists representing the same set of \emph{N} obj
 \details{
 The package consists of three modules and a graphical user interface (GUI):
 (1) \verb{TopKInference} provides exploratory nonparametric inference for the estimation of the top-\emph{k} list length of paired rankings;
-(2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists of different lengths (space) as well as missing rank information;
+(2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists even when the rank positions of some objects are not present in all the lists (so-called \emph{partial input lists});
 (3) \verb{TopKGraphics} provides a collection of graphical tools for visualization of the inputs to and the outputs from the other modules.
 
-Most convenient is a new aggregation mapping tool called \code{aggmap} in \verb{TopKGraphics}. The GUI allows the non-statistician an easy access to the exploratory techniques in \verb{TopKInference} and \verb{TopKGraphics}. Due to the exploratory nature of the implemented methods, tuning parameters are required (they can be controlled via the GUI). For additional program details and a bioscience application see Schimek et al. (2011). For aspects of modelling the rank order of Web search engine results see Schimek and Bloice (2012). A Springer monograph by Schimek, Lin and Wang of the title ``Statistical Integration of Omics Data'' is in preparation.} 
+Highly convenient is a new aggregation mapping tool called \code{aggmap} in \verb{TopKGraphics}. The GUI allows the non-statistician an easy access to the practically most relevant techniques provided in \verb{TopKInference}, \verb{TopKSpace}, and \verb{TopKGraphics}. Due to the exploratory nature of the implemented methods, tuning parameters are required. All those having a strong impact on the results can be controlled via the GUI. For additional program details and a bioscience application see Schimek et al. (2011). For aspects of modelling the rank order of Web search engine results see Schimek and Bloice (2012). A Springer monograph by Schimek, Lin and Wang of the title ``Statistical Integration of Omics Data'' is in preparation.} 
 
 \author{
-Michael G. Schimek, Eva Budinska, Jie Ding, Karl G. Kugler and Shili Lin. 
+Michael G. Schimek, Eva Budinska, Shili Lin, Jie Ding, Karl G. Kugler, Vendula Svendova. 
 
-Maintainers: Karl G. Kugler <kg.kugler@gmail.com>
+Maintainers: Karl G. Kugler <kg.kugler@gmail.com>, Vendula Svendova <vendula.svendova@medunigraz.at>
 }
 \seealso{
 Project homepage: \url{http://topklists.r-forge.r-project.org}
@@ -50,11 +50,11 @@ Schimek, M. G. and Bloice, M. (2012). Modelling the rank order of Web search eng
 
 Schimek, M. G. and Budinska, E. (2010). Visualization Techniques for the Integration of Rank Data. In Lechevallier, Y. and Saporta, G. (eds). COMPSTAT 2010. Proceedings in Computational Statistics. Heidelberg: Physica (e-book ISBN 978-3-7908-2603-6), 1637-1644.
 
-Schimek, M. G., Budinska, E., Kugler, K. and Lin, S. (2011). Package ``TopKLists'' for rank-based genomic data integration. Proceedings of the IASTED International Conference Computational Bioscience (CompBio 2011), 434-440, DOI: 10.2316/P.2011.742-032.
+Schimek, M. G., Budinska, E., Kugler, K. and Lin, S. (2011). Package ``TopKLists'' for rank-based genomic data integration. Proceedings of CompBio 2011, 434-440, DOI: 10.2316/P.2011.742-032.
 
 Schimek, M. G., Mysickova, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists. Communications in Statistics - Simulation and Computation, 41:7, 1152-1166. 
 
-Schimek, M. G., Lin, S. and Wang, N. (2014). Statistical Integration of Omics Data. In preparation. New York: Springer.
+Schimek, M. G., Lin, S. and Wang, N. (2015). Statistical Integration of Omics Data. In preparation. New York: Springer.
 }
 \keyword{package}
 

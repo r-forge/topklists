@@ -13,7 +13,7 @@ prepareIdata(x, d)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-Data matrix or data frame, where the columns represent the lists of objects ordered according to ranking, obtained based on two different assessments. 
+Data matrix or data frame, where the columns represent the lists of objects ordered according those rankings obtained from two different assessments. 
 }
   \item{d}{
 The maximal distance between two lists for a ranked object}

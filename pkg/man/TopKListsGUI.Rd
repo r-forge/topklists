@@ -29,7 +29,7 @@ gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100)
 }
 \item{gui.size}{A numeric vector defining the width and height of the RGUI to be displayed; defaults to c(900, 810)
 }
-\item{directory}{Specification of the name of the directory where the results and plots should be saved (including some temporary files required for the calculations). If kept \code{NULL} a directory called "TopKLists-temp" will be created in \code{getwd()}. In that case write permission are needed for \code{getwd()}.
+\item{directory}{Specification of the name of the directory where the results and plots should be saved (including some temporary files required for the calculations). If kept \code{NULL} a directory called "TopKLists-temp" will be created in \code{getwd()}. In that case a write permission is needed for \code{getwd()}.
 }
 \item{venndiag.res}{A number defining the resolution of the Venn-diagram plot - this argument is passed to the \code{res = argument} of the \code{png()} function saving the diagram, but affects also the RGUI display; defaults to 70
 }
@@ -41,17 +41,17 @@ RGUI window with three tabs:
 
 'Aggregation map':  For an index \eqn{p=1,2,\ldots$, $L-1} aggregation levels (groupings of top lists) are combined in one display. For each group of \emph{L-p} truncated lists down to the smallest group consisting of just one pair of lists, (1) an arbitrary reference list ("ground truth") is selected under the condition that it comprises \eqn{\max_i(\hat{k}_i)} items among all pairwise comparisons in the group of rankings, (2) symbols of its \eqn{\max_i(\hat{k}_i)} items are printed vertically from the highest to the lowest rank position, and (3) the aggregation information for all remaining \emph{L-p} rankings in the group is added, ordered according to descending list length. 
 
-'Summary table': An intereactive table that displays all overlapping (gray) objects based on the truncated list comparison. Rank sum per object and frequency of each object in the input lists or truncated lists are calculated over all compared lists. First column denotes if a gene was chosen by CEMC algorithm into the final list of genes. The table can be ordered according to any of the displayed columns. 
+'Summary table': An interactive table that displays all overlapping (grey) objects based on the truncated list comparison. Rank sum per object and frequency of each object in the input lists or truncated lists are calculated over all compared lists. The first column denotes if an object was selected by the CEMC algorithm for the final set of common objects. The table can be ordered according to any of the displayed columns. 
 
 'Venn-diagram & Venn-table': The Venn-diagram and the Venn-table display the rank intersection of the identified top-\emph{k} objects in two different formats. 
 
-These tabs automatically save all plots and tables into the selected directory.
+These tabs automatically save all plots and tables into the specified directory.
 
 The following additional exploratory features are implemented:
 
 'Delta-plot' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window).
 
-'Mdelta' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt} file.
+'Mdelta' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt}-file.
 }
 \author{
 Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <kg.kugler@gmail.com>, Michael G. Schimek <michael.schimek@medunigraz.at>

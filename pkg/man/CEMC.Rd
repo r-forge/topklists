@@ -2,7 +2,7 @@
 \alias{CEMC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-CEMC combination of (top-\emph{k}) ranked lists
+CEMC integration of (top-\emph{k}) ranked lists
 }
 \description{
 Performs cross-entropy Monte Carlo simluations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists
@@ -15,10 +15,10 @@ d.w = NULL, input.par = NULL, extra=0)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{topK}{
-A list of several TopKLists, may have different length
+A list of several top-\emph{k} lists, may have different lengths
 }
   \item{space}{
-A list of the same structure as the topK list. Contains underlying spaces for the top-K lists. NULL means all lists share a common space, which is taken to be the union of all input lists
+A list of the same structure as the top-\emph{k} lists. Contains underlying spaces for the top-\emph{k} lists. NULL means all lists share a common space, which is taken to be the union of all input lists
 }
   \item{k}{
 Desired length of combined list
