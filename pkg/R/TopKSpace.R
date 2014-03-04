@@ -70,7 +70,7 @@ ylab="Borda Score",main="",sub=""){
 	legend=c("ARM", "MED", "GEO", "L2Norm"), pch=1:4)
 }      
 
-MC.ranks <- function(elements, trans, a, delta){
+MC.ranks <- function(elements, trans, a = 0.15, delta = 10^-15){
 #Compute rankings based on the transition matrix from a MC algorithm
         n=nrow(trans)
         trans=trans*(1-a)+a/n
