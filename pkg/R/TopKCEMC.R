@@ -3,7 +3,7 @@
 ###Last modified: 04/28/10
 
 `CEMC` <-
-function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
+function(topK,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  
 
@@ -25,13 +25,13 @@ function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
   ##d.w: weights for distances from different input lists
   ##input.par: input parameters in a dataframe
 
-if (missing(input))
+if (missing(topK))
 	stop("You need to input the top-k lists to be aggregated")
   if (!is.null(input.par)) {
     for (p.n in names(input.par))
       assign(p.n,input.par[1,p.n])
   }
-
+  input <- topK
   time.start <- proc.time()
 
   topK.input <- input
