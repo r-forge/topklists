@@ -3,7 +3,7 @@
 ###Last modified: 04/28/10
 
 `CEMC` <-
-function(topK,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
+function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  
 
@@ -25,13 +25,13 @@ function(topK,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
   ##d.w: weights for distances from different input lists
   ##input.par: input parameters in a dataframe
 
-if (missing(topK))
+if (missing(input))
 	stop("You need to input the top-k lists to be aggregated")
   if (!is.null(input.par)) {
     for (p.n in names(input.par))
       assign(p.n,input.par[1,p.n])
   }
-  input <- topK
+
   time.start <- proc.time()
 
   topK.input <- input
@@ -100,7 +100,7 @@ if (is.null(k)==TRUE) k=n
       if (dm=="s")
         dist <- dist + spearman(rank.a[,i],rank.b,k.a[i],k,n) * d.w[i]
       else if (dm=="k") 
-        dist <- dist + kendall2.c(rank.a[,i],rank.b,k.a[i],k,n,kp) * d.w[i]
+        dist <- dist + kendallTau.c(rank.a[,i],rank.b,k.a[i],k,n,kp) * d.w[i]
       else stop("Invalid distance measure")
     }
     y2 <- sort(dist)[round(N*rho)]
@@ -137,7 +137,7 @@ if (is.null(k)==TRUE) k=n
   dist.k <- 0
   for (i in 1:a) {
     dist.s <- dist.s + spearman(rank.a[,i],rank.result,k.a[i],k,n) * d.w[i]
-    dist.k <- dist.k + kendall2.c(rank.a[,i],rank.result,k.a[i],k,n,kp) *d.w[i]
+    dist.k <- dist.k + kendallTau.c(rank.a[,i],rank.result,k.a[i],k,n,kp) *d.w[i]
   }
   
   time.end <- proc.time()
@@ -298,7 +298,7 @@ function(topK,n,k,init.m="p",init.w=0) {
   p.u*(1-init.w) + p.e*init.w
 }
 
-`kendall` <-
+`kendallTau` <-
 function(rank.a,rank.b,k.a,k.b,n,p=0) {
  
   ##Kendall's tau distance between top K lists
@@ -327,31 +327,31 @@ function(rank.a,rank.b,k.a,k.b,n,p=0) {
   dist
 }
 
-`kendall.c` <-
-function(rank.a,rank.b,k.a,k.b,n,p=0) {
+## `kendall.c` <-
+## function(rank.a,rank.b,k.a,k.b,n,p=0) {
 
-  #version that calls a C subroutine to speed up calculation
-  #Kendall's tau distance between top K lists
-  ##rank.a: a single top k list
-  ##rank.b: a vector of matrix form of top k list(s) to be compared to list a
-  ##k.a: value of k for rank.a
-  ##k.b: value of k for rank.b
-  ##p: distance added for tied pair (potential problem when p != 0)
-  ##n: total number of objects, numbered from 1 to n
+##   #version that calls a C subroutine to speed up calculation
+##   #Kendall's tau distance between top K lists
+##   ##rank.a: a single top k list
+##   ##rank.b: a vector of matrix form of top k list(s) to be compared to list a
+##   ##k.a: value of k for rank.a
+##   ##k.b: value of k for rank.b
+##   ##p: distance added for tied pair (potential problem when p != 0)
+##   ##n: total number of objects, numbered from 1 to n
   
-  if (is.vector(rank.b)) {
-    n.b <- 1
-  }
-  else {
-    n.b <- ncol(rank.b) # number of lists in b
-  }
+##   if (is.vector(rank.b)) {
+##     n.b <- 1
+##   }
+##   else {
+##     n.b <- ncol(rank.b) # number of lists in b
+##   }
 
-  dist <- numeric(n.b)
-  .C("kendallc",as.integer(rank.a),as.integer(rank.b),as.integer(n),
-     as.integer(n.b),as.double(p),dist=as.double(dist))$dist
-}
+##   dist <- numeric(n.b)
+##   .C("kendallc",as.integer(rank.a),as.integer(rank.b),as.integer(n),
+##      as.integer(n.b),as.double(p),dist=as.double(dist))$dist
+## }
 
-`kendall2.c` <-
+`kendallTau.c` <-
 function(rank.a,rank.b,k.a,k.b,n,p=0) {
 
   ##Kendall's tau distance between top K lists with different underlying spaces
@@ -376,7 +376,7 @@ function(rank.a,rank.b,k.a,k.b,n,p=0) {
 `spearman` <-
 function(rank.a,rank.b,k.a,k.b,n) {
   
-  ##Spearman's footrule distance between two top K lists
+  ##spearman's footrule distance between two top K lists
   ##rank.a: a single top k list
   ##rank.b: a vector of matrix form of top k list(s) to be compared to list a
   ##k.a: value of k for rank.a

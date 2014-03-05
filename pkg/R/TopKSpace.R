@@ -185,7 +185,7 @@ main=""){
     legend(2*K/3,ymin+(ymax-ymin)/2,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 }
 
-Kendall <-function(input,aggregate,space=NULL,p=0.5,w=NULL){
+kendallModified <-function(input,aggregate,space=NULL,p=0.5,w=NULL){
 if (missing(input))
         stop("You need to input the individual top-k lists")
 if (missing(aggregate))
@@ -273,7 +273,7 @@ if (is.null(algorithm)==TRUE)
 
 kd=rep(0,n)
 for (i in 1:n)
-        kd[i]=Kendall(input, all.aggregates[[i]], space,p,w)
+        kd[i]=kendallModified(input, all.aggregates[[i]], space,p,w)
 names(kd)=algorithm
 plot(1:n,kd,type="o",xaxt="n",xlab="Algorithm",ylab="Modified Kendall Distance")
 axis(1, at = 1:n, labels =algorithm)
