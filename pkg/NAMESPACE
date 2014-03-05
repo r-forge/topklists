@@ -1,4 +1,6 @@
 useDynLib(TopKLists)
-
+import(Hmisc)
+import(grid)
+import(gplots)
 ##export everything that does not start with a .
 exportPattern("^[^\\.]")
