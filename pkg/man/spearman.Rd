@@ -2,7 +2,7 @@
 \alias{spearman}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Calculate modified Spearman's footrule distance between two top-k lists
+Modified Spearman's footrule distance
 }
 \description{
 Spearman's footrule is a measure for distance between ranked lists. It is given as the sum of absolute differences between ranks of two lists. Here a modified version is implemented that allows for comparing partial lists.
@@ -34,11 +34,8 @@ Returns modified spearman distance against \code{a} for each lists within \code{
 \author{
 Jie Ding <jding@jimmy.harvard.edu>
 }
-\note{
-Implemented using native C code; for the R version see \code{\link{kendall}}
-}
 \seealso{
-\code{\link{kendall}}, \code{\link{spearman}}
+\code{\link{kendallTau}}
 }
 \examples{
 set.seed(1234)

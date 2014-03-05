@@ -2,33 +2,34 @@
 \alias{Borda}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Compute Borda scores and ranks
+Borda based rank aggregation
 }
 \description{
-Computes Borda scores and ranks based on four different aggregation functions
+Computes Borda scores and ranks based on four different aggregation functions.
 }
 \usage{
-Borda(input, space, K)
+Borda(input, space = NULL, K = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
-A list containing individual ranked lists
+A list containing individual ranked lists.
 }
   \item{space}{
-A list containing the underlying spaces. If not explicitly specified, all lists are treated as coming from a common space defined by the union of all input lists
+A list containing the underlying spaces. If not explicitly specified, all lists are treated as coming from a common space defined by the union of all input lists.
 }
   \item{K}{
-An integer specifying the number of items in the output top-K list
+An integer specifying the number of items in the output top-K list.
+}
 }
 \details{
-Computes Borda scores and ranks based on four different aggregation functions, in which the underlying spaces where the individual ranked lists come from, are taken into account. The four aggregation functions are mean, median, geometric mean, and l2 norm.
+Computes Borda scores and ranks based on four different aggregation functions, in which the underlying spaces where the individual ranked lists come from, are taken into account. The four aggregation functions are mean, median, geometric mean, and L2 norm.
 }
 \value{
-Output is a list with two components
-\item{Comp 1 (RankedObjects)}{Top-k: A matrix with 4 columns each corresponding to the rankings
-by each of the 4 aggregation functions}
-\item{Comp 2 (BordaScores) }{Scores: A matix with 4 columns each corresponding to the Borda
+A list with two components:
+\item{TopK}{A matrix with 4 columns each corresponding to the rankings
+by each of the 4 aggregation functions.}
+\item{Scores}{A matrix with 4 columns each corresponding to the Borda
 scores from each of the 4 aggregation functions}
 }
 \references{

@@ -2,30 +2,27 @@
 \alias{CEMC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-CEMC integration of (top-\emph{k}) ranked lists
+CEMC based rank aggregation
 }
 \description{
-Performs cross-entropy Monte Carlo simluations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists
+Performs cross-entropy Monte Carlo simulations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists.
 }
 \usage{
-CEMC(topK, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
+CEMC(input, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
 rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0,
 d.w = NULL, input.par = NULL, extra=0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{topK}{
-A list of several top-\emph{k} lists, may have different lengths
+  \item{input}{
+A list of several TopKLists, may have different length
 }
   \item{space}{
-A list of the same structure as the top-\emph{k} lists. Contains underlying spaces for the top-\emph{k} lists. NULL means all lists share a common space, which is taken to be the union of all input lists
+A list of the same structure as the input list. Contains underlying spaces for the top-K lists. NULL means all lists share a common space, which is taken to be the union of all input lists
 }
   \item{k}{
 Desired length of combined list
 }
-
-
-
   \item{dm}{
 Distance measure, "s" for spearman, "k" for kendall(p=0)
 }
@@ -71,11 +68,17 @@ calculation
 }
 }
 \details{
+The algorithm implemented is the Order Explicit Algorithm, which is an iterative procedure to maximize an objective function (either based on Kendall's distance (dm="k") or Spearman's distance (dm="s")). 
+
 init.w: probability matrix initialization:
 (1-init.w) * uniform +  init.w * estimated from input lists
 }
 \value{
-A list containing the resulting object and the parameters
+A list containing three components:
+\item{TopK}{A vector giving the aggregate ranked list.}
+\item{ProbMatrix}{A matrix, with each column represent the probability vector of a multinomial distribution and thus sum to 1.}
+\item{input.par}{A vector containing tuning parameters used in the current run. User may edit this vector and uses it as input for a more refined analysis.
+}
 }
 \references{
 Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. Biometrics, 65, 9-18.
@@ -86,14 +89,7 @@ Jie Ding <jding@jimmy.harvard.edu>, Shili Lin <shili@stat.osu.edu>
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-set.seed(1234)
-
-
-
-
-
-
-
-outCEMC=CEMC(input, space)
+outCEMC=CEMC(input, space) #platform dependent
+outCEMC1=MC(input,space=input) #top-k spaces
 }
 

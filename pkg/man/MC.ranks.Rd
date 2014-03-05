@@ -2,39 +2,38 @@
 \alias{MC.ranks}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Compute rankings based on a MC algorithm
+MC based rank aggregation
 }
 \description{
-Compute rankings based on the transition matrix from a MC algorithm
+Compute aggregate ranks based on the transition matrix from a three Markov chain algorithms.
 }
 \usage{
-MC.ranks(elements, trans, a = 0.15, delta = 10^-15)
+MC.ranks(elements, trans, a, delta)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{elements}{
-Unique elemenets of the union of all input lists - second element of the output list from function \code{trans.matrix}
+Unique elements of the union of all input lists - second element of the output list from function \code{trans.matrix}
 }
   \item{trans}{
 One of the three transition matrices build by function \code{trans.matrix} - 4 (5 or 6)
 elements of the output list from function \code{trans.matrix}
 }
   \item{a}{
-Tuning parameter to make sure Markov chain with the transition matrix is ergodic;
-default set to 0.15 
+Tuning parameter to make sure Markov chain with the transition matrix is ergodic; parameter value passed from MC.
 }
   \item{delta}{
-Convergence criterion for stationary distribution; default set to 10^-15
+Convergence criterion for stationary distribution; parameter value passed from MC.
 }
 }
 \details{
-Compute stationary distribution based on a Markov chain transition matrix built with function \code{trans.matrix}
+Compute stationary distribution based on a Markov chain transition matrix built with function \code{trans.matrix}.
 }
 \value{
-Output is a list with 3 components
-\item{comp1 }{Number of iterations to reach the stationary distribution}
-\item{comp2 }{The stationary distribution}
-\item{comp3 }{The rankings based on the stationary distribution}
+A list with 3 components:
+\item{comp1}{Number of iterations to reach the stationary distribution}
+\item{comp2}{The stationary distribution}
+\item{comp3}{The rankings based on the stationary distribution}
 }
 \references{
 Lin, S. (2010)
@@ -47,20 +46,5 @@ Shili Lin <shili@stat.osu.edu>
 
 \seealso{
 
-MC
+MC, trans.matrix
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
-

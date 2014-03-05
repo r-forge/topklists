@@ -15,15 +15,12 @@ plotMC(outMC, K, xlab="Ranking", ylab="MC Stationary Probability", main="")
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{outMC}{
-
 Output (a list) from running the MC algorithm 
 }
   \item{K}{
-
 Number of stationary probabilities to be plotted. If missing, all stationary probabilities contained in the MC output will be plotted
 }
   \item{xlab}{
-
 Text for x-label
 }
   \item{ylab}{
@@ -32,21 +29,15 @@ Text for y-label
   \item{main}{
 Text for title of plot, if desire
 }
-\details{
-
 }
 \value{
 A plot of ordered stationary probabilities versus ranking.
 }
-\references{
-
-}
 \author{
-Shili Lin <shili@stat.osu.edu}
+Shili Lin <shili@stat.osu.edu
 }
 
 \seealso{
-
 \code{\link{MC}} 
 }
 \examples{
@@ -55,4 +46,3 @@ data(TopKSpaceSampleInput)
 outMC=MC(input,space)
 plotMC(outMC)
 }
-

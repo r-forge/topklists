@@ -2,10 +2,10 @@
 \alias{MC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-TBD
+Markov chain based rank aggregation
 }
 \description{
-TBD
+Aggregating ranked lists using three  Markov chain algorithms.
 }
 \usage{
 MC(input, space = NULL, K = NULL, a = 0.15, delta = 10^-15)
@@ -13,80 +13,48 @@ MC(input, space = NULL, K = NULL, a = 0.15, delta = 10^-15)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
-%%     ~~Describe \code{input} here~~
+A list containing individual ranked lists.
 }
   \item{space}{
-%%     ~~Describe \code{space} here~~
+A list containing the underlying spaces. If not explicitly specified, all lists are treated as coming from a common space defined by the union of all input lists.
 }
   \item{K}{
-%%     ~~Describe \code{K} here~~
+An integer specifying the number of items in the output top-K list.
 }
   \item{a}{
-%%     ~~Describe \code{a} here~~
+Tuning parameter to make sure Markov chain with the transition matrix is ergodic;
+default set to 0.15.
 }
   \item{delta}{
-%%     ~~Describe \code{delta} here~~
+Convergence criterion for stationary distribution; default set to 10^-15.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Constructs ergodic Markov chain based on ranking data from individual lists. A larger probability in the stationary distribution corresponds to a higher rank of the corresponding element. The algorithm are considered: MC1 (spam sensitive), MC2 (majority rule), and MC3 (proportional).
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A list of elements, two for each of the MC algorithms: 
+\item{MC1.TopK}{A vector of aggregate ranked elements based on MC1 algorithm.}
+\item{MC1.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in MC1.TopK}
+\item{MC2.TopK}{A vector of aggregate ranked elements based on MC2 algorithm.}
+\item{MC2.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in MC2.TopK}
+\item{MC3.TopK}{A vector of aggregate ranked elements based on MC3 algorithm.}
+\item{MC3.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in MC3.TopK}
 }
 \references{
-%% ~put references to the literature/web site here ~
+Lin, S. (2010). Space oriented rank-based data integration.
+Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 }
 \author{
-%%  ~~who you are~~
+Shili Lin <shili@stat.osu.edu>
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{Borda}}, \code{\link{CEMC}}, \code{\link{plotMC}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (input, space = NULL, K = NULL, a = 0.15, delta = 10^-15) 
-{
-    if (missing(input)) 
-        stop("You need to input the top-k lists to be aggregated")
-    if (is.null(space) == TRUE) {
-        common = sort(unique(unlist(input)))
-        space = vector("list", length(input))
-        for (i in 1:length(input)) space[[i]] = common
-    }
-    out.trans = trans.matrix(input, space)
-    N = length(out.trans[[1]])
-    MC1 = MC.ranks(out.trans[[1]], out.trans[[2]], a, delta)
-    MC2 = MC.ranks(out.trans[[1]], out.trans[[3]], a, delta)
-    MC3 = MC.ranks(out.trans[[1]], out.trans[[4]], a, delta)
-    if (is.null(K) == TRUE) 
-        K = N
-    else {
-        if (K > N) 
-            K = N
-    }
-    results = list(MC1[[3]][1:K], MC1[[2]], MC2[[3]][1:K], MC2[[2]], 
-        MC3[[3]][1:K], MC3[[2]])
-    names(results) = c("MC1.TopK", "MC1.Prob", "MC2.TopK", "MC2.Prob", 
-        "MC3.TopK", "MC3.Prob")
-    return(results)
-  }
+#get sample data
+data(TopKSpaceSampleInput)
+outMC=MC(input,space) #platform dependent
+outMCa=MC(input,space=input) #top-k spaces
+plotMC(outMC)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

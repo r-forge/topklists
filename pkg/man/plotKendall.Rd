@@ -2,10 +2,10 @@
 \alias{plotKendall}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-TBD
+Plot of the Kendall Criterion values
 }
 \description{
-TBD
+Plot of the Kendall Criterion values of aggregate ranked lists; useful for comparing performances of several algorithms.
 }
 \usage{
 plotKendall(input, all.aggregates, space = NULL, algorithm = NULL, p = 0.5, w = NULL)
@@ -13,86 +13,42 @@ plotKendall(input, all.aggregates, space = NULL, algorithm = NULL, p = 0.5, w = 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
-%%     ~~Describe \code{input} here~~
+A list object containing individual ranked lists.
 }
   \item{all.aggregates}{
-%%     ~~Describe \code{all.aggregates} here~~
+A list comprising of aggregate top-k lists from different algorithms to be compared.
 }
   \item{space}{
-%%     ~~Describe \code{space} here~~
+A list containing the underlying spaces. If not explicitly specified, all lists are treated as coming from a common space defined by the union of all input lists.
 }
   \item{algorithm}{
-%%     ~~Describe \code{algorithm} here~~
+A vector listing the names corresponding to the algorithms used to construct the aggregate ranked lists all.aggregates.
 }
   \item{p}{
-%%     ~~Describe \code{p} here~~
+A parameter between 0 and 1 for setting the distance of a pair of elements between two lists, if at least one of the elements is not in the underlying space of one of the list or if both elements belong to one list but neither belong
+to the other list. (We recommend using \code{p=0.5} for a "neutral approach".)
 }
   \item{w}{
-%%     ~~Describe \code{w} here~~
+Weight vector assigned to the input list. Prior information on the reliability of each input list can be incorporated. The default is set to equal weight for each input list.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Compute the weighted Kendall's distance between each of the aggregate ranked list with the input ranked lists and plot the computed distances.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
+A plot of Kendall's distance for each of the aggregate list.
 }
 \author{
-%%  ~~who you are~~
+Shili Lin <shili@stat.osu.edu
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{kendallModified}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (input, all.aggregates, space = NULL, algorithm = NULL, 
-    p = 0.5, w = NULL) 
-{
-    if (missing(input)) 
-        stop("You need to input the individual top-k lists")
-    if (missing(all.aggregates)) 
-        stop("You need to have the aggregate top-k lists for comparison")
-    if (is.null(space) == TRUE) {
-        common = sort(unique(unlist(input)))
-        space = vector("list", length(input))
-        for (i in 1:length(input)) space[[i]] = common
-    }
-    nList = length(input)
-    if (is.null(w) == TRUE) 
-        w = rep(1, nList)
-    n = length(all.aggregates)
-    if (is.null(algorithm) == TRUE) 
-        algorithm = paste(rep("alg", n), 1:n)
-    kd = rep(0, n)
-    for (i in 1:n) kd[i] = Kendall(input, all.aggregates[[i]], 
-        space, p, w)
-    names(kd) = algorithm
-    plot(1:n, kd, type = "o", xaxt = "n", xlab = "Algorithm", 
-        ylab = "Modified Kendall Distance")
-    axis(1, at = 1:n, labels = algorithm)
-    kdl = list(kd)
-    names(kdl) = "Modified Kendall Distance"
-    return(kdl)
-  }
+#get sample data
+data(TopKSpaceSampleInput)
+outMC=MC(input,space)
+all.aggregate=list(outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK)
+plotKendall(input, all.aggregate,space, algorithm=c("MC1","MC2","MC3"))
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

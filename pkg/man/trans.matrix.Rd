@@ -43,14 +43,7 @@ Shili Lin <shili@stat.osu.edu>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-
 MC
-}
-\examples{
-#get sample data
-
-
-
 }
 
 
