@@ -8,7 +8,7 @@ Markov chain based rank aggregation
 Aggregating ranked lists using three  Markov chain algorithms.
 }
 \usage{
-MC(input, space = NULL, K = NULL, a = 0.15, delta = 10^-15)
+MC(input, space = NULL, k = NULL, a = 0.15, delta = 10^-15)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,8 +18,8 @@ A list containing individual ranked lists.
   \item{space}{
 A list containing the underlying spaces. If not explicitly specified, all lists are treated as coming from a common space defined by the union of all input lists.
 }
-  \item{K}{
-An integer specifying the number of items in the output top-K list.
+  \item{k}{
+An integer specifying the number of items in the output top-k list.
 }
   \item{a}{
 Tuning parameter to make sure Markov chain with the transition matrix is ergodic;

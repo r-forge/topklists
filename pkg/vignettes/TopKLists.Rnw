@@ -228,12 +228,12 @@ the aggregate rankings and ``Scores'' gives the corresponding Borda scores
 for each of the four functions.
 Of the three arguments in Borda, only the first one ({\em input}) is required. If argument {\em space} is not
 provided, then the underlying space is assumed to be common among all top-\emph{k} lists implicitly, and the union of
-the top-\emph{k} lists is treated as the common space. If argument {\em K} is not specified, then the full ranked
+the top-\emph{k} lists is treated as the common space. If argument {\em k} is not specified, then the full ranked
 list (all elements in the union) is outputted.
  
 
 <<>>=
-outBorda=Borda(input,space,K=50) # "space" is explicitly specified; assessor-dependent
+outBorda=Borda(input,space,k=50) # "space" is explicitly specified; assessor-dependent
 @
 
 <<>>=
@@ -311,7 +311,7 @@ MC2 (majority rule), and MC3 (proportional).
 Among them, MC3 may be more appropriate for multi-platform omics problems given the potential of unique features of each data type.
 The output is a list with two elements for each of the MC algorithms(aggregate top-\emph{k} list: MC1.TopK, MC2.TopK, or MC3.TopK; stationary probability distribution: MC1.Prob, MC2.Prob, or MC3.Prob). 
 Of the arguments in MC, only the first one, {\em input}, is required. If argument {\em space} is not provided, it is assumed that the underlying space is common among all top-\emph{k} lists, and the union of
-the top-\emph{k} list is supplied as the common space. If argument {\em K} is not specified, then the full ranked list (all elements in the union) is outputted.
+the top-\emph{k} list is supplied as the common space. If argument {\em k} is not specified, then the full ranked list (all elements in the union) is outputted.
 The other two arguments ($a$ and $delta$) are tuning parameters, whose default values were shown to work well in a number of examples.
 
 
@@ -321,7 +321,7 @@ outMC=MC(input,space) # "space" is explicitly specified; assessor-dependent
 
 
 <<>>=
-outMCa=MC(input,K=30) # "space" is not specified, so it is the same as common space (1-40)
+outMCa=MC(input,k=30) # "space" is not specified, so it is the same as common space (1-40)
 @
 
 

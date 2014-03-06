@@ -8,7 +8,7 @@ Borda based rank aggregation
 Computes Borda scores and ranks based on four different aggregation functions.
 }
 \usage{
-Borda(input, space = NULL, K = NULL)
+Borda(input, space = NULL, k = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,8 +18,8 @@ A list containing individual ranked lists.
   \item{space}{
 A list containing the underlying spaces. If not explicitly specified, all lists are treated as coming from a common space defined by the union of all input lists.
 }
-  \item{K}{
-An integer specifying the number of items in the output top-K list.
+  \item{k}{
+An integer specifying the number of items in the output top-k list.
 }
 }
 \details{

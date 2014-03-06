@@ -10,14 +10,14 @@ regarding the relative rankings of elements.
 }
 \usage{
 
-plotMC(outMC, K, xlab="Ranking", ylab="MC Stationary Probability", main="")
+plotMC(outMC, k, xlab="Ranking", ylab="MC Stationary Probability", main="")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{outMC}{
 Output (a list) from running the MC algorithm 
 }
-  \item{K}{
+  \item{k}{
 Number of stationary probabilities to be plotted. If missing, all stationary probabilities contained in the MC output will be plotted
 }
   \item{xlab}{

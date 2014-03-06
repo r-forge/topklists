@@ -1,4 +1,4 @@
-Borda <- function(input,space=NULL,K=NULL){
+Borda <- function(input,space=NULL,k=NULL){
 #l2norm is the square root of l2norm to make its unit more comparable with the rest
 	if (missing(input))
 	stop("You need to input the top-k lists to be aggregated")
@@ -33,13 +33,13 @@ Borda <- function(input,space=NULL,K=NULL){
         names(allranks)=aggreg.function
         allfun=data.frame(matrix(0,nrow=N,ncol=length(aggreg.function)))
         names(allfun)=aggreg.function
-        for (k in 1:length(aggreg.function)){
-            allfun[,k]=sort(apply(rank,1,aggreg.function[k], na.rm = TRUE))
-            allranks[,k]=L[order(apply(rank,1,aggreg.function[k], na.rm = TRUE))]
+        for (i in 1:length(aggreg.function)){
+            allfun[,i]=sort(apply(rank,1,aggreg.function[i], na.rm = TRUE))
+            allranks[,i]=L[order(apply(rank,1,aggreg.function[i], na.rm = TRUE))]
                 }
-	if (is.null(K)==TRUE) K=N
-	else {if (K>N) K=N}
-        results=list(allranks[1:K,],allfun)
+	if (is.null(k)==TRUE) k=N
+	else {if (k>N) k=N}
+        results=list(allranks[1:k,],allfun)
         names(results)=c("TopK", "Scores")
         return(results)
         }
@@ -52,21 +52,21 @@ l2norm <- function(x, na.rm=TRUE){
         return(sqrt(mean(abs(x)^2,na.rm=TRUE)))
         }
 
-plotBorda <- function(outBorda, K=NULL, xlab="Ranking",
+plotBorda <- function(outBorda, k=NULL, xlab="Ranking",
 ylab="Borda Score",main="",sub=""){
         if (missing(outBorda))
         stop("Borda scores missing; need to run Borda first to obtain the scores")
         scores=outBorda[[2]]
-        if (is.null(K)==TRUE) K=nrow(scores)
-        else {if (K > nrow(scores)) K=nrow(scores)}
+        if (is.null(k)==TRUE) k=nrow(scores)
+        else {if (k > nrow(scores)) k=nrow(scores)}
    ##plot it
    par(las=1)
-   plot(1:K, scores[1:K,1], type="o", col="red", pch=1, lty=1,xlab=xlab,
-        ylab=ylab, main=main, sub=sub,ylim=c(min(scores[1:K,]),max(scores[1:K,])))
-   lines(1:K,scores[1:K,2], type="o", col="blue", pch=2,lty=2)
-   lines(1:K,scores[1:K,3], type="o", col="green", pch=3,lty=3)
-   lines(1:K,scores[1:K,4], type="o", col="magenta", pch=4,lty=4)
-    legend(2*K/3,min(scores[1:K,])+(max(scores[1:K,])-min(scores))/2,
+   plot(1:k, scores[1:k,1], type="o", col="red", pch=1, lty=1,xlab=xlab,
+        ylab=ylab, main=main, sub=sub,ylim=c(min(scores[1:k,]),max(scores[1:k,])))
+   lines(1:k,scores[1:k,2], type="o", col="blue", pch=2,lty=2)
+   lines(1:k,scores[1:k,3], type="o", col="green", pch=3,lty=3)
+   lines(1:k,scores[1:k,4], type="o", col="magenta", pch=4,lty=4)
+    legend(2*k/3,min(scores[1:k,])+(max(scores[1:k,])-min(scores))/2,
 	legend=c("ARM", "MED", "GEO", "L2Norm"), pch=1:4)
 }      
 
@@ -141,7 +141,7 @@ trans.matrix <- function(input, space){
 	return(list(L,MC1,MC2,MC3))
 }
 
-MC=function(input,space=NULL,K=NULL,a=0.15, delta=10^-15){
+MC=function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 	if (missing(input))
 		stop("You need to input the top-k lists to be aggregated")
 	if (is.null(space)==TRUE){ #Will treat it as a common space problem
@@ -155,34 +155,34 @@ MC=function(input,space=NULL,K=NULL,a=0.15, delta=10^-15){
 	MC1=MC.ranks(out.trans[[1]], out.trans[[2]],a, delta)
 	MC2=MC.ranks(out.trans[[1]], out.trans[[3]],a, delta)
 	MC3=MC.ranks(out.trans[[1]], out.trans[[4]],a, delta)
-	if (is.null(K)==TRUE) K=N
-	else {if (K>N) K=N}
-	results=list(MC1[[3]][1:K],MC1[[2]],
-		     MC2[[3]][1:K],MC2[[2]],
-		     MC3[[3]][1:K],MC3[[2]])
+	if (is.null(k)==TRUE) k=N
+	else {if (k>N) k=N}
+	results=list(MC1[[3]][1:k],MC1[[2]],
+		     MC2[[3]][1:k],MC2[[2]],
+		     MC3[[3]][1:k],MC3[[2]])
 	names(results)=c("MC1.TopK", "MC1.Prob",
 			 "MC2.TopK", "MC2.Prob",
 			 "MC3.TopK", "MC3.Prob")
 	return(results)
 }
 
-plotMC <- function(outMC, K, xlab="Ranking", ylab="MC Stationary Probability",
+plotMC <- function(outMC, k, xlab="Ranking", ylab="MC Stationary Probability",
 main=""){
 	if (missing(outMC))
 	stop("MC stationary probabilities missing; need to run MC first to obtain the probabilities")
 	N=length(outMC[[2]])
-	if (missing(K)) K=N
-	else {if (K>N) K=N}
+	if (missing(k)) k=N
+	else {if (k>N) k=N}
 	   ##plot it
    par(las=1)
-	ymin=min(c(unlist(outMC[[2]][1:K]),unlist(outMC[[4]][1:K]),unlist(outMC[[6]][1:K])))
-	ymax=max(c(unlist(outMC[[2]][1:K]),unlist(outMC[[4]][1:K]),unlist(outMC[[6]][1:K])))
-   plot(1:K, outMC[[2]][1:K], type="n", col="red", pch=1, lty=1,xlab=xlab,
+	ymin=min(c(unlist(outMC[[2]][1:k]),unlist(outMC[[4]][1:k]),unlist(outMC[[6]][1:k])))
+	ymax=max(c(unlist(outMC[[2]][1:k]),unlist(outMC[[4]][1:k]),unlist(outMC[[6]][1:k])))
+   plot(1:k, outMC[[2]][1:k], type="n", col="red", pch=1, lty=1,xlab=xlab,
         ylab=ylab, main=main, ylim=c(ymin,ymax))
-   lines(1:K,outMC[[2]][1:K], type="o", col="red", pch=1,lty=1)
-   lines(1:K,outMC[[4]][1:K], type="o", col="blue", pch=2,lty=2)
-   lines(1:K,outMC[[6]][1:K], type="o", col="green", pch=3,lty=3)
-    legend(2*K/3,ymin+(ymax-ymin)/2,legend=c("MC1", "MC2", "MC3"), pch=1:3)
+   lines(1:k,outMC[[2]][1:k], type="o", col="red", pch=1,lty=1)
+   lines(1:k,outMC[[4]][1:k], type="o", col="blue", pch=2,lty=2)
+   lines(1:k,outMC[[6]][1:k], type="o", col="green", pch=3,lty=3)
+    legend(2*k/3,ymin+(ymax-ymin)/2,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 }
 
 kendallMLists <-function(input,aggregate,space=NULL,p=0.5,w=NULL){
