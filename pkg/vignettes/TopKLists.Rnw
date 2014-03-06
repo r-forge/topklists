@@ -173,8 +173,8 @@ There are three classes of algorithms implemented in \texttt{TopKSpace}, namely
 Borda's method, Markov chain (MC) algorithms \cite{lin}, 
 and a Cross Entropy Monte Carlo (CEMC) method taking advantage of the new Order Explicit Algorithm (OEA) as described by \cite{linding}.
 The Borda and Markov Chain methods consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the CEMC method employs a Monte Carlo search procedure for achieving this optimization. Borda and Markov chain algorithms run much faster than the Cross Entropy Monte Carlo algorithm, however the latter usually achieves better results. Nevertheless, simulation studies indicate that taking the underlying space into consideration has a much greater impact than using different algorithms.
-These three algorithms are implemented in three top-level functions within TopKSpace: Borda, MC, 
-and CEMC. There are also two plotting functions: plotBorda and plotMC that help the user to visualize 
+These three algorithms are implemented in three top-level functions within \texttt{TopKSpace}: \texttt{Borda}, \texttt{MC}, 
+and \texttt{CEMC}. There are also two plotting functions: \texttt{plotBorda} and \texttt{plotMC} that help the user to visualize 
 and compare the results.
 
 \begin{figure}[h]
@@ -213,7 +213,7 @@ potential aggregate top-40 lists is more than $8 \times 10^{47}$, enumerating al
 accurate guess. There should be
 overwhelming information for ranking objects 1-10 in the top-10. Objects 11-15 should come next, followed
 by 16-20. For the remaining of the objects, 31-40 should be ranked ahead of
-21-30. In the following subsection, we will demonstrate the use of the three classes of algorithms (Borda, MC, CEMC) for aggregation of these three ranked lists.
+21-30. In the following subsection, we will demonstrate the use of the three classes of algorithms (\texttt{Borda}, \texttt{MC}, \texttt{CEMC}) for aggregation of these three ranked lists.
 We will also demonstrate the use of an objective evaluation criterion to compare the
 relative performances of different algorithms.
 
@@ -222,11 +222,11 @@ relative performances of different algorithms.
 
 \subsection{Function calling}
 \subsubsection{Borda algorithm}
-Four Borda scores are implemented in the Borda function of TopKSpace, namely the arithmetic mean (ARM), median (MED),
+Four Borda scores are implemented in the \texttt{Borda} function of \texttt{TopKSpace}, namely the arithmetic mean (ARM), median (MED),
 geometric mean (GEO), and L2-norm (L2N). The output is a list with two elements: ``Top-K'' provides
 the aggregate rankings and ``Scores'' gives the corresponding Borda scores
 for each of the four functions.
-Of the three arguments in Borda, only the first one ({\em input}) is required. If argument {\em space} is not
+Of the three arguments in \texttt{Borda}, only the first one ({\em input}) is required. If argument {\em space} is not
 provided, then the underlying space is assumed to be common among all top-\emph{k} lists implicitly, and the union of
 the top-\emph{k} lists is treated as the common space. If argument {\em k} is not specified, then the full ranked
 list (all elements in the union) is outputted.
@@ -287,7 +287,7 @@ plotBorda(outBorda2) # plot scores from top-\emph{k} space analysis
 
 
 
-Note that the first argument of the plotBorda function is the output from the Borda function, which is 
+Note that the first argument of the \texttt{plotBorda} function is the output from the Borda function, which is 
 mandatory. If the number of ranked objects (second argument) is not specified, the plot will show 
 scores for all objects in the union set. 
  
@@ -308,9 +308,9 @@ scores for all objects in the union set.
 Three Markov Chain (MC) algorithms are implemented in the MC function in
 \texttt{TopKSpace}: MC1 (spam sensitive), 
 MC2 (majority rule), and MC3 (proportional). 
-Among them, MC3 may be more appropriate for multi-platform omics problems given the potential of unique features of each data type.
-The output is a list with two elements for each of the MC algorithms(aggregate top-\emph{k} list: MC1.TopK, MC2.TopK, or MC3.TopK; stationary probability distribution: MC1.Prob, MC2.Prob, or MC3.Prob). 
-Of the arguments in MC, only the first one, {\em input}, is required. If argument {\em space} is not provided, it is assumed that the underlying space is common among all top-\emph{k} lists, and the union of
+Among them, \texttt{MC3} may be more appropriate for multi-platform omics problems given the potential of unique features of each data type.
+The output is a list with two elements for each of the \texttt{MC} algorithms(aggregate top-\emph{k} list: MC1.TopK, MC2.TopK, or MC3.TopK; stationary probability distribution: MC1.Prob, MC2.Prob, or MC3.Prob). 
+Of the arguments in \texttt{MC}, only the first one, {\em input}, is required. If argument {\em space} is not provided, it is assumed that the underlying space is common among all top-\emph{k} lists, and the union of
 the top-\emph{k} list is supplied as the common space. If argument {\em k} is not specified, then the full ranked list (all elements in the union) is outputted.
 The other two arguments ($a$ and $delta$) are tuning parameters, whose default values were shown to work well in a number of examples.
 
@@ -337,7 +337,7 @@ sum(abs(outMC$MC2.TopK-outMCb$MC2.TopK))
 
 
 Comment 1: 
-Similar to the discussion for running the Borda function, 
+Similar to the discussion for running the \texttt{Borda} function, 
  the results for which the space was explicitly
 specified were expected to be the same as those run with the common space
 assumption, which was exactly what we saw above (the two stationary distributions were identical). On the
@@ -350,9 +350,9 @@ list(outMC$MC1.TopK, outMC$MC2.TopK, outMC$MC3.TopK)
 
 
 
-Comment 2: All three MC algorithms ranked objects 1-10, in that order, in the top-10. MC2 also ranked the next two groups, 11-15 and 16-20 in the correct 
+Comment 2: All three \texttt{MC} algorithms ranked objects 1-10, in that order, in the top-10. \texttt{MC2} also ranked the next two groups, 11-15 and 16-20 in the correct 
 order. However, the remaining objects (21-40) were ranked in the reverse of
-the expected order. MC3, on the other hand, had all the correct ordering 
+the expected order. \texttt{MC3}, on the other hand, had all the correct ordering 
 except a transposition between the order of objects 15 and (16, 17).
 The stationary probabilities can be visualized using the plotting function (described in
 the following), which can be used to detect information degradation heuristically.
@@ -365,13 +365,13 @@ plotMC(outMC)
 A plot of the ordered stationary probabilities versus the ranking using the above command can contain useful information
 regarding the relative rankings of objects. 
 For example, Figure~\ref{fig:equil} shows that 
-for MC2, there was considerable information for ranking objects in the top-20,
+for \texttt{MC2}, there was considerable information for ranking objects in the top-20,
 but there was practically no information ranking any object after that (all 
 stationary probabilities are the same). This was the reason why the rankings for objects
 21-40 were completely wrong as we saw in the output.
-On the other hand, for MC1, there was less information for ranking
-objects beyond the top-10 compared to MC2, thus objects 11-20 were not ranked
-correctly. MC3 appears to be a compromise between MC1 and MC2, leading to a better 
+On the other hand, for \texttt{MC1}, there was less information for ranking
+objects beyond the top-10 compared to \texttt{MC2}, thus objects 11-20 were not ranked
+correctly. \texttt{MC3} appears to be a compromise between \texttt{MC1} and \texttt{MC2}, leading to a better 
 aggregate ranked 
 list.
 
@@ -385,23 +385,23 @@ list.
 %% \label{equil}
 %% \end{figure}
 
-Note that the first argument of the plotMC function is the output from the MC function, which is
+Note that the first argument of the \texttt{plotMC} function is the output from the \texttt{MC} function, which is
 mandatory. If the number of ranked objects (second argument) is not specified, the plot will show
 probabilities for all objects in the union set.
 
 \subsubsection{The CEMC algorithm}
-The Order Explicit Algorithm (OEA) in \cite{linding} is implemented as the CEMC function in TopKSpace.
-Of the three main input arguments in CEMC, only the first one ({\em input}) is required. If argument {\em space}
+The Order Explicit Algorithm (OEA) in \cite{linding} is implemented as the \texttt{CEMC} function in \texttt{TopKSpace}.
+Of the three main input arguments in \texttt{CEMC}, only the first one ({\em input}) is required. If argument {\em space}
 is not provided, then all the underlying spaces are assumed to be a common one, and the union of 
 the input top-\emph{k} lists is supplied as the common space. If argument {\em k} is not specified, then the full 
 aggregate ranked-list (all elements in the union) is outputted. 
 The function also has a number of other arguments, all tuning parameters, that can be set to run the OEA more efficiently.
-The default specified in the CEMC function constitutes a set of 
+The default specified in the \texttt{CEMC} function constitutes a set of 
 values that seem to work well for the examples/data that we have analyzed in \cite{linding}, but it is always a good idea
 to run OEA with multiple sets of tuning parameters to increase the chance of finding 
 the global maximum; see \cite{linding} for some recommendations on how to choose these 
-parameters. In fact, the output of CEMC contains the set of tuning parameters used in the current run. If  users
-are unsure of what to use, they are recommended to run CEMC without setting any parameter and use 
+parameters. In fact, the output of \texttt{CEMC} contains the set of tuning parameters used in the current run. If  users
+are unsure of what to use, they are recommended to run \texttt{CEMC} without setting any parameter and use 
 the parameter file in the output ({\em input.par}) to fine-tune the parameters and apply them as input
 for a more refined analysis. For the convenience of the user, after the parameter values are 
 modified, the file can be directly supplied as an input argument without having to enter the value of 
@@ -446,17 +446,17 @@ outCEMC$ProbMatrix[1:5,1:5]
 outCEMC1$ProbMatrix[1:5,1:5]
 @
 
-Comment 2: From the submatrix shown above for outCEMC, it can be seen that item one is ranked no. 1, since the probability vector in the first column for item one is almost 1, but very small for the rest of the items. Similarly, item 2 is ranked no. 2, and so on.
-On the other hand, for outCEMC1 with top-\emph{k} space assumption, the 5th item is no longer ranked no.5, different from the assessor-dependence results.
-This discrepancy can also be seen from the above TopK outputs.
+Comment 2: From the submatrix shown above for \texttt{outCEMC}, it can be seen that item one is ranked no. 1, since the probability vector in the first column for item one is almost 1, but very small for the rest of the items. Similarly, item 2 is ranked no. 2, and so on.
+On the other hand, for \texttt{outCEMC1} with top-\emph{k} space assumption, the 5th item is no longer ranked no.5, different from the assessor-dependence results.
+This discrepancy can also be seen from the above \texttt{TopK} outputs.
 
 <<>>=
 outCEMC$input.par
 @
 
-Comment 3: This file contains all the tuning parameter values (defaults) for running CEMC. User may
+Comment 3: This file contains all the tuning parameter values (defaults) for running \texttt{CEMC}. User may
 modify this file and use it as the input to the {\em input.par} argument in
-the CEMC function.
+the \texttt{CEMC} function.
 
 
 
@@ -473,23 +473,23 @@ the example was contrived.
 However, in a real data application, the ground truth is typically completely unknown,
 therefore, it would be helpful to have some objective criterion to evaluate the relative
 performances of the various algorithms. To this end, we have implemented two functions 
-based on the modified Kendall distance (MKD) \cite{lin} in the TopKSpace module. The first 
-function is Kendall, which computes the weighted sum of 
+based on the modified Kendall distance (MKD) \cite{lin} in the \texttt{TopKSpace} module. The first 
+function is \texttt{Kendall}, which computes the weighted sum of 
 MKD between an aggregate top-\emph{k} list with the input lists. 
 Of the input arguments, the first two ({\em input, aggregate}) are required. If argument
 {\em space} is not supplied, all input lists are assumed to come from the same underlying
 space, the union of all elements in the input. If user has prior information on which list
 is more informative, then that information can be utilized by specifying the weight vector
 {\em w}.
-The output of Kendall is the MKD, a single number. However, it would be much more meaningful
-to compare MKDs accross results from different algorithms to assess their relative
-performances. This can be achieved by invoking the plotKendall function, which not only 
-provide a vector of MKDs but also provide a plot of the MKDs for ease of comparison visually.
+The output of \texttt{Kendall} is the \texttt{MKD}, a single number. However, it would be much more meaningful
+to compare \texttt{MKD}s accross results from different algorithms to assess their relative
+performances. This can be achieved by invoking the \texttt{plotKendall} function, which not only 
+provide a vector of \texttt{MKD}s but also provide a plot of the \texttt{MKD}s for ease of comparison visually.
 There are also two mandatory input arguments, {\em input} and {\em all.aggregates},
 where all.aggregates is a list comprising of aggregate top-\emph{k} lists from different 
 algorithms to be compared. 
 
-The following command will compute the MKD for the aggregate list form the  
+The following command will compute the \texttt{MKD} for the aggregate list form the  
 Borda algorithm "ARM".
 
 <<>>=
@@ -499,12 +499,12 @@ all.aggregates=list(outBorda$TopK[,1],outBorda$TopK[,2],outBorda$TopK[,3],outBor
 <<plotKendall, include=TRUE, tidy=TRUE, echo=TRUE, out.width='8cm', out.height='8cm', fig.pos='H',fig.cap="Comparison of the modified Kendall distances across several algorithms", fig.align='center'>>=
 plotKendall(input,all.aggregates,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3"))
 @
-Runing the Kendall function returns the MKD for the aggregate list from the
-Borda algorithm "ARM", whereas the plotKendall function returns a vector of MKDs, with
-the first one matching the output from the Kendall function.
-Figure~\ref{fig:plotKendall} is the graphical component of the plotKendall output.
+Runing the \texttt{Kendall} function returns the \texttt{MKD} for the aggregate list from the
+Borda algorithm "ARM", whereas the \texttt{plotKendall} function returns a vector of \texttt{MKD}s, with
+the first one matching the output from the \texttt{Kendall} function.
+Figure~\ref{fig:plotKendall} is the graphical component of the \texttt{plotKendall} output.
 As we can see, the range on the y-axis is very small, indicating similar performance of 
-all algorithms, especially those from Borda. The result from MC3 seems to perform a bit 
+all algorithms, especially those from \texttt{Borda}. The result from \texttt{MC3} seems to perform a bit 
 better than the rest, confirming our heuristic interpretation of the results. 
 
 
