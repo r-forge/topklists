@@ -43,7 +43,7 @@ Shili Lin <shili@stat.osu.edu
 }
 
 \seealso{
-\code{\link{kendallModified}}
+\code{\link{kendallMLists}}
 }
 \examples{
 #get sample data

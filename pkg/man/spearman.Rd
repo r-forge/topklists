@@ -35,7 +35,7 @@ Returns modified spearman distance against \code{a} for each lists within \code{
 Jie Ding <jding@jimmy.harvard.edu>
 }
 \seealso{
-\code{\link{kendallTau}}
+\code{\link{kendall2Lists}}
 }
 \examples{
 set.seed(1234)

@@ -1,6 +1,6 @@
-\name{kendallTau}
-\alias{kendallTau}
-\alias{kendallTau.c}
+\name{kendall2Lists}
+\alias{kendall2Lists}
+\alias{kendall2Lists.c}
 \title{
 Calculate modified Kendall's tau distance
 }
@@ -8,8 +8,8 @@ Calculate modified Kendall's tau distance
 Kendall's tau is equal to the number of adjunct pairwise exchanges required to convert one ranking into another. This modified version allows for partial lists to be compared.
 }
 \usage{
-kendallTau(rank.a, rank.b, k.a, k.b, n, p = 0)
-kendallTau.c(rank.a, rank.b, k.a, k.b, n, p = 0)
+kendall2Lists(rank.a, rank.b, k.a, k.b, n, p = 0)
+kendall2Lists.c(rank.a, rank.b, k.a, k.b, n, p = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -52,6 +52,6 @@ Jie Ding <jding@jimmy.harvard.edu>
 set.seed(1234)
 a <- sample(1:10, 10)
 b <- sample(1:10, 10)
-kendallTau(a, b, 6, 6, 10)
-kendallTau.c(a, b, 6, 6, 10)
+kendall2Lists(a, b, 6, 6, 10)
+kendall2Lists.c(a, b, 6, 6, 10)
 }
