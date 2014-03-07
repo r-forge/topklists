@@ -280,7 +280,7 @@ top-\emph{k} space assumption (Figure~\ref{fig:borda}(b)). \\
 
 
 <<borda, fig.cap='Plotting Borda\'s scores', fig.subcap=c('assessor-dependent analysis','top-k space analysis'), out.width='.49\\linewidth', fig.pos='ht!', fig.align='center'>>=
-plotBorda(outBorda, K=40) #plot scores from assessor-dependent analysis
+plotBorda(outBorda, k=40) #plot scores from assessor-dependent analysis
 plotBorda(outBorda2) # plot scores from top-\emph{k} space analysis
 @
 
