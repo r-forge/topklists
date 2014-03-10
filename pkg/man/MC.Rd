@@ -54,7 +54,7 @@ Shili Lin <shili@stat.osu.edu>
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outMC=MC(input,space) #platform dependent
+outMC=MC(input,space) #underlying space-dependent
 outMCa=MC(input,space=input) #top-k spaces
 plotMC(outMC)
 }

@@ -45,7 +45,7 @@ geomean, l2norm}
 #get sample data
 data(TopKSpaceSampleInput)
 
-outBorda=Borda(input,space) #platform dependent
+outBorda=Borda(input,space) #underlying space-dependent
 outBorda1=Borda(input,space=input) #top-k spaces
 
 }
