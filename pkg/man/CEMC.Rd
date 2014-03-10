@@ -89,7 +89,7 @@ Jie Ding <jding@jimmy.harvard.edu>, Shili Lin <shili@stat.osu.edu>
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outCEMC=CEMC(input, space) #platform dependent
+outCEMC=CEMC(input, space) #underlying space-dependent
 outCEMC1=MC(input,space=input) #top-k spaces
 }
 
