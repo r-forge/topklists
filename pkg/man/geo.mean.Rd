@@ -1,5 +1,5 @@
-\name{geomean}
-\alias{geomean}
+\name{geo.mean}
+\alias{geo.mean}
 \title{
 Calculate the geometric mean
 }
@@ -7,7 +7,7 @@ Calculate the geometric mean
 Calculate the geometric mean
 }
 \usage{
-geomean(x, na.rm = TRUE)
+geo.mean(x, na.rm = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,12 +30,12 @@ Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-Borda
+\link{Borda}
 }
 \examples{
 set.seed(122)
 vals <- sample(1:100, 10)
-geomean(vals)
+geo.mean(vals)
 }
 \keyword{ arith }
 

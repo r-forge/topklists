@@ -40,7 +40,8 @@ Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-geomean, l2norm}
+  \link{geo.mean}, \link{l2norm}
+  }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
