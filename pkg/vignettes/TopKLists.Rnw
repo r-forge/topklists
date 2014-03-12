@@ -502,7 +502,7 @@ The following command will compute the \texttt{MKD} for the aggregate list form 
 Borda algorithm "ARM".
 
 <<>>=
-kendallMLists(input,outBorda$TopK[,1],space)
+kendallMLists(input,space, outBorda$TopK[,1])
 all.aggregates=list(outBorda$TopK[,1],outBorda$TopK[,2],outBorda$TopK[,3],outBorda$TopK[,4],outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK)
 @
 <<plotKendall, include=TRUE, tidy=TRUE, echo=TRUE, out.width='8cm', out.height='8cm', fig.pos='H',fig.cap="Comparison of the modified Kendall distances across several algorithms", fig.align='center'>>=
