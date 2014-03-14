@@ -85,7 +85,7 @@ The presence of an estrogene receptor on cancer cells discriminates between two 
 Given the study designs, we also expected a substantial overlap in the top ranked genes.
 We begin by loading the data set and displaying the first part of the data frame, as described below.
 
-<<>>=
+<<message=FALSE, warning=FALSE>>=
 library(TopKLists)
 data(breast)
 head(breast)
