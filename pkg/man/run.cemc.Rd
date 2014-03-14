@@ -1,5 +1,5 @@
-\name{CEMC}
-\alias{CEMC}
+\name{run.cemc}
+\alias{run.cemc}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 CEMC based rank aggregation
@@ -8,7 +8,7 @@ CEMC based rank aggregation
 Performs cross-entropy Monte Carlo simulations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists.
 }
 \usage{
-CEMC(input, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
+run.cemc(input, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
 rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0,
 d.w = NULL, input.par = NULL, extra=0)
 }
@@ -89,7 +89,7 @@ Jie Ding <jding@jimmy.harvard.edu>, Shili Lin <shili@stat.osu.edu>
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outCEMC=CEMC(input, space) #underlying space-dependent
-outCEMC1=MC(input,space=input) #top-k spaces
+outCEMC=run.cemc(input, space) #underlying space-dependent
+outCEMC1=run.cemc(input,space=input) #top-k spaces
 }
 

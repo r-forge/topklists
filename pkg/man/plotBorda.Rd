@@ -38,12 +38,12 @@ A plot of Borda's scores versus ranks.
  Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-\code{\link{Borda}}
+\link{\code{borda.scores}}
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outBorda=Borda(input,space,k=40)
+outBorda=borda.scores(input,space,k=40)
 plotBorda(outBorda, k=40)
 }
 

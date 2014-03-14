@@ -48,7 +48,7 @@ Shili Lin <shili@stat.osu.edu
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outMC=MC(input,space)
+outMC=run.mc(input,space)
 all.aggregate=list(outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK)
 plotKendall(input, all.aggregate,space, algorithm=c("MC1","MC2","MC3"))
 }

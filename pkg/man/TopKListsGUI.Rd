@@ -56,6 +56,9 @@ The following additional exploratory features are implemented:
 \author{
 Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <kg.kugler@gmail.com>, Michael G. Schimek <michael.schimek@medunigraz.at>
 }
+\seealso{
+  \code{\link{run.cemc}}
+}
 \examples{
 ##using a GUI
 \dontrun{

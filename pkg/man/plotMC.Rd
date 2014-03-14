@@ -38,11 +38,11 @@ Shili Lin <shili@stat.osu.edu
 }
 
 \seealso{
-\code{\link{MC}} 
+\code{\link{run.mc}} 
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outMC=MC(input,space)
+outMC=run.mc(input,space)
 plotMC(outMC)
 }

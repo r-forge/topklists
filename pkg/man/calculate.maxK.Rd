@@ -1,5 +1,5 @@
-\name{calculateDataSet}
-\alias{calculateDataSet}
+\name{calculate.maxK}
+\alias{calculate.maxK}
 \title{
 The main function for TopKInference
 }
@@ -7,7 +7,7 @@ The main function for TopKInference
 Returns a complex object named truncated.lists containing the Idata vector (see \code{prepareIdata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-\emph{k} estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}
 }
 \usage{
-calculateDataSet(lists, L, d, v, threshold) 
+calculate.maxK(lists, L, d, v, threshold) 
 }
 \arguments{
   \item{lists}{
@@ -53,10 +53,13 @@ A named list of the following content:
 \references{
 Hall, P. and Schimek, M. G. (2012). Moderate deviation-based inference for random degeneration in paired rank lists. J. Amer. Statist. Assoc., 107, 661-672.
 }
+\seealso{
+  \code{\link{run.cemc}}
+}
 \examples{
 set.seed(1234)
 data(TopKGUISampleInput)
-truncated.lists = calculateDataSet(lists, d=10, v=10, L=3, threshold=50)
+truncated.lists = calculate.maxK(lists, d=10, v=10, L=3, threshold=50)
 \dontrun{
 aggmap(truncated.lists, N=80, L=3, d=10, v=10, lists=lists, threshold=50)
 }

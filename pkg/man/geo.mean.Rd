@@ -30,7 +30,7 @@ Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-\link{Borda}
+\link{borda.scores}
 }
 \examples{
 set.seed(122)
