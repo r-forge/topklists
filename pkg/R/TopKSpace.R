@@ -1,4 +1,4 @@
-Borda <- function(input,space=NULL,k=NULL){
+borda.scores <- function(input,space=NULL,k=NULL){
 #l2norm is the square root of l2norm to make its unit more comparable with the rest
 	if (missing(input))
 	stop("You need to input the top-k lists to be aggregated")
@@ -52,7 +52,7 @@ l2norm <- function(x, na.rm=TRUE){
         return(sqrt(mean(abs(x)^2,na.rm=TRUE)))
         }
 
-plotBorda <- function(outBorda, k=NULL, xlab="Ranking",
+borda.scores.plot <- function(outBorda, k=NULL, xlab="Ranking",
 ylab="Borda Score",main="",sub=""){
         if (missing(outBorda))
         stop("Borda scores missing; need to run Borda first to obtain the scores")
@@ -70,7 +70,7 @@ ylab="Borda Score",main="",sub=""){
 	legend=c("ARM", "MED", "GEO", "L2Norm"), pch=1:4)
 }      
 
-MC.ranks <- function(elements, trans, a = 0.15, delta = 10^-15){
+mc.ranks <- function(elements, trans, a = 0.15, delta = 10^-15){
 #Compute rankings based on the transition matrix from a MC algorithm
         n=nrow(trans)
         trans=trans*(1-a)+a/n
@@ -141,7 +141,7 @@ trans.matrix <- function(input, space){
 	return(list(L,MC1,MC2,MC3))
 }
 
-MC=function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
+run.mc <- function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 	if (missing(input))
 		stop("You need to input the top-k lists to be aggregated")
 	if (is.null(space)==TRUE){ #Will treat it as a common space problem
@@ -152,9 +152,9 @@ MC=function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 		}
 	out.trans=trans.matrix(input,space)
 	N=length(out.trans[[1]])
-	MC1=MC.ranks(out.trans[[1]], out.trans[[2]],a, delta)
-	MC2=MC.ranks(out.trans[[1]], out.trans[[3]],a, delta)
-	MC3=MC.ranks(out.trans[[1]], out.trans[[4]],a, delta)
+	MC1=mc.ranks(out.trans[[1]], out.trans[[2]],a, delta)
+	MC2=mc.ranks(out.trans[[1]], out.trans[[3]],a, delta)
+	MC3=mc.ranks(out.trans[[1]], out.trans[[4]],a, delta)
 	if (is.null(k)==TRUE) k=N
 	else {if (k>N) k=N}
 	results=list(MC1[[3]][1:k],MC1[[2]],
@@ -166,7 +166,7 @@ MC=function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 	return(results)
 }
 
-plotMC <- function(outMC, k, xlab="Ranking", ylab="MC Stationary Probability",
+mc.plot <- function(outMC, k, xlab="Ranking", ylab="MC Stationary Probability",
 main=""){
 	if (missing(outMC))
 	stop("MC stationary probabilities missing; need to run MC first to obtain the probabilities")
@@ -251,7 +251,7 @@ dall=dall+(sum(((allranks[,1]-allranks[,2])*(allranks[,3]-(allranks[,4]))<0)*not
         return(dall)
 }
 
-plotKendall=function(input, all.aggregates, space=NULL, algorithm=NULL, p=0.5, w=NULL){
+kendall.plot <- function(input, all.aggregates, space=NULL, algorithm=NULL, p=0.5, w=NULL){
 if (missing(input))
         stop("You need to input the individual top-k lists")
 if (missing(all.aggregates))

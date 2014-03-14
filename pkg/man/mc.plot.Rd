@@ -1,5 +1,5 @@
-\name{plotMC}
-\alias{plotMC}
+\name{mc.plot}
+\alias{mc.plot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plot of the ordered stationary probabilities
@@ -10,7 +10,7 @@ regarding the relative rankings of elements.
 }
 \usage{
 
-plotMC(outMC, k, xlab="Ranking", ylab="MC Stationary Probability", main="")
+mc.plot(outMC, k, xlab="Ranking", ylab="MC Stationary Probability", main="")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -44,5 +44,5 @@ Shili Lin <shili@stat.osu.edu
 #get sample data
 data(TopKSpaceSampleInput)
 outMC=run.mc(input,space)
-plotMC(outMC)
+mc.plot(outMC)
 }

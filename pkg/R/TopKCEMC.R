@@ -2,7 +2,7 @@
 ###taking into account difference spaces of input ranked lists
 ###Last modified: 04/28/10
 
-`CEMC` <-
+`run.cemc` <-
 function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  

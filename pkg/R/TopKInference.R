@@ -3,7 +3,7 @@
 # Stage sk is associated with an integer Jsk, which when k is odd, is a potential lower bound to j0
 # Idata - input data is a vector of 0's and 1's
 
-calculateDataSet <- function(lists, L, d, v, threshold=50) {
+calculate.maxK <- function(lists, L, d, v, threshold=50) {
   compared.lists <- list() #contains all pairwise compared lists (structure for aggmap)
   info <- matrix(ncol = 0, nrow = 3) #contains information about list names
   rownames(info) <- c("listname", "original listname", "ref-list or trunc-list")
@@ -24,7 +24,7 @@ calculateDataSet <- function(lists, L, d, v, threshold=50) {
   tli = as.character(unique(unlist(tl))) #unique genes in truncated lists
   
   
-  resS = CEMC(tl,maxK, space=tl)
+  resS = run.cemc(tl,maxK, space=tl)
   
 
 ##### adjusts v - in case the estimated maxK is larger than nrow(lists)-v 
@@ -253,7 +253,7 @@ rownames(venntable) <- NULL
       message(paste("!!!...For selected delta, the top L list cannot be estimated (little or no overlap)!!!", "\n"))
       return(truncated.lists=NULL)
     } # end if if (maxK)
-}# end of function calculateDataSet
+}# end of function calculate.maxK
 
 compute.stream<-function(Idata, const=0.251, v, r=1.2)
 {
@@ -405,7 +405,7 @@ j0.multi<-function(lists,d,v) {
   for (i in 1:ncol(lists)){
   for (j in 1:ncol(lists)){
     if (i!=j) {
-	ID = prepareIdata(lists[,c(i,j)],d=d)
+	ID = prepare.idata(lists[,c(i,j)],d=d)
    	Idata_ID=cbind(Idata_ID, ID$Idata)
 	names_idata = c(names_idata, paste(colnames(lists)[i],"_",colnames(lists)[j],sep=""))
 	J = compute.stream(ID$Idata,v=v)$j0_est
@@ -448,7 +448,7 @@ return(pj.plus)
 #
 # The result is an object of type "Idata", which is a list containing Idata and the information on the distance delta.
 
-prepareIdata <- function(x, d)
+prepare.idata <- function(x, d)
 {
 if(ncol(x)<2){
     warning("You need a minimum of two lists to compare. Execution halted.","\n")

@@ -1,5 +1,5 @@
 \name{run.mc}
-\aliasrun.mc}
+\alias{run.mc}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Markov chain based rank aggregation
@@ -49,12 +49,12 @@ Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-\code{\link{borda.scores}}, \code{\link{run.cemc}}, \code{\link{plotMC}}
+\code{\link{borda.scores}}, \code{\link{run.cemc}}, \code{\link{mc.plot}}
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
 outMC=run.mc(input,space) #underlying space-dependent
 outMCa=run.mc(input,space=input) #top-k spaces
-plotMC(outMC)
+mc.plot(outMC)
 }

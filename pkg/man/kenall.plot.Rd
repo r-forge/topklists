@@ -1,5 +1,5 @@
-\name{plotKendall}
-\alias{plotKendall}
+\name{kendall.plot}
+\alias{kendall.plot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plot of the Kendall Criterion values
@@ -8,7 +8,7 @@ Plot of the Kendall Criterion values
 Plot of the Kendall Criterion values of aggregate ranked lists; useful for comparing performances of several algorithms.
 }
 \usage{
-plotKendall(input, all.aggregates, space = NULL, algorithm = NULL, p = 0.5, w = NULL)
+kendall.plot(input, all.aggregates, space = NULL, algorithm = NULL, p = 0.5, w = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -50,5 +50,5 @@ Shili Lin <shili@stat.osu.edu
 data(TopKSpaceSampleInput)
 outMC=run.mc(input,space)
 all.aggregate=list(outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK)
-plotKendall(input, all.aggregate,space, algorithm=c("MC1","MC2","MC3"))
+kendall.plot(input, all.aggregate,space, algorithm=c("MC1","MC2","MC3"))
 }

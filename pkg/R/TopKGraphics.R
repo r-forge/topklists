@@ -208,7 +208,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
       gtkMainIterationDo(FALSE)
                                         #try to calculate data set for current delta and selected N
       tryCatch({
-        truncated.lists <- calculateDataSet(lists[1:as.numeric(svalue(wid$N)),], dim(lists)[2], i, as.numeric(svalue(wid$v)), as.numeric(svalue(wid$threshold)))
+        truncated.lists <- calculate.maxK(lists[1:as.numeric(svalue(wid$N)),], dim(lists)[2], i, as.numeric(svalue(wid$v)), as.numeric(svalue(wid$threshold)))
                                         #save calculated truncated lists for current delta in the destination directory
         save(truncated.lists, file = paste(directory, "/N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".Rdata", sep = ""))
 
@@ -414,7 +414,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
     xx = c()
     for (d in deltas)
     {	
-        a = prepareIdata(lists[,c(i,j)],d=d)
+        a = prepare.idata(lists[,c(i,j)],d=d)
         x = table(as.numeric(a$Idata))['0']
         xx = c(xx,x)
         Mdelta.temp[,paste("delta_",d)] = c(a$Idata, x)

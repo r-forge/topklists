@@ -4,7 +4,7 @@
 The main function for TopKInference
 }
 \description{
-Returns a complex object named truncated.lists containing the Idata vector (see \code{prepareIdata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-\emph{k} estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}
+Returns a complex object named truncated.lists containing the Idata vector (see \code{prepare.idata}), the estimated truncation index j0=k+1 (see \code{compute.stream}) for each pair of input lists, the overall top-\emph{k} estimate (see \code{j0.multi}), and other objects with necessary plotting information for the \code{aggmap}
 }
 \usage{
 calculate.maxK(lists, L, d, v, threshold) 
@@ -54,7 +54,7 @@ A named list of the following content:
 Hall, P. and Schimek, M. G. (2012). Moderate deviation-based inference for random degeneration in paired rank lists. J. Amer. Statist. Assoc., 107, 661-672.
 }
 \seealso{
-  \code{\link{run.cemc}}
+  \code{\link{run.cemc}, \link{prepare.idata}}
 }
 \examples{
 set.seed(1234)

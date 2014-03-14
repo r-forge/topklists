@@ -15,7 +15,7 @@ compute.stream(Idata, const=0.251, v, r=1.2)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Idata}{
-Input data is a vector of 0s and 1s (see \code{prepareIdata})
+Input data is a vector of 0s and 1s (see \code{prepare.idata})
 }
   \item{const}{
 Denotes the constant C of the moderate deviation bound, needs to be larger than 0.25 (default is 0.251)
@@ -37,6 +37,9 @@ A named list containing:
 }
 \author{
  Eva Budinska <budinska@iba.muni.cz>, Michael G. Schimek <michael.schimek@medunigraz.at>
+}
+\seealso{
+  \code{\link{prepare.idata}}
 }
 \examples{
 set.seed(465)

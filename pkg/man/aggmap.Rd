@@ -16,7 +16,7 @@ aggmap(truncated.lists)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{truncated.lists}{
-Object resulting from the \link{\code{calculate.maxK}} function
+Object resulting from the \code{\link{calculate.maxK}} function
 }
 }
 \author{
@@ -29,7 +29,7 @@ Schimek, M. G. and Budinska, E. (2010). Visualization techniques for the integra
 Schimek, M. G. and Bloice, M. (2012). Modelling the rank order of Web search engine results. In Komarek, A. and Nagy, S. (eds). Proceedings of the 27th International Workshop on Statistical Modelling. (e-book ISBN 978-80-263-0250-6), Vol. 1, 303-308. 
 }
 \seealso{
-  \link{\code{calculate.maxK}}
+  \code{\link{calculate.maxK}}
 }
 
 \examples{

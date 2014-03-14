@@ -47,7 +47,7 @@ kendallMLists(input, space = NULL, aggregate, p = 0.5, w = NULL)
 
 \examples{
 data(TopKSpaceSampleInput)
-bb1=borda.scores{(input,space)
+bb1=borda.scores(input,space)
 w= c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 * (20 -+ 1)))
 kc.ARM=kendallMLists(input, space, bb1[[1]][, 1], p = 0.5, w = w)
 }

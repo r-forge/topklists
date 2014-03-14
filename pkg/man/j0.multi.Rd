@@ -39,7 +39,7 @@ Eva Budinska <budinska@iba.muni.cz>, Michael G. Schimek <michael.schimek@medunig
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link{compute.stream}, \link{prepareIdata}
+\link{compute.stream}, \link{prepare.idata}
 }
 \examples{
 set.seed(4657)
