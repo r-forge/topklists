@@ -48,6 +48,4 @@ mytail <- rbinom(20, 1, 0.5)
 mydata <- c(myhead, mytail)
 compute.stream(mydata, v=10)	
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 

@@ -100,7 +100,7 @@ if (is.null(k)==TRUE) k=n
       if (dm=="s")
         dist <- dist + spearman(rank.a[,i],rank.b,k.a[i],k,n) * d.w[i]
       else if (dm=="k") 
-        dist <- dist + kendall2Lists.c(rank.a[,i],rank.b,k.a[i],k,n,kp) * d.w[i]
+        dist <- dist + Kendall2Lists.c(rank.a[,i],rank.b,k.a[i],k,n,kp) * d.w[i]
       else stop("Invalid distance measure")
     }
     y2 <- sort(dist)[round(N*rho)]
@@ -137,7 +137,7 @@ if (is.null(k)==TRUE) k=n
   dist.k <- 0
   for (i in 1:a) {
     dist.s <- dist.s + spearman(rank.a[,i],rank.result,k.a[i],k,n) * d.w[i]
-    dist.k <- dist.k + kendall2Lists.c(rank.a[,i],rank.result,k.a[i],k,n,kp) *d.w[i]
+    dist.k <- dist.k + Kendall2Lists.c(rank.a[,i],rank.result,k.a[i],k,n,kp) *d.w[i]
   }
   
   time.end <- proc.time()
@@ -298,7 +298,7 @@ function(topK,n,k,init.m="p",init.w=0) {
   p.u*(1-init.w) + p.e*init.w
 }
 
-`kendall2Lists` <-
+`Kendall2Lists` <-
 function(rank.a,rank.b,k.a,k.b,n,p=0) {
  
   ##Kendall's tau distance between top K lists
@@ -351,7 +351,7 @@ function(rank.a,rank.b,k.a,k.b,n,p=0) {
 ##      as.integer(n.b),as.double(p),dist=as.double(dist))$dist
 ## }
 
-`kendall2Lists.c` <-
+`Kendall2Lists.c` <-
 function(rank.a,rank.b,k.a,k.b,n,p=0) {
 
   ##Kendall's tau distance between top K lists with different underlying spaces

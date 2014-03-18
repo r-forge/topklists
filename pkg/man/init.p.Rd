@@ -51,7 +51,3 @@ rlist <- list(a, b, c)
 
 init.p(rlist, length(unique(unlist(rlist))), 5, "cp")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ htest }
-\keyword{ robust }

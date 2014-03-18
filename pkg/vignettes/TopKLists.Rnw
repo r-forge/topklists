@@ -174,8 +174,8 @@ There are three classes of algorithms implemented in \texttt{TopKSpace}, namely
 Borda's method, Markov Chain (MC) algorithms \cite{lin}, 
 and a Cross Entropy Monte Carlo (CEMC) method taking advantage of the new Order Explicit Algorithm (OEA) as described by \cite{linding}.
 The Borda and Markov Chain methods consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the CEMC method employs a Monte Carlo search procedure for achieving this optimization. Borda and Markov Chain algorithms run much faster than the Cross Entropy Monte Carlo algorithm, however the latter usually achieves better results. Nevertheless, simulation studies indicate that taking the underlying space into consideration has a much greater impact than using different algorithms.
-These three algorithms are implemented in three top-level functions within \texttt{TopKSpace}: \texttt{borda.scores}, \texttt{run,mc}, 
-and \texttt{run.cemc}. There are also two plotting functions: \texttt{borda.scores.plot} and \texttt{mc.plot} that help the user to visualize 
+These three algorithms are implemented in three top-level functions within \texttt{TopKSpace}: \texttt{Borda.scores}, \texttt{run,mc}, 
+and \texttt{run.cemc}. There are also two plotting functions: \texttt{Borda.plot} and \texttt{mc.plot} that help the user to visualize 
 and compare the results.
 
 \begin{figure}[h]
@@ -223,29 +223,29 @@ relative performances of different algorithms.
 
 \subsection{Function calling}
 \subsubsection{The Borda algorithm}
-Four Borda scores are implemented in the \texttt{borda.scores} function of \texttt{TopKSpace}, namely the arithmetic mean (ARM), median (MED),
+Four Borda scores are implemented in the \texttt{Borda.scores} function of \texttt{TopKSpace}, namely the arithmetic mean (ARM), median (MED),
 geometric mean (GEO), and L2-norm (L2N). The output is a list with two elements: \texttt{Top-K} provides
 the aggregate rankings and \texttt{Scores} gives the corresponding Borda scores
 for each of the four functions.
-Of the three arguments in \texttt{borda.scores}, only the first one ({\em input}) is required. If argument {\em space} is not
+Of the three arguments in \texttt{Borda.scores}, only the first one ({\em input}) is required. If argument {\em space} is not
 provided, then the underlying space is assumed to be common among all top-\emph{k} lists implicitly, and the union of
 the top-\emph{k} lists is treated as the common space. If argument {\em k} is not specified, then the full ranked
 list (all elements in the union) is outputted.
  
 
 <<>>=
-outBorda=borda.scores(input,space,k=50) 
+outBorda=Borda.scores(input,space,k=50) 
 # "space" is explicitly specified; underlying space-dependent
 @
 
 <<>>=
-outBorda1=borda.scores(input) 
+outBorda1=Borda.scores(input) 
 #"space" is not specified; all lists are assumed to come from the common space (objects 1-40)
 
 @
 
 <<>>=
-outBorda2=borda.scores(input,space=input) 
+outBorda2=Borda.scores(input,space=input) 
 # "space = input" indicates that this is the top-\emph{k} space
 @
 
@@ -284,14 +284,14 @@ top-\emph{k} space assumption (Figure~\ref{fig:borda}(b)). \\
 
 
 <<borda, fig.cap='Plotting Borda\'s scores', fig.subcap=c('underlying space-dependent analysis','top-k space analysis'), out.width='.49\\linewidth', fig.pos='ht!', fig.align='center'>>=
-borda.scores.plot(outBorda, k=40) # plot scores from underlying space-dependent analysis
-borda.scores.plot(outBorda2) # plot scores from top-k space analysis
+Borda.plot(outBorda, k=40) # plot scores from underlying space-dependent analysis
+Borda.plot(outBorda2) # plot scores from top-k space analysis
 @
 
 
 
 
-Note that the first argument of the \texttt{borda.scores.plot} function is the output from the Borda function, which is 
+Note that the first argument of the \texttt{Borda.plot} function is the output from the Borda function, which is 
 mandatory. If the number of ranked objects (second argument) is not specified, the plot will show 
 scores for all objects in the union set. 
  
@@ -493,7 +493,7 @@ is more informative, then that information can be utilized by specifying the wei
 {\em w}.
 The output of \texttt{Kendall} is the \texttt{MKD}, a single number. However, it would be much more meaningful
 to compare \texttt{MKD}s accross results from different algorithms to assess their relative
-performances. This can be achieved by invoking the \texttt{kendall.plot} function, which not only 
+performances. This can be achieved by invoking the \texttt{Kendall.plot} function, which not only 
 provide a vector of \texttt{MKD}s but also provide a plot of the \texttt{MKD}s for ease of comparison visually.
 There are also two mandatory input arguments, {\em input} and {\em all.aggregates},
 where \texttt{all.aggregates} is a list comprising of aggregate top-\emph{k} lists from different 
@@ -503,16 +503,16 @@ The following command will compute the \texttt{MKD} for the aggregate list form 
 Borda algorithm \texttt{ARM}.
 
 <<>>=
-kendallMLists(input,space, outBorda$TopK[,1])
+KendallMLists(input,space, outBorda$TopK[,1])
 all.aggregates=list(outBorda$TopK[,1],outBorda$TopK[,2],outBorda$TopK[,3],outBorda$TopK[,4],outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK)
 @
 <<plotKendall, include=TRUE, tidy=TRUE, echo=TRUE, out.width='8cm', out.height='8cm', fig.pos='H',fig.cap="Comparison of the modified Kendall distances across several algorithms", fig.align='center'>>=
-kendall.plot(input,all.aggregates,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3"))
+Kendall.plot(input,all.aggregates,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3"))
 @
 Runing the \texttt{Kendall} function returns the \texttt{MKD} for the aggregate list from the
-Borda algorithm \texttt{ARM}, whereas the \texttt{kendall.plot} function returns a vector of \texttt{MKD}s, with
+Borda algorithm \texttt{ARM}, whereas the \texttt{Kendall.plot} function returns a vector of \texttt{MKD}s, with
 the first one matching the output from the \texttt{Kendall} function.
-Figure~\ref{fig:plotKendall} is the graphical component of the \texttt{kendall.plot} output.
+Figure~\ref{fig:plotKendall} is the graphical component of the \texttt{Kendall.plot} output.
 As we can see, the range on the y-axis is very small, indicating similar performance of 
 all algorithms, especially those from \texttt{Borda}. The result from \texttt{MC3} seems to perform a bit 
 better than the rest, confirming our heuristic interpretation of the results. 

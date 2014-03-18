@@ -51,7 +51,4 @@ Idata2 = prepare.idata(breast[,c(1,2)], d=10)
 Idata2 = prepare.idata(breast, d=10)
 }
 
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{list}
 

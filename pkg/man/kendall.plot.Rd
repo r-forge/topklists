@@ -1,5 +1,5 @@
-\name{kendall.plot}
-\alias{kendall.plot}
+\name{Kendall.plot}
+\alias{Kendall.plot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plot of the Kendall Criterion values
@@ -8,7 +8,8 @@ Plot of the Kendall Criterion values
 Plot of the Kendall Criterion values of aggregate ranked lists; useful for comparing performances of several algorithms.
 }
 \usage{
-kendall.plot(input, all.aggregates, space = NULL, algorithm = NULL, p = 0.5, w = NULL)
+Kendall.plot(input, all.aggregates, space = NULL, algorithm = NULL, p =
+0.5, w = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,6 +32,10 @@ to the other list. (We recommend using \code{p=0.5} for a "neutral approach".)
   \item{w}{
 Weight vector assigned to the input list. Prior information on the reliability of each input list can be incorporated. The default is set to equal weight for each input list.
 }
+\item{...}{
+Other parameters passed on to the plot function.
+}
+
 }
 \details{
 Compute the weighted Kendall's distance between each of the aggregate ranked list with the input ranked lists and plot the computed distances.
@@ -43,12 +48,12 @@ Shili Lin <shili@stat.osu.edu
 }
 
 \seealso{
-\code{\link{kendallMLists}}
+\code{\link{KendallMLists}}
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
 outMC=run.mc(input,space)
 all.aggregate=list(outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK)
-kendall.plot(input, all.aggregate,space, algorithm=c("MC1","MC2","MC3"))
+Kendall.plot(input, all.aggregate,space, algorithm=c("MC1","MC2","MC3"))
 }

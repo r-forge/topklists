@@ -1,4 +1,4 @@
-borda.scores <- function(input,space=NULL,k=NULL){
+Borda.scores <- function(input,space=NULL,k=NULL){
 #l2norm is the square root of l2norm to make its unit more comparable with the rest
 	if (missing(input))
 	stop("You need to input the top-k lists to be aggregated")
@@ -52,8 +52,7 @@ l2norm <- function(x, na.rm=TRUE){
         return(sqrt(mean(abs(x)^2,na.rm=TRUE)))
         }
 
-borda.scores.plot <- function(outBorda, k=NULL, xlab="Ranking",
-ylab="Borda Score",main="",sub=""){
+Borda.plot <- function(outBorda, k=NULL, ...){
         if (missing(outBorda))
         stop("Borda scores missing; need to run Borda first to obtain the scores")
         scores=outBorda[[2]]
@@ -61,8 +60,8 @@ ylab="Borda Score",main="",sub=""){
         else {if (k > nrow(scores)) k=nrow(scores)}
    ##plot it
    par(las=1)
-   plot(1:k, scores[1:k,1], type="o", col="red", pch=1, lty=1,xlab=xlab,
-        ylab=ylab, main=main, sub=sub,ylim=c(min(scores[1:k,]),max(scores[1:k,])))
+   plot(1:k, scores[1:k,1], type="o", col="red", pch=1, xlab="Ranking",
+ylab="Borda Score", lty=1,,ylim=c(min(scores[1:k,]),max(scores[1:k,])), ...)
    lines(1:k,scores[1:k,2], type="o", col="blue", pch=2,lty=2)
    lines(1:k,scores[1:k,3], type="o", col="green", pch=3,lty=3)
    lines(1:k,scores[1:k,4], type="o", col="magenta", pch=4,lty=4)
@@ -166,8 +165,7 @@ run.mc <- function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 	return(results)
 }
 
-mc.plot <- function(outMC, k, xlab="Ranking", ylab="MC Stationary Probability",
-main=""){
+mc.plot <- function(outMC, k, ...){
 	if (missing(outMC))
 	stop("MC stationary probabilities missing; need to run MC first to obtain the probabilities")
 	N=length(outMC[[2]])
@@ -177,15 +175,14 @@ main=""){
    par(las=1)
 	ymin=min(c(unlist(outMC[[2]][1:k]),unlist(outMC[[4]][1:k]),unlist(outMC[[6]][1:k])))
 	ymax=max(c(unlist(outMC[[2]][1:k]),unlist(outMC[[4]][1:k]),unlist(outMC[[6]][1:k])))
-   plot(1:k, outMC[[2]][1:k], type="n", col="red", pch=1, lty=1,xlab=xlab,
-        ylab=ylab, main=main, ylim=c(ymin,ymax))
+   plot(1:k, outMC[[2]][1:k], type="n", col="red", pch=1, lty=1,ylim=c(ymin,ymax), xlab="Ranking", ylab="MC Stationary Probability",...)
    lines(1:k,outMC[[2]][1:k], type="o", col="red", pch=1,lty=1)
    lines(1:k,outMC[[4]][1:k], type="o", col="blue", pch=2,lty=2)
    lines(1:k,outMC[[6]][1:k], type="o", col="green", pch=3,lty=3)
     legend(2*k/3,ymin+(ymax-ymin)/2,legend=c("MC1", "MC2", "MC3"), pch=1:3)
 }
 
-kendallMLists <-function(input,space=NULL, aggregate,p=0.5,w=NULL){
+KendallMLists <-function(input,space=NULL, aggregate,p=0.5,w=NULL){
 if (missing(input))
         stop("You need to input the individual top-k lists")
 if (missing(aggregate))
@@ -251,7 +248,7 @@ dall=dall+(sum(((allranks[,1]-allranks[,2])*(allranks[,3]-(allranks[,4]))<0)*not
         return(dall)
 }
 
-kendall.plot <- function(input, all.aggregates, space=NULL, algorithm=NULL, p=0.5, w=NULL){
+Kendall.plot <- function(input, all.aggregates, space=NULL, algorithm=NULL, p=0.5, w=NULL, ...){
 if (missing(input))
         stop("You need to input the individual top-k lists")
 if (missing(all.aggregates))
@@ -273,9 +270,9 @@ if (is.null(algorithm)==TRUE)
 
 kd=rep(0,n)
 for (i in 1:n)
-        kd[i]=kendallMLists(input, space, all.aggregates[[i]], p, w)
+        kd[i]=KendallMLists(input, space, all.aggregates[[i]], p, w)
 names(kd)=algorithm
-plot(1:n,kd,type="o",xaxt="n",xlab="Algorithm",ylab="Modified Kendall Distance")
+plot(1:n,kd,type="o",xaxt="n",xlab="Algorithm",ylab="Modified Kendall Distance", ...)
 axis(1, at = 1:n, labels =algorithm)
 kdl=list(kd)
 names(kdl)="Modified Kendall Distance"

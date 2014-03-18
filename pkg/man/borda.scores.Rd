@@ -1,5 +1,5 @@
-\name{borda.scores}
-\alias{borda.scores}
+\name{Borda.scores}
+\alias{Borda.scores}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Borda based rank aggregation
@@ -8,7 +8,7 @@ Borda based rank aggregation
 Computes Borda scores and ranks based on four different aggregation functions.
 }
 \usage{
-borda.scores(input, space = NULL, k = NULL)
+Borda.scores(input, space = NULL, k = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,11 +46,8 @@ Shili Lin <shili@stat.osu.edu>
 #get sample data
 data(TopKSpaceSampleInput)
 
-outBorda=borda.scores(input,space) #underlying space-dependent
-outBorda1=borda.scores(input,space=input) #top-k spaces
+outBorda=Borda.scores(input,space) #underlying space-dependent
+outBorda1=Borda.scores(input,space=input) #top-k spaces
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ models }
 

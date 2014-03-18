@@ -54,5 +54,5 @@ a = deltaplot(lists, deltas = 1:50, subplot=TRUE)
 ##don't plot subplot (default)
 a = deltaplot(lists, deltas=1:50, subplot = FALSE)
 }
-\keyword{ list}
+
 

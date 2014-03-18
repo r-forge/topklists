@@ -10,7 +10,7 @@ regarding the relative rankings of elements.
 }
 \usage{
 
-mc.plot(outMC, k, xlab="Ranking", ylab="MC Stationary Probability", main="")
+mc.plot(outMC, k, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,14 +20,8 @@ Output (a list) from running the MC algorithm
   \item{k}{
 Number of stationary probabilities to be plotted. If missing, all stationary probabilities contained in the MC output will be plotted
 }
-  \item{xlab}{
-Text for x-label
-}
-  \item{ylab}{
-Text for y-label
-}
-  \item{main}{
-Text for title of plot, if desire
+\item{...}{
+Other parameters passed on the the plot function
 }
 }
 \value{

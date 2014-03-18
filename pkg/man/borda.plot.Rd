@@ -1,5 +1,5 @@
-\name{borda.scores.plot}
-\alias{borda.scores.plot}
+\name{Borda.plot}
+\alias{Borda.plot}
 \title{
 Plot Borda's scores against ranks
 }
@@ -8,7 +8,7 @@ Plot Borda's scores against ranks
 ranking starts to diminish. This function plots scores versus ranks after aggregation.
 }
 \usage{
-borda.scores.plot(outBorda, k, xlab="Ranking", ylab="Borda Score", main="", sub="")
+Borda.plot(outBorda, k, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,17 +18,8 @@ A list containing the output from running the Borda function.
   \item{k}{
 The number of scores to be plotted. If not supplied, all the scores in the output from Borda will be plotted.
 }
-  \item{xlab}{
-Desired text for x-label.
-}
-  \item{ylab}{
-Desired text for y-label.
-}
-  \item{main}{
-Desired text for title.
-}
-  \item{sub}{
-Desired text for sub in plotting function - useful if there are multiple plots in a single figure.
+\item{...}{
+  other parameters passed on to the plot function
 }
 }
 \value{
@@ -38,12 +29,12 @@ A plot of Borda's scores versus ranks.
  Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-\code{\link{borda.scores}}
+\code{\link{Borda.scores}}
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outBorda=borda.scores(input,space,k=40)
-borda.scores.plot(outBorda, k=40)
+outBorda=Borda.scores(input,space,k=40)
+Borda.plot(outBorda, k=40)
 }
 

@@ -30,5 +30,4 @@ each of the three lists has the length of N = 917.
 }
 }
 
-\keyword{datasets}
 

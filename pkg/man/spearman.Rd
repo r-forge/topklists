@@ -35,7 +35,7 @@ Returns modified spearman distance against \code{a} for each lists within \code{
 Jie Ding <jding@jimmy.harvard.edu>
 }
 \seealso{
-\code{\link{kendall2Lists}}
+\code{\link{Kendall2Lists}}
 }
 \examples{
 set.seed(1234)
@@ -44,5 +44,4 @@ b <- sample(1:10, 10)
 spearman(a, b, 6, 6, 10)
 
 }
-\keyword{ arith }
 

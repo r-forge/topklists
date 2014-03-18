@@ -13,17 +13,18 @@ Starting with the work of Mallows (1957), there is a substantial model-based lit
 For multiple full ranked (input) lists representing the same set of \emph{N} objects, the package \verb{TopKLists} offers (1) statistical inference on the lengths of informative (top-\emph{k}) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization. Our implementations are based on recently developed methods as outlined in Hall and Schimek (2012), Lin (2010a), Lin and Ding (2009), and Schimek, Mysickova and Budinska (2012). Whenever you use the package, please refer to these references (for correct citation please see below).}
 
 \details{
-The package consists of three modules and a graphical user interface (GUI):
-(1) \verb{TopKInference} provides exploratory nonparametric inference for the estimation of the top-\emph{k} list length of paired rankings;
-(2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists even when the rank positions of some objects are not present in all the lists (so-called \emph{partial input lists});
-(3) \verb{TopKGraphics} provides a collection of graphical tools for visualization of the inputs to and the outputs from the other modules.
+The package consists of three modules and a graphical user interface
+(GUI):
+\itemize{
+\item (1) \verb{TopKInference} provides exploratory nonparametric inference for the estimation of the top-\emph{k} list length of paired rankings;
+\item (2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists even when the rank positions of some objects are not present in all the lists (so-called \emph{partial input lists});
+\item (3) \verb{TopKGraphics} provides a collection of graphical tools for visualization of the inputs to and the outputs from the other modules.
+}
 
 Highly convenient is a new aggregation mapping tool called \code{aggmap} in \verb{TopKGraphics}. The GUI allows the non-statistician an easy access to the practically most relevant techniques provided in \verb{TopKInference}, \verb{TopKSpace}, and \verb{TopKGraphics}. Due to the exploratory nature of the implemented methods, tuning parameters are required. All those having a strong impact on the results can be controlled via the GUI. For additional program details and a bioscience application see Schimek et al. (2011). For aspects of modelling the rank order of Web search engine results see Schimek and Bloice (2012). A Springer monograph by Schimek, Lin and Wang of the title ``Statistical Integration of Omics Data'' is in preparation.} 
 
 \author{
 Michael G. Schimek, Eva Budinska, Shili Lin, Jie Ding, Karl G. Kugler, Vendula Svendova. 
-
-Maintainers: Karl G. Kugler <kg.kugler@gmail.com>, Vendula Svendova <vendula.svendova@medunigraz.at>
 }
 \seealso{
 Project homepage: \url{http://topklists.r-forge.r-project.org}
@@ -56,5 +57,5 @@ Schimek, M. G., Mysickova, A. and Budinska, E. (2012). An inference and integrat
 
 Schimek, M. G., Lin, S. and Wang, N. (2015). Statistical Integration of Omics Data. In preparation. New York: Springer.
 }
-\keyword{package}
+
 

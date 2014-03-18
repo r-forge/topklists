@@ -49,7 +49,7 @@ Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-\code{\link{borda.scores}}, \code{\link{run.cemc}}, \code{\link{mc.plot}}
+\code{\link{Borda.scores}}, \code{\link{run.cemc}}, \code{\link{mc.plot}}
 }
 \examples{
 #get sample data

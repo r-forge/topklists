@@ -40,4 +40,4 @@ truncated.lists = calculate.maxK(lists, d=10, v=10, L=3, threshold=50)
 aggmap(truncated.lists)
 }
 }
-\keyword{ hplot }
+

@@ -30,12 +30,11 @@ Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-\link{borda.scores}
+\link{Borda.scores}
 }
 \examples{
 set.seed(122)
 vals <- sample(1:100, 10)
 geo.mean(vals)
 }
-\keyword{ arith }
 

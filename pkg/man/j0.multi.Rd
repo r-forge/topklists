@@ -51,7 +51,5 @@ res.j0.temp = j0.multi(lists, d=5, v=3)
 
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ list }
+
 

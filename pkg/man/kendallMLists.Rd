@@ -1,14 +1,14 @@
-\name{kendallMLists}
-\alias{kendallMLists}
+\name{KendallMLists}
+\alias{KendallMLists}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-  kendallMLists
+  KendallMLists
 }
 \description{
   Compute Kendall's tau criterion
 }
 \usage{
-kendallMLists(input, space = NULL, aggregate, p = 0.5, w = NULL)
+KendallMLists(input, space = NULL, aggregate, p = 0.5, w = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -47,8 +47,8 @@ kendallMLists(input, space = NULL, aggregate, p = 0.5, w = NULL)
 
 \examples{
 data(TopKSpaceSampleInput)
-bb1=borda.scores(input,space)
+bb1=Borda.scores(input,space)
 w= c(2/(30 * (30 - 1)), 2/(25 * (25 - 1)), 2/(20 * (20 -+ 1)))
-kc.ARM=kendallMLists(input, space, bb1[[1]][, 1], p = 0.5, w = w)
+kc.ARM=KendallMLists(input, space, bb1[[1]][, 1], p = 0.5, w = w)
 }
 

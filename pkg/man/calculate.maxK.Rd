@@ -64,5 +64,5 @@ truncated.lists = calculate.maxK(lists, d=10, v=10, L=3, threshold=50)
 aggmap(truncated.lists, N=80, L=3, d=10, v=10, lists=lists, threshold=50)
 }
 }
-\keyword{ list}
+
 

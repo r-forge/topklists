@@ -18,4 +18,3 @@ data(TopKSpaceSampleInput)
 str(input)
 str(space)
 }
-\keyword{datasets}

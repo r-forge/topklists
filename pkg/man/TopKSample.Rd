@@ -42,4 +42,4 @@ M <- cbind(a, b, c)
 TopKSample.c(M, 4)
 
 }
-\keyword{ distribution }
+
