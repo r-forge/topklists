@@ -55,8 +55,7 @@ For these two tasks this package offers several options which can be selected fr
 \item \texttt{TopKGraphics} provides a collection of graphical tools for the visualization of the inputs to, and the outputs from, the other modules.
 \end{enumerate}
 
-Whenever you use the package \texttt{TopKLists}, please cite \cite{haschi} and \cite{linding}.\\
-In the following sections, we illustrate the usage of these modules.
+\textbf{Whenever you refer to the package \texttt{TopKLists}, please cite \cite{haschi} and \cite{linding}.} In the following sections, we illustrate the usage of these modules.
 
 \subsection{The breast cancer data}
 
@@ -129,7 +128,7 @@ Now let us estimate $j_0$ for different values of $\nu$ using the \texttt{comput
 
 <<tidy=TRUE>>=
 
-v.vect=seq(2,length(x), by=2) #setting up a vector of $\nu$ values
+v.vect=seq(2,length(x), by=2) #setting up a vector of the nu values
 
 resF=c()
 
@@ -246,7 +245,7 @@ outBorda1=Borda.scores(input)
 
 <<>>=
 outBorda2=Borda.scores(input,space=input) 
-# "space = input" indicates that this is the top-\emph{k} space
+# "space = input" indicates that this is the top-k space
 @
 
 <<>>=
@@ -722,7 +721,7 @@ As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the M
 
 The table is ordered in ascending order with regard to the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes SCUBE2, EVL, FBP1, CIRBP, and BTG2 are also consistently present in the top-\emph{k} truncated lists, but at different positions. Genes FUT8, C1orf106 and QDPR are found in only two of the truncated lists and at varying positions.
 
-\item{\texttt{Venn-diagram and Venn-table}}:\\ The outputted Venn diagram and Venn table show overlaps of objects in the top-\emph{k} lists of all input lists in the analysis. Asterisk-highlighted genes are objects that form the final aggregate list as returned by the \texttt{TopKSpace} module.
+\item{\texttt{Venn-diagram and Venn-table}}:\\ The outputted Venn diagram and Venn table show overlaps of objects in the top-\emph{k} lists of all input lists in the analysis. The asterisk-highlighted objects, in this example the genes, are those that belong to the final aggregate list as returned by the \texttt{TopKSpace} module.
 
 \begin{figure}[H]
 \centering
@@ -738,7 +737,7 @@ The table is ordered in ascending order with regard to the sum of ranks of the o
 \bibliographystyle{plain}
 \begin{thebibliography}{}
 
-\bibitem{desmedt} Desmedt C., Piette F., Loi S., Wang Y. et al. (2007). Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. \emph{Clin Cancer Res} \textbf{1;13(11)}, 3207-2114. PMID: 17545524.
+\bibitem{desmedt} Desmedt C., Piette F., Loi S., Wang Y. et al. (2007). Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. \emph{Clin Cancer Res}, \textbf{13}, 3207-3214. 
 
 \bibitem{haschi} Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. \emph{J. Amer. Statist. Assoc.}, \textbf{107}, 661-672.
 
@@ -750,17 +749,10 @@ The table is ordered in ascending order with regard to the sum of ranks of the o
 
 \bibitem{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
-\bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol}; \textbf{28(8)}, 827-838. PMID: 20676074.
+\bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol}, \textbf{28}, 827-838. 
 
-\bibitem{tabchy} Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. \emph{Clin Cancer Res} \textbf{1;16(21)}, 5351-5361. PMID: 20829329
+\bibitem{tabchy} Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. \emph{Clin Cancer Res} \textbf{16}, 5351-5361. 
  
-%% \bibitem[Karn et al. 2011]{karn2011} Karn T., Pusztai L., Holtrich U., Iwamoto T. et al. (2011). Homogeneous datasets of triple negative breast cancers enable the identification of novel prognostic and predictive signatures. \emph{PLoS One}; 6(12):e28403. PMID: 22220191.
-
-%% \bibitem[Karn et al. 2012]{karn2012} Karn T., Pusztai L., Ruckhäberle E., Liedtke C. et al. (2012). Melanoma antigen family A identified by the bimodality index defines a subset of triple negative breast cancers as candidates for immune response augmentation. \emph{Eur J Cancer}; 48(1):12-23. PMID: 21741824.
-
-%% \bibitem[Popovici et al. 2010]{popovici} Popovici V., Chen W., Gallas B.G., Hatzis C. et al. (2010). Effect of training-sample size and classification difficulty on the accuracy of genomic predictors. \emph{Breast Cancer Res};12(1):R5. PMID: 20064235.
-
-%% \bibitem[Rody et al. 2011]{rody} Rody A., Karn T., Liedtke C., Pusztai L. et al. (2011). A clinically relevant gene signature in triple negative and basal-like breast cancer. \emph{Breast Cancer Res} 6;13(5):R97. PMID: 21978456.
 
 \end{thebibliography}
 
