@@ -23,7 +23,7 @@ An integer specifying the number of items in the output top-k list.
 }
 }
 \details{
-Computes Borda scores and ranks based on four different aggregation functions, in which the underlying spaces where the individual ranked lists come from, are taken into account. The four aggregation functions are mean, median, geometric mean, and L2 norm.
+Computes Borda scores and ranks based on four different aggregation functions, in which the underlying spaces, where the individual ranked lists come from, are taken into account. The four aggregation functions are mean, median, geometric mean, and L2 norm.
 }
 \value{
 A list with two components:

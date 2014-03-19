@@ -10,14 +10,14 @@ Inference, aggregation and visualization for top-\emph{k} ranked lists
 
 Starting with the work of Mallows (1957), there is a substantial model-based literature on problems in combining rankings where the number of items \emph{N} is relatively small, and significantly less than the number \emph{L} of assessors (rankings). These well-known parametric approaches cannot handle data of the type described above with \emph{N>>L} and \emph{N} huge. Dwork et al. (2001) and DeConde et al. (2006) were the first to address such large-scale rank aggregation problems in the context of Web search engine technology and high-throughput biotechnology, repectively. Here our task is not limited to the aggregation of rankings, we also consider the problem of ranked lists where the reliability of rankings breaks down after the first (top) \emph{k} objects due to error or lack of discriminatory information. In response to the above requirements, we have implemented various distribution-free, and at the same time computationally highly efficient, stochastic approaches because list consolidation by means of brute force (e.g. combinatorial approaches) is limited to the situation where both \emph{N} and \emph{L} are impractically small.
 
-For multiple full ranked (input) lists representing the same set of \emph{N} objects, the package \verb{TopKLists} offers (1) statistical inference on the lengths of informative (top-\emph{k}) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization. Our implementations are based on recently developed methods as outlined in Hall and Schimek (2012), Lin (2010a), Lin and Ding (2009), and Schimek, Mysickova and Budinska (2012). Whenever you use the package, please refer to these references (for correct citation please see below).}
+For multiple full ranked (input) lists representing the same set of \emph{N} objects, the package \verb{TopKLists} offers (1) statistical inference on the lengths of informative (top-\emph{k}) partial lists, (2) stochastic aggregation of full or partial lists, and (3) graphical tools for the statistical exploration of input lists, and for aggregation visualization. Our implementations are based on recently developed methods as outlined in Hall and Schimek (2012), Lin (2010a), Lin and Ding (2009), and Schimek, Mysickova and Budinska (2012). Whenever you use the package, please refer to Hall and Schimek (2012) and Lin and Ding (2009) (for correct citation please see below).}
 
 \details{
 The package consists of three modules and a graphical user interface
 (GUI):
 \itemize{
 \item (1) \verb{TopKInference} provides exploratory nonparametric inference for the estimation of the top-\emph{k} list length of paired rankings;
-\item (2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross-entropy Monte Carlo) which allow the combination of input lists even when the rank positions of some objects are not present in all the lists (so-called \emph{partial input lists});
+\item (2) \verb{TopKSpace} provides several rank aggregation techniques (Borda, Markov chain, and Cross Entropy Monte Carlo) which allow the combination of input lists even when the rank positions of some objects are not present in all the lists (so-called \emph{partial input lists});
 \item (3) \verb{TopKGraphics} provides a collection of graphical tools for visualization of the inputs to and the outputs from the other modules.
 }
 
@@ -37,7 +37,7 @@ Dwork, C. et al. (2001). Rank aggregation methods for the Web. \url{http://www10
 
 Hall, P. and Schimek, M. G. (2012). Moderate deviation-based inference for random degeneration in paired rank lists. J. Amer. Statist. Assoc., 107, 661-672.
 
-Lin, S. (2010a). Space oriented rank-based data integration. Statist. Appl. Genet. Mol. Biol., 20, Article 20.
+Lin, S. (2010a). Space oriented rank-based data integration. Statist. Appl. Genet. Mol. Biol., 9, Article 20.
 
 Lin, S. (2010b). Rank aggregation methods. Wiley Interdisciplinary Reviews: Computational Statistics, 2, 555-570.
 

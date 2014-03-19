@@ -7,7 +7,7 @@ function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  
 
-  ##topK: a list of several top K lists, may have different length
+  ##input: a list of several top K lists, may have different length
   ##space: underlying spaces for the lists
   ##k: desired length of combined list
   ##dm: distance measure, "s" for spearman, "k" for kendall(p=0)

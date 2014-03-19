@@ -18,7 +18,7 @@ mc.plot(outMC, k, ...)
 Output (a list) from running the MC algorithm 
 }
   \item{k}{
-Number of stationary probabilities to be plotted. If missing, all stationary probabilities contained in the MC output will be plotted
+Number of stationary probabilities to be plotted. If missing, all stationary probabilities contained in the \code{MC} output will be plotted
 }
 \item{...}{
 Other parameters passed on the the plot function

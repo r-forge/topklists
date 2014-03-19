@@ -4,7 +4,7 @@
 Function returning an overall point j0 of degeneration into noise for multiple ranked lists
 }
 \description{
-Moderate deviation-based calculation of an overall point j0 of degeneration into noise for multiple ranked lists. The function takes a matrix of ordered lists and estimates a j0 for each pair of the input lists (columns), with repect to the preselected distance parameter \eqn{\delta}. This function combines the functions \code{compute.stream} and \code{prepare.Idata}.
+Moderate deviation-based calculation of an overall point \eqn{j_0} of degeneration into noise for multiple ranked lists. The function takes a matrix of ordered lists and estimates a \eqn{j_0} for each pair of the input lists (columns), with repect to the preselected distance parameter \eqn{\delta}. This function combines the functions \code{compute.stream} and \code{prepare.Idata}.
 }
 \usage{
 j0.multi(lists, d, v)
@@ -18,16 +18,16 @@ Input data frame, where each column represents one list of ordered items
 The maximal distance of an object's rank positions when two lists are compared. When the distance between the respective rank positions of the object is smaller or equal \code{d}, then the object is assigned the value 1, otherwise 0
 }
   \item{v}{
-Parameter for estimating j0
+Parameter for estimating \eqn{j_0}
 }
 }
 \details{
 The smaller \code{d}, the stronger the assumption about the concordance of any two lists (\code{d=0} is assuming identical rankings of an object)
 }
 \value{
-A list containing the maximal estimated indices of information degradation j0 through all combinations of \emph{L} lists:
+A list containing the maximal estimated indices of information degradation \eqn{j_0} through all combinations of \emph{L} lists:
 \item{maxK}{Maximal estimated k through all combinations of two lists}
-\item{L}{Data frame of estimated j0 for each pairwise comparison}
+\item{L}{Data frame of estimated \eqn{j_0} for each pairwise comparison}
 \item{Idata}{Data stream vector of zeros and ones}
 }
 \author{

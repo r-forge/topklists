@@ -5,7 +5,7 @@
 CEMC based rank aggregation
 }
 \description{
-Performs cross-entropy Monte Carlo simulations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists.
+Performs Cross Entropy Monte Carlo simulations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists.
 }
 \usage{
 run.cemc(input, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
@@ -15,16 +15,16 @@ d.w = NULL, input.par = NULL, extra=0)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
-A list of several TopKLists, may have different length
+A list of several \code{TopKLists}, may have different length
 }
   \item{space}{
-A list of the same structure as the input list. Contains underlying spaces for the top-K lists. NULL means all lists share a common space, which is taken to be the union of all input lists
+A list of the same structure as the input list. Contains underlying spaces for the top-\emph{k} lists. NULL means all lists share a common space, which is taken to be the union of all input lists
 }
   \item{k}{
 Desired length of combined list
 }
   \item{dm}{
-Distance measure, "s" for spearman, "k" for kendall(p=0)
+Distance measure, "s" for spearman, "k" for kendall (p=0)
 }
   \item{kp}{
 Partial distance used in Kendall's tau distance measure
@@ -77,7 +77,7 @@ init.w: probability matrix initialization:
 A list containing three components:
 \item{TopK}{A vector giving the aggregate ranked list.}
 \item{ProbMatrix}{A matrix, with each column represent the probability vector of a multinomial distribution and thus sum to 1.}
-\item{input.par}{A vector containing tuning parameters used in the current run. User may edit this vector and uses it as input for a more refined analysis.
+\item{input.par}{A vector containing tuning parameters used in the current run. User may edit this vector and use it as input for a more refined analysis.
 }
 }
 \references{

@@ -23,11 +23,13 @@ each of the three lists has the length of N = 917.
 }
 }
 \references{
-\enumerate{
-	\item TransBig: Desmedt C, Piette F, Loi S, Wang Y et al. (2007).  Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. Clin Cancer Res, 1;13(11):3207-14. PMID: 17545524
-	\item Pusztai: Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. Clin Cancer Res 1;16(21):5351-61. PMID: 20829329
-	\item MDACC: Shi L, Campbell G, Jones WD, Campagne F et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. Nat Biotechnol;28(8):827-38. PMID: 20676074
-}
+
+	TransBig: Desmedt C, Piette F, Loi S, Wang Y et al. (2007).  Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. Clin Cancer Res, 1;13(11):3207-14. PMID: 17545524
+	
+	Pusztai: Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. Clin Cancer Res 1;16(21):5351-61. PMID: 20829329
+	
+	MDACC: Shi L, Campbell G, Jones WD, Campagne F et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. Nat Biotechnol;28(8):827-38. PMID: 20676074
+
 }
 
 

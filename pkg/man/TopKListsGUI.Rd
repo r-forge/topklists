@@ -4,12 +4,13 @@
 TopKListsGUI for inference and visualization
 }
 \description{
-This function opens a RGUI window and allows the user to select the parameters for the distance \eqn{\delta}, for the pilot sample size \eqn{\nu}, and the threshold for the \code{aggmap} presentation. Based on the selected parameters, a pairwise estimation of the top-\emph{k} lists overlap is performed with switching reference lists (e.g. L1 with L2 and L2 with L1). Based on these estimates, all involved lists are truncated and the maximum of the \eqn{\hat{k}_i} estimates is selected by default. The individual results of each combination of ranked lists are displayed automatically in the RGUI window and saved to a prespecified folder. After the maximal truncation point is estimated, \code{CEMC} algorithm is applied to generate final list of top K genes.
+This function opens a RGUI window and allows the user to select the parameters for the distance \eqn{\delta}, for the pilot sample size \eqn{\nu}, and the threshold for the \code{aggmap} presentation. Based on the selected parameters, a pairwise estimation of the top-\emph{k} lists overlap is performed with switching reference lists (e.g. L1 with L2 and L2 with L1). Based on these estimates, all involved lists are truncated and the maximum of the \eqn{\hat{k}_i} estimates is selected by default. The individual results of each combination of ranked lists are displayed automatically in the RGUI window and saved to a prespecified folder. After the maximal truncation point is estimated, \code{CEMC} algorithm is applied to generate final list of top-\emph{k} genes.
 
 The consolidated top-\emph{k} list results can be displayed in three different formats controlled by tabs: 
-(1) 'Aggregation map': It is a special type of heatmap, where the truncated lists are ordered from left to right, from the one with the largest overlap with all the others to the one with the lowest overlap. For details see the description of the \code{aggmap}.
-(2) 'Summary table': An interactive table that displays the set of overlapping objects in dependence of the selected parameters. 
-(3) 'Venn-diagram & Venn-table': A Venn-diagram and a Venn-table of the overlapping objects based on all truncated input lists. 
+
+	(1)'Aggregation map': It is a special type of heatmap, where the truncated lists are ordered from left to right, from the one with the largest overlap with all the others to the one with the lowest overlap. For details see the description of the \code{aggmap}.
+	(2) 'Summary table': An interactive table that displays the set of overlapping objects in dependence of the selected parameters. 
+	(3) 'Venn-diagram & Venn-table': A Venn-diagram and a Venn-table of the overlapping objects based on all truncated input lists. 
 }
 \usage{
 TopKListsGUI(lists, autorange.delta = FALSE, override.errors = TRUE,
@@ -19,7 +20,7 @@ gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100)
 \arguments{
   \item{lists}{A data frame of ordered lists of objects - rows represent the objects, columns represent the individual input lists
 }
-\item{autorange.delta}{If TRUE, results for all \eqn{\delta} values leading to the  \eqn{\hat{k}_i} estimates (as function of the parameters specified by the user) will be displayed (note, for a large list length \emph{N} this can take quite some time, because the \eqn{\delta} range examined is from 0 to \code{nrow(lists)} by steps of 1) if FALSE, then the user defines the \eqn{\delta} range (min and max) in the RGUI window 
+\item{autorange.delta}{If TRUE, results for all \eqn{\delta} values leading to the  \eqn{\hat{k}_i} estimates (as function of the parameters specified by the user) will be displayed (note, for a large list length \emph{N} this can take quite some time, because the \eqn{\delta} range examined is from 0 to \code{nrow(lists)} by steps of 1). If FALSE, then the user defines the \eqn{\delta} range (min and max) in the RGUI window 
 }
 \item{override.errors}{If TRUE, errors due to an inappropriate value selection are overridden and the calculation continues for all other \eqn{\delta} values, but there is no output for viewing in the GUI corresponding to that combination of values which has caused the error; defaults to TRUE 
 }
@@ -49,7 +50,7 @@ These tabs automatically save all plots and tables into the specified directory.
 
 The following additional exploratory features are implemented:
 
-'Delta-plot' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window).
+'Deltaplot' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window).
 
 'Mdelta' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt}-file.
 }

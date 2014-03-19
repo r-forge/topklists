@@ -22,7 +22,7 @@ A list containing the underlying spaces. If not explicitly specified, all lists 
 An integer specifying the number of items in the output top-k list.
 }
   \item{a}{
-Tuning parameter to make sure Markov chain with the transition matrix is ergodic;
+Tuning parameter to make sure Markov Chain with the transition matrix is ergodic;
 default set to 0.15.
 }
   \item{delta}{
@@ -30,16 +30,16 @@ Convergence criterion for stationary distribution; default set to 10^-15.
 }
 }
 \details{
-Constructs ergodic Markov chain based on ranking data from individual lists. A larger probability in the stationary distribution corresponds to a higher rank of the corresponding element. The algorithm are considered: MC1 (spam sensitive), MC2 (majority rule), and MC3 (proportional).
+Constructs ergodic Markov Chain based on ranking data from individual lists. A larger probability in the stationary distribution corresponds to a higher rank of the corresponding element. The algorithm are considered: MC1 (spam sensitive), MC2 (majority rule), and MC3 (proportional).
 }
 \value{
 A list of elements, two for each of the MC algorithms: 
-\item{MC1.TopK}{A vector of aggregate ranked elements based on MC1 algorithm.}
-\item{MC1.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in MC1.TopK}
+\item{MC1.TopK}{A vector of aggregate ranked elements based on \code{MC1} algorithm.}
+\item{MC1.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in \code{MC1.TopK}}
 \item{MC2.TopK}{A vector of aggregate ranked elements based on MC2 algorithm.}
-\item{MC2.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in MC2.TopK}
+\item{MC2.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in \code{MC2.TopK}}
 \item{MC3.TopK}{A vector of aggregate ranked elements based on MC3 algorithm.}
-\item{MC3.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in MC3.TopK}
+\item{MC3.Prob}{Stationary probability distribution: a vector of probabilities corresponding to the ranked elements in \code{MC3.TopK}}
 }
 \references{
 Lin, S. (2010). Space oriented rank-based data integration.

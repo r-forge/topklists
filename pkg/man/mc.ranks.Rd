@@ -5,7 +5,7 @@
 MC based rank aggregation
 }
 \description{
-Compute aggregate ranks based on the transition matrix from a three Markov chain algorithms.
+Compute aggregate ranks based on the transition matrix from the three Markov Chain algorithms.
 }
 \usage{
 mc.ranks(elements, trans, a, delta)
@@ -20,14 +20,14 @@ One of the three transition matrices build by function \code{trans.matrix} - 4 (
 elements of the output list from function \code{trans.matrix}
 }
   \item{a}{
-Tuning parameter to make sure Markov chain with the transition matrix is ergodic; parameter value passed from MC.
+Tuning parameter to make sure Markov Chain with the transition matrix is ergodic; parameter value passed from \code{MC}.
 }
   \item{delta}{
-Convergence criterion for stationary distribution; parameter value passed from MC.
+Convergence criterion for stationary distribution; parameter value passed from \code{MC}.
 }
 }
 \details{
-Compute stationary distribution based on a Markov chain transition matrix built with function \code{trans.matrix}.
+Compute stationary distribution based on a Markov Chain transition matrix built with function \code{trans.matrix}.
 }
 \value{
 A list with 3 components:

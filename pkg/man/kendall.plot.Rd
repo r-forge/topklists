@@ -17,7 +17,7 @@ Kendall.plot(input, all.aggregates, space = NULL, algorithm = NULL, p =
 A list object containing individual ranked lists.
 }
   \item{all.aggregates}{
-A list comprising of aggregate top-k lists from different algorithms to be compared.
+A list comprising of aggregate top-\emph{k} lists from different algorithms to be compared.
 }
   \item{space}{
 A list containing the underlying spaces. If not explicitly specified, all lists are treated as coming from a common space defined by the union of all input lists.

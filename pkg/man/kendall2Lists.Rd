@@ -17,7 +17,7 @@ Kendall2Lists.c(rank.a, rank.b, k.a, k.b, n, p = 0)
 A single top-\emph{k} list
 }
   \item{rank.b}{
-A vector of matrix form of top-\emph{k} list(s) to be compared to list \code{a}
+A vector of matrix form of top-\emph{k} list(s) to be compared to the list \code{a}
 }
   \item{k.a}{
 Value of \code{k} for \code{rank.a}

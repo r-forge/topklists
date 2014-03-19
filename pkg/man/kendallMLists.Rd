@@ -24,7 +24,7 @@ KendallMLists(input, space = NULL, aggregate, p = 0.5, w = NULL)
   \item{p}{
     A parameter between 0 and 1 for setting the distance of a pair of elements between two lists,  
     if at least one of the elements is not in the underlying space of one
-    of the list or if both elements belong to one list but neither belong 
+    of the list or if both elements belong to one list but neither belongs 
     to the other list. (We recommend using \code{p=0.5} for a "neutral approach".)
   }
   \item{w}{
