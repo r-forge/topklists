@@ -24,7 +24,7 @@ calculate.maxK <- function(lists, L, d, v, threshold=50) {
   tli = as.character(unique(unlist(tl))) #unique genes in truncated lists
   
   
-  resS = run.cemc(tl,maxK, space=tl)
+  resS = run.cemc(input=tl,space=tl, k=maxK)
   
 
 ##### adjusts v - in case the estimated maxK is larger than nrow(lists)-v 
@@ -207,7 +207,7 @@ calculate.maxK <- function(lists, L, d, v, threshold=50) {
         venn.table$listname <-apply(venn.table, 1, function(x){paste(sort(x[!is.na(x)]), sep="", collapse="_")})
         venn.temp <- split(rownames(venn.table),venn.table$listname)
         # adding stars to those that were in the CEMC final list
-        venn.list <- lapply(venn.temp, function(x)  {a = rep("*",length(x))[match(x,resS$topK)>0]; a[which(is.na(a))]=""; paste(a,x,sep="")})
+        venn.list <- lapply(venn.temp, function(x)  {a = rep("*",length(x))[match(x,resS$TopK)>0]; a[which(is.na(a))]=""; paste(a,x,sep="")})
         venn.list <- venn.list[order(-sapply(names(venn.list), nchar), names(venn.list))]
         venntable <- data.frame(t(sapply(names(venn.list), function(nn){
         data.frame(intersection=nn,objects=paste(sort(venn.list[[nn]]), sep="",collapse=", "), stringsAsFactors=FALSE)
@@ -223,7 +223,7 @@ rownames(venntable) <- NULL
     summarytable.temp = data.frame(Object=cg_temp,summarytable, stringsAsFactors=FALSE)
 	  summarytable.temp2 = summarytable.temp[order(summarytable.temp[,L+2]),]
     CEMCres =  rep("",nrow(summarytable.temp2))
-    CEMCres[match(resS$topK,summarytable.temp2$Object)] = "YES"
+    CEMCres[match(resS$TopK,summarytable.temp2$Object)] = "YES"
     summarytable.final = data.frame(Final.selection.CEMC = CEMCres, summarytable.temp2)
           
                   
@@ -246,7 +246,7 @@ rownames(venntable) <- NULL
           truncated.lists$N <- nrow(lists)
           truncated.lists$lists <- lists
           truncated.lists$maxK <-maxK
-          truncated.lists$topkspace <-resS$topK
+          truncated.lists$topkspace <-resS$TopK
           return(truncated.lists)
         }
     } else {

@@ -186,7 +186,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
     enabled(wid$delta.slider) <- FALSE
 
                                         #calculate data set for each delta in the given range for delta
-    temp.tocalc <- length(seq(as.numeric(svalue(wid$delta.start)),as.numeric(svalue(wid$delta.stop)),by=as.numeric(svalue(wid$delta.by))))+ 1
+    temp.tocalc <- length(seq(as.numeric(svalue(wid$delta.start)),as.numeric(svalue(wid$delta.stop)),by=as.numeric(svalue(wid$delta.by))))
     temp.loopcounter <- 0
     wid$error <- FALSE
 
@@ -202,8 +202,6 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
         rm(Mdelta)
 
-
-
     for (i in seq(as.numeric(svalue(wid$delta.start)),as.numeric(svalue(wid$delta.stop)),by=as.numeric(svalue(wid$delta.by)))) {
       gtkMainIterationDo(FALSE)
                                         #try to calculate data set for current delta and selected N
@@ -213,9 +211,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
         save(truncated.lists, file = paste(directory, "/N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".Rdata", sep = ""))
 
         #draw the aggmap and save it as pdf-image in the destination directory
-	if(is.null(truncated.lists)){max.length=10}else{max.length <- min(length(truncated.lists$comparedLists[[1]]), as.numeric(svalue(wid$N)))}
+	      if(is.null(truncated.lists)){max.length=10}else{max.length <- min(length(truncated.lists$comparedLists[[1]]), as.numeric(svalue(wid$N)))}
 
- 	png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = 870, height = 60+28*max.length, res=aggmap.res, type="cairo-png")
+      	png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = 870, height = 60+28*max.length, res=aggmap.res, type="cairo-png")
         aggmap(truncated.lists)
         dev.off()
         
@@ -240,7 +238,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
           text(1,1,"No overlap on selected parameters")
           dev.off()
 
- 	 png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
+ 	      png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
           plot(1,1, type="n", axes=FALSE)
           text(1,1,"No overlap on selected parameters")
           dev.off()
