@@ -1,5 +1,5 @@
-\name{mc.ranks}
-\alias{mc.ranks}
+\name{MC.ranks}
+\alias{MC.ranks}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 MC based rank aggregation
@@ -8,7 +8,7 @@ MC based rank aggregation
 Compute aggregate ranks based on the transition matrix from the three Markov Chain algorithms.
 }
 \usage{
-mc.ranks(elements, trans, a, delta)
+MC.ranks(elements, trans, a, delta)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -45,5 +45,5 @@ Shili Lin <shili@stat.osu.edu>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{run.mc}, \link{trans.matrix}}
+\code{\link{MC}, \link{trans.matrix}}
 }

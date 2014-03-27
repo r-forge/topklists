@@ -69,7 +69,7 @@ ylab="Borda Score", lty=1,,ylim=c(min(scores[1:k,]),max(scores[1:k,])), ...)
 	legend=c("ARM", "MED", "GEO", "L2Norm"), pch=1:4)
 }      
 
-mc.ranks <- function(elements, trans, a = 0.15, delta = 10^-15){
+MC.ranks <- function(elements, trans, a = 0.15, delta = 10^-15){
 #Compute rankings based on the transition matrix from a MC algorithm
         n=nrow(trans)
         trans=trans*(1-a)+a/n
@@ -140,7 +140,7 @@ trans.matrix <- function(input, space){
 	return(list(L,MC1,MC2,MC3))
 }
 
-run.mc <- function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
+MC <- function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 	if (missing(input))
 		stop("You need to input the top-k lists to be aggregated")
 	if (is.null(space)==TRUE){ #Will treat it as a common space problem
@@ -151,9 +151,9 @@ run.mc <- function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 		}
 	out.trans=trans.matrix(input,space)
 	N=length(out.trans[[1]])
-	MC1=mc.ranks(out.trans[[1]], out.trans[[2]],a, delta)
-	MC2=mc.ranks(out.trans[[1]], out.trans[[3]],a, delta)
-	MC3=mc.ranks(out.trans[[1]], out.trans[[4]],a, delta)
+	MC1=MC.ranks(out.trans[[1]], out.trans[[2]],a, delta)
+	MC2=MC.ranks(out.trans[[1]], out.trans[[3]],a, delta)
+	MC3=MC.ranks(out.trans[[1]], out.trans[[4]],a, delta)
 	if (is.null(k)==TRUE) k=N
 	else {if (k>N) k=N}
 	results=list(MC1[[3]][1:k],MC1[[2]],
@@ -165,7 +165,7 @@ run.mc <- function(input,space=NULL,k=NULL,a=0.15, delta=10^-15){
 	return(results)
 }
 
-mc.plot <- function(outMC, k, ...){
+MC.plot <- function(outMC, k, ...){
 	if (missing(outMC))
 	stop("MC stationary probabilities missing; need to run MC first to obtain the probabilities")
 	N=length(outMC[[2]])

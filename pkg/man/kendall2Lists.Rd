@@ -46,7 +46,7 @@ Integration of ranked lists via Cross Entropy Monte Carlo with applications to m
 Jie Ding <jding@jimmy.harvard.edu>
 }
 \seealso{
-\code{\link{spearman}}
+\code{\link{Spearman}}
 }
 \examples{
 set.seed(1234)

@@ -1,5 +1,5 @@
-\name{run.cemc}
-\alias{run.cemc}
+\name{CEMC}
+\alias{CEMC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 CEMC based rank aggregation
@@ -8,7 +8,7 @@ CEMC based rank aggregation
 Performs Cross Entropy Monte Carlo simulations for generating combined ranked list using CEMC, taking into account the different spaces of ranked input lists.
 }
 \usage{
-run.cemc(input, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
+CEMC(input, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
 rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0,
 d.w = NULL, input.par = NULL, extra=0)
 }
@@ -24,7 +24,7 @@ A list of the same structure as the input list. Contains underlying spaces for t
 Desired length of combined list
 }
   \item{dm}{
-Distance measure, "s" for spearman, "k" for kendall (p=0)
+Distance measure, "s" for Spearman, "k" for Kendall (p=0)
 }
   \item{kp}{
 Partial distance used in Kendall's tau distance measure
@@ -89,7 +89,7 @@ Jie Ding <jding@jimmy.harvard.edu>, Shili Lin <shili@stat.osu.edu>
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outCEMC=run.cemc(input, space) #underlying space-dependent
-outCEMC1=run.cemc(input,space=input) #top-k spaces
+outCEMC=CEMC(input, space) #underlying space-dependent
+outCEMC1=CEMC(input,space=input) #top-k spaces
 }
 

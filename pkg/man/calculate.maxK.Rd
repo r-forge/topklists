@@ -54,7 +54,7 @@ A named list of the following content:
 Hall, P. and Schimek, M. G. (2012). Moderate deviation-based inference for random degeneration in paired rank lists. J. Amer. Statist. Assoc., 107, 661-672.
 }
 \seealso{
-  \code{\link{run.cemc}, \link{prepare.idata}}
+  \code{\link{CEMC}, \link{prepare.idata}}
 }
 \examples{
 set.seed(1234)

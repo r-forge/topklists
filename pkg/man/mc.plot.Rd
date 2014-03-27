@@ -1,5 +1,5 @@
-\name{mc.plot}
-\alias{mc.plot}
+\name{MC.plot}
+\alias{MC.plot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plot of the ordered stationary probabilities
@@ -10,7 +10,7 @@ regarding the relative rankings of elements.
 }
 \usage{
 
-mc.plot(outMC, k, ...)
+MC.plot(outMC, k, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -32,11 +32,11 @@ Shili Lin <shili@stat.osu.edu
 }
 
 \seealso{
-\code{\link{run.mc}} 
+\code{\link{MC}} 
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outMC=run.mc(input,space)
-mc.plot(outMC)
+outMC=MC(input,space)
+MC.plot(outMC)
 }

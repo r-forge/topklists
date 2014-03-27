@@ -43,7 +43,7 @@ Shili Lin <shili@stat.osu.edu>
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{run.mc}}
+\code{\link{MC}}
 }
 
 

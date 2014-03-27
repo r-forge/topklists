@@ -24,7 +24,7 @@ calculate.maxK <- function(lists, L, d, v, threshold=50) {
   tli = as.character(unique(unlist(tl))) #unique genes in truncated lists
   
   
-  resS = run.cemc(input=tl,space=tl, k=maxK)
+  resS = CEMC(input=tl,space=tl, k=maxK)
   
 
 ##### adjusts v - in case the estimated maxK is larger than nrow(lists)-v 

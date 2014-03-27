@@ -2,7 +2,7 @@
 ###taking into account difference spaces of input ranked lists
 ###Last modified: 04/28/10
 
-`run.cemc` <-
+`CEMC` <-
 function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
          e1=0.1,e2=1,w=0.5,b=0,init.m="p",init.w=0, d.w=NULL,input.par=NULL,
          extra=0){  
@@ -10,7 +10,7 @@ function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
   ##input: a list of several top K lists, may have different length
   ##space: underlying spaces for the lists
   ##k: desired length of combined list
-  ##dm: distance measure, "s" for spearman, "k" for kendall(p=0)
+  ##dm: distance measure, "s" for Spearman, "k" for kendall(p=0)
   ##kp: partial distance used in Kendall's tau distance measure
   ##N: number of samples generated in each iterate
   ##N1: number of samples retained after each iterate 
@@ -98,7 +98,7 @@ if (is.null(k)==TRUE) k=n
     dist <- numeric(N)
     for (i in 1:a) {
       if (dm=="s")
-        dist <- dist + spearman(rank.a[,i],rank.b,k.a[i],k,n) * d.w[i]
+        dist <- dist + Spearman(rank.a[,i],rank.b,k.a[i],k,n) * d.w[i]
       else if (dm=="k") 
         dist <- dist + Kendall2Lists.c(rank.a[,i],rank.b,k.a[i],k,n,kp) * d.w[i]
       else stop("Invalid distance measure")
@@ -136,7 +136,7 @@ if (is.null(k)==TRUE) k=n
   dist.s <- 0
   dist.k <- 0
   for (i in 1:a) {
-    dist.s <- dist.s + spearman(rank.a[,i],rank.result,k.a[i],k,n) * d.w[i]
+    dist.s <- dist.s + Spearman(rank.a[,i],rank.result,k.a[i],k,n) * d.w[i]
     dist.k <- dist.k + Kendall2Lists.c(rank.a[,i],rank.result,k.a[i],k,n,kp) *d.w[i]
   }
   
@@ -281,7 +281,7 @@ function(topK,n,k,init.m="p",init.w=0) {
       dist <- 0
       for (i in 1:(a-1)) {
         for (j in (i+1):a) {
-          dist <- dist + spearman(topK[[i]],topK[[j]],n)
+          dist <- dist + Spearman(topK[[i]],topK[[j]],n)
         }
       }
       dist.avg <- dist/(a*(a-1)/2)/n #average rank difference
@@ -373,10 +373,10 @@ function(rank.a,rank.b,k.a,k.b,n,p=0) {
      as.double(p),dist=as.double(dist))$dist
 }
 
-`spearman` <-
+`Spearman` <-
 function(rank.a,rank.b,k.a,k.b,n) {
   
-  ##spearman's footrule distance between two top K lists
+  ##Spearman's footrule distance between two top K lists
   ##rank.a: a single top k list
   ##rank.b: a vector of matrix form of top k list(s) to be compared to list a
   ##k.a: value of k for rank.a

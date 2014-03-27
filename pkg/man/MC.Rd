@@ -1,5 +1,5 @@
-\name{run.mc}
-\alias{run.mc}
+\name{MC}
+\alias{MC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Markov chain based rank aggregation
@@ -8,7 +8,7 @@ Markov chain based rank aggregation
 Aggregating ranked lists using three  Markov chain algorithms.
 }
 \usage{
-run.mc(input, space = NULL, k = NULL, a = 0.15, delta = 10^-15)
+MC(input, space = NULL, k = NULL, a = 0.15, delta = 10^-15)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,12 +49,12 @@ Statistical Applications in Genetics and Molecular Biology 9, Article 20.
 Shili Lin <shili@stat.osu.edu>
 }
 \seealso{
-\code{\link{Borda.scores}}, \code{\link{run.cemc}}, \code{\link{mc.plot}}
+\code{\link{Borda.scores}}, \code{\link{CEMC}}, \code{\link{MC.plot}}
 }
 \examples{
 #get sample data
 data(TopKSpaceSampleInput)
-outMC=run.mc(input,space) #underlying space-dependent
-outMCa=run.mc(input,space=input) #top-k spaces
-mc.plot(outMC)
+outMC=MC(input,space) #underlying space-dependent
+outMCa=MC(input,space=input) #top-k spaces
+MC.plot(outMC)
 }
