@@ -33,7 +33,8 @@ of N objects, the package TopKLists offers
 <H2>Citation Information</H2>
 <div style="max-width:750px">
 <P>When using TopKLists in your work please refer to it by
-citing:<BR>XXX</P>
+citing:<BR>Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. J. Amer. Statist. Assoc., 107, 661-672.</P>
+<BR>Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. Biometrics, 65, 9-18.</P>
 </div>
 <H2>Examples for the Usage of TopKLists</H2>
 <div style="max-width:750px">
