@@ -1,5 +1,5 @@
-\name{Borda.scores}
-\alias{Borda.scores}
+\name{Borda}
+\alias{Borda}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Borda based rank aggregation
@@ -8,7 +8,7 @@ Borda based rank aggregation
 Computes Borda scores and ranks based on four different aggregation functions.
 }
 \usage{
-Borda.scores(input, space = NULL, k = NULL)
+Borda(input, space = NULL, k = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,8 +46,8 @@ Shili Lin <shili@stat.osu.edu>
 #get sample data
 data(TopKSpaceSampleInput)
 
-outBorda=Borda.scores(input,space) #underlying space-dependent
-outBorda1=Borda.scores(input,space=input) #top-k spaces
+outBorda=Borda(input,space) #underlying space-dependent
+outBorda1=Borda(input,space=input) #top-k spaces
 
 }
 

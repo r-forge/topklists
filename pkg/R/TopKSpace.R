@@ -1,4 +1,4 @@
-Borda.scores <- function(input,space=NULL,k=NULL){
+Borda <- function(input,space=NULL,k=NULL){
 #l2norm is the square root of l2norm to make its unit more comparable with the rest
 	if (missing(input))
 	stop("You need to input the top-k lists to be aggregated")

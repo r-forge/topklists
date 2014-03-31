@@ -1,6 +1,5 @@
 \name{CEMC}
 \alias{CEMC}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 CEMC based rank aggregation
 }
@@ -12,7 +11,6 @@ CEMC(input, space = NULL, k=NULL, dm = "k", kp = 0.5, N = NULL, N1 = NULL,
 rho = 0.1, e1 = 0.1, e2 = 1, w = 0.5, b = 0, init.m = "p", init.w = 0,
 d.w = NULL, input.par = NULL, extra=0)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{
 A list of several \code{TopKLists}, may have different length
@@ -39,16 +37,16 @@ Number of samples retained after each iterate
 Proportion of samples used to estimate a new probability matrix
 }
   \item{e1}{
-Stop criteria w.r.t. p
+Stopping criterion with respect to the l1-norm of the difference of the two probability matrices between the current and previous iterations  
 }
   \item{e2}{
-Stop criteria w.r.t. y
+Stopping criterion with respect to the difference in the obtimizing criterion (e.g. the generalized Kemeny guideline) between the current and the previous iterations  
 }
   \item{w}{
 Weight of the new probability vector for the next iterate
 }
   \item{b}{
-Parameter used in blur function
+Parameter used in blur function - this is for finding starting values for the algorithem
 }
   \item{init.m}{
 Initialization method, see the function \code{init.p} for details
@@ -87,9 +85,12 @@ Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte
 Jie Ding <jding@jimmy.harvard.edu>, Shili Lin <shili@stat.osu.edu>
 }
 \examples{
-#get sample data
-data(TopKSpaceSampleInput)
+#small data set; a larger data example is available in the vignettes
+L1=c("chicken","dog","cat")
+L2=c(1,"chicken","cat", 2:5)
+L3=c("dog","chicken",1:10)
+input=list(L1,L2,L3)
+space1=c("chicken","dog","cat",1:10)
+space=list(space1,space1,space1)
 outCEMC=CEMC(input, space) #underlying space-dependent
-outCEMC1=CEMC(input,space=input) #top-k spaces
 }
-

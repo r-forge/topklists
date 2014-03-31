@@ -13,7 +13,7 @@ TopKSample.c(p, N)
 }
 \arguments{
   \item{p}{
-Matrix of dimension n*(k+1), n is the number of items
+Matrix of dimension n*(k+1), n is the number of items (to be ranked) and k is the top elements in the joint ranking. Each column is a multinomial probability vector.
 }
   \item{N}{
 The number of samples
@@ -42,4 +42,3 @@ M <- cbind(a, b, c)
 TopKSample.c(M, 4)
 
 }
-

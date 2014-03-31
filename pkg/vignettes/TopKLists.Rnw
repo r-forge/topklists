@@ -173,7 +173,7 @@ There are three classes of algorithms implemented in \texttt{TopKSpace}, namely
 Borda's method, Markov Chain (MC) algorithms \cite{lin}, 
 and a Cross Entropy Monte Carlo (CEMC) method taking advantage of the new Order Explicit Algorithm (OEA) as described by \cite{linding}.
 The Borda and Markov Chain methods consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the CEMC method employs a Monte Carlo search procedure for achieving this optimization. Borda and Markov Chain algorithms run much faster than the Cross Entropy Monte Carlo algorithm, however the latter usually achieves better results. Nevertheless, simulation studies indicate that taking the underlying space into consideration has a much greater impact than using different algorithms.
-These three algorithms are implemented in three top-level functions within \texttt{TopKSpace}: \texttt{Borda.scores}, \texttt{MC}, 
+These three algorithms are implemented in three top-level functions within \texttt{TopKSpace}: \texttt{Borda}, \texttt{MC}, 
 and \texttt{CEMC}. There are also two plotting functions: \texttt{Borda.plot} and \texttt{MC.plot} that help the user to visualize 
 and compare the results.
 
@@ -222,29 +222,29 @@ relative performances of different algorithms.
 
 \subsection{Function calling}
 \subsubsection{The Borda algorithm}
-Four Borda scores are implemented in the \texttt{Borda.scores} function of \texttt{TopKSpace}, namely the arithmetic mean (ARM), median (MED),
+Four Borda scores are implemented in the \texttt{Borda} function of \texttt{TopKSpace}, namely the arithmetic mean (ARM), median (MED),
 geometric mean (GEO), and L2-norm (L2N). The output is a list with two elements: \texttt{Top-K} provides
 the aggregate rankings and \texttt{Scores} gives the corresponding Borda scores
 for each of the four functions.
-Of the three arguments in \texttt{Borda.scores}, only the first one ({\em input}) is required. If argument {\em space} is not
+Of the three arguments in \texttt{Borda}, only the first one ({\em input}) is required. If argument {\em space} is not
 provided, then the underlying space is assumed to be common among all top-\emph{k} lists implicitly, and the union of
 the top-\emph{k} lists is treated as the common space. If argument {\em k} is not specified, then the full ranked
 list (all elements in the union) is outputted.
  
 
 <<>>=
-outBorda=Borda.scores(input,space,k=50) 
+outBorda=Borda(input,space,k=50) 
 # "space" is explicitly specified; underlying space-dependent
 @
 
 <<>>=
-outBorda1=Borda.scores(input) 
+outBorda1=Borda(input) 
 #"space" is not specified; all lists are assumed to come from the common space (objects 1-40)
 
 @
 
 <<>>=
-outBorda2=Borda.scores(input,space=input) 
+outBorda2=Borda(input,space=input) 
 # "space = input" indicates that this is the top-k space
 @
 
