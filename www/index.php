@@ -8,9 +8,10 @@
 <BODY LANG="en-US" DIR="LTR">
 <div style="width: 800px; text-align: center">
 <H1>Welcome to the TopKLists page!</H1>
+<br><br> 
 <img src="img/website_pic.png" alt="Welcome to the TopKLists website"  height="20%" />
 </div>
-<H1>Details</H1>
+<H2>Details</H2>
 <div style="max-width:750px">
 <P>For multiple ranked input lists (full or partial) representing the same set
 of N objects, the package <strong>Top<font color="FireBrick">K</font>Lists</strong> offers 
@@ -42,12 +43,12 @@ citing:
 <H2>Examples for the Usage</H2>
 <div style="max-width:750px">
 <UL>
-  <li>Package “TopKLists” for rank-based genomic data integration
-    <br/>Schimek, M. G., Budinska, E., Kugler, K. and Lin, S. (2011), Proc IASTED CompBio, 434-440.</li>
-  <li>Modelling the rank order of Web search engine results
-	<br/>Schimek, M. G., Bloice, M. (2012), Proc IWSM, 303-308.</li>
-  <li>An inference and integration approach for the consolidation of ranked lists
-	<br/>Schimek, M. G., Mysickova, A. and Budinska, E. (2010), J. Statist. Plan. Inference, Vol 47, 1152-1166.
+  <li>Schimek, M. G., Budinska, E., Kugler, K. and Lin, S. (2011). Package "TopKLists" for rank-based genomic data integration.
+    Proceedings of CompBio 2011, 434-440, DOI: 10.2316/P.2011.742-032.</li>
+  <li>Schimek, M. G. and Bloice, M. (2012). Modelling the rank order of Web search engine results.
+	In Komarek, A. and Nagy, S. (eds). Proceedings of the 27th International Workshop on Statistical Modelling. (e-book ISBN 978-80-263-0250-6), Vol. 1, 303-308. </li>
+  <li>Schimek, M. G., Mysickova, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists.
+	Communications in Statistics - Simulation and Computation, 41:7, 1152-1166. 
 	</li>
 </UL>
 </div>
