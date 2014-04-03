@@ -9,7 +9,7 @@
 <div style="width: 800px; text-align: center">
 <H1>Welcome to the TopKLists page!</H1>
 <br><br> 
-<img src="img/website_pic.png" alt="Welcome to the TopKLists website"  height="20%" />
+<img src="img/website_pic.png" alt="Welcome to the TopKLists website"  width=800px />
 </div>
 <H2>Details</H2>
 <div style="max-width:750px">
