@@ -23,13 +23,14 @@ of N objects, the package <strong>Top<font color="FireBrick">K</font>Lists</stro
 	<LI><P>graphical tools for the statistical exploration of input
 	lists, and for the visualization of aggregation results</P>
 </OL>
+Results that can be obtained are a sublist of highly conforming objects in a new rank order, an aggregation map of the top-k objects, or a Venn-diagram of the top-k objects. Typical applications are rank-based data integration and meta-analyses.
 <P>The <B>latest stable build</B> can be found on <A HREF="##" TARGET="_blank">CRAN</A>.</P>
 <P>You can find the <STRONG>latest news</STRONG> and the <STRONG>project summary page</STRONG> <STRONG><A HREF="https://r-forge.r-project.org/projects/topklists/" TARGET="_blank"><SPAN STYLE="text-decoration: none"><SPAN STYLE="font-weight: normal">here</SPAN></SPAN></A></STRONG>.
 </P>
 <P>For a <STRONG>detailed description</STRONG> of the package see the
 <A HREF="##" TARGET="_blank">reference manual</A>.</P>
-<P>When using TopKLists for the first time it's helpful to make use of <B>reproducible examples</B>, which can be found in the <A HREF="##" TARGET="_blank">Vignette</A> 
-(comprises the modules TopKInference, TopKSpace, TopKGraphics and TopKListsGUI).</P>
+<P>When using TopKLists for the first time it is helpful to make use of <B>reproducible examples</B>, which can be found in the <A HREF="##" TARGET="_blank">Vignette</A> 
+(comprises the modules TopKInference, TopKSpace, TopKGraphics;  the graphical user interface TopKListsGUI is described as well).</P>
 </div>
 <H2>Citation Information</H2>
 <div style="max-width:750px">
