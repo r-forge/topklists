@@ -4,7 +4,7 @@
 TopKListsGUI for inference and visualization
 }
 \description{
-This function opens a RGUI window and allows the user to select the parameters for the distance \eqn{\delta}, for the pilot sample size \eqn{\nu}, and the threshold for the \code{aggmap} presentation. Based on the selected parameters, a pairwise estimation of the top-\emph{k} lists overlap is performed with switching reference lists (e.g. L1 with L2 and L2 with L1). Based on these estimates, all involved lists are truncated and the maximum of the \eqn{\hat{k}_i} estimates is selected by default. The individual results of each combination of ranked lists are displayed automatically in the RGUI window and saved to a prespecified folder. After the maximal truncation point is estimated, \code{CEMC} algorithm is applied to generate final list of top-\emph{k} genes.
+This function opens a RGUI window and allows the user to select the parameters for the distance \eqn{\delta}, for the pilot sample size \eqn{\nu}, and the threshold for the \code{aggmap} presentation. Based on the selected parameters, a pairwise estimation of the top-\emph{k} lists overlap is performed with switching reference lists (e.g. L1 with L2 and L2 with L1). Based on these estimates, all involved lists are truncated and the maximum of the \eqn{\hat{k}_i} estimates is selected by default. The individual results of each combination of ranked lists are displayed automatically in the RGUI window and saved to a prespecified folder. After the maximal truncation point is estimated, \code{CEMC} algorithm is applied to generate the final list of top-\emph{k} objects.
 
 The consolidated top-\emph{k} list results can be displayed in three different formats controlled by tabs: 
 
@@ -52,7 +52,7 @@ The following additional exploratory features are implemented:
 
 'Deltaplot' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, an exploratory plot of rank discordance is created and saved (function not part of the RGUI window).
 
-'Mdelta' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each Delta-matrix is saved individually in a tab delimited \code{.txt}-file.
+'Mdelta' (see \code{deltaplot}): For a preselected range of \eqn{\delta}'s and all list pairs, Delta-matrices are created and saved (function not part of the RGUI window) in one \code{rdata} object (\code{Mdelta.rdata}). Each delta-matrix is saved individually in a tab delimited \code{.txt}-file.
 }
 \author{
 Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <kg.kugler@gmail.com>, Michael G. Schimek <michael.schimek@medunigraz.at>
