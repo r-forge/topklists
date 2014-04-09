@@ -1,7 +1,5 @@
 \name{TopKLists-package}
-\alias{topklists-package}
 \alias{TopKLists}
-\alias{topklists}
 \docType{package}
 \title{
 Inference, aggregation and visualization for top-\emph{k} ranked lists

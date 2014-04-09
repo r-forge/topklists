@@ -467,14 +467,6 @@ Comment 3: This file contains all the tuning parameter values (defaults) for run
 modify this file and use it as the input to the {\em input.par} argument in
 the \texttt{CEMC} function.
 
-
-
-
-
-
-
-
-
 \subsection{Comparison of performance of the different algorithms}
 In the example given above, we discussed the performances of the different 
 algorithms and assumptions since the underlying truth can be guessed to a large extend since
@@ -518,37 +510,48 @@ better than the rest, confirming our heuristic interpretation of the results.
 
 
 
-
-
-
-
-
-\subsection{CEMC on the breast cancer data}
-Here the Cross Entropy Monte Carlo method on the breast cancer data is applied (introduced in Section~\ref{sec:introduction}):
+\subsection{Application to the breast cancer example dataset}
+Here the three MC algorithms and the CEMC method are applied to the breast cancer dataset:
 <<>>=
 data(breast)
 @
-Now the overall top-\emph{k} list length \texttt{maxK} is calculated using the \texttt{j0.multi} function
+Now the overall top-$k$ list length \texttt{maxK} is calculated using the \texttt{j0.multi} function
 <<>>=
 res = j0.multi(breast, d=6, v=10)
 res$maxK
 @
-Each of the three lists is truncated to the 14 most highly ranked genes. The set of genes contained in each list is not identical and each list can contain a different set of 14 top genes. 
-Since each of the top-14 gene lists comes from the common set of 917 genes, one way to set the common underlying space, without loss of information, is to make it the set of all the genes present in these 3 truncated lists. 
-In this case there are 22 unique genes. 
+Each of the three lists is truncated to the 14 most highly ranked genes. The set
+ of genes contained in each list is not identical and each list can contain a di
+fferent set of 14 top genes. Since each of the top-14 gene lists come from the c
+ommon set of 917 genes, one way to set the common underlying space, without loss
+ of information, is to make it the set of all the genes present in these 3 trunc
+ated lists. In this case there are 22 unique genes. 
 <<>>=
-topK = as.list(breast[1:res$maxK, ])
-topK
-uniq=unique(factor(c(as.character(topK$TransBig), as.character(topK$MDCC), as.character(topK$Pusztai))))
-length(uniq)
-space = list(uniq, uniq, uniq)
-pd = CEMC(topK, space, res$maxK)
+l1=as.character(breast[1:res$maxK,1])
+l2=as.character(breast[1:res$maxK,2])
+l3=as.character(breast[1:res$maxK,3])
+input=list(l1,l2,l3)
+common=unique(unlist(input))
+space=list(common,common,common)
+outBorda=Borda(input,space)
+outMC=MC(input,space)
+outCEMC=CEMC(input,space,N=2000)
 @
 
-Finally we obtain the following optimized aggregation result:
+Display results in a matrix form for comparison
 <<>>=
-pd$TopK
-@
+agg=list(ARM=outBorda$TopK[,1],MED=outBorda$TopK[,2],GEO=outBorda$TopK[,3],L2N=outBorda$TopK[,4],MC1=outMC$MC1.TopK,MC2=outMC$MC2.TopK,MC3=outMC$MC3.TopK,CEMC=outCEMC$TopK)
+head(do.call(cbind, agg))
+@ 
+
+
+<<aggplot, out.width='8cm', out.height='8cm', fig.pos="ht!", fig.cap="Results from different algorithms for the breast cancer example data", fig.align='center'>>=
+Kendall.plot(input,agg,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3","CEMC"))
+@ 
+
+Note: The results indicate that CEMC performs better with  a smaller distance
+between the aggregate and individual lists (\ref{fig:aggplot}).
+
 
 
 \section{Using TopKGraphics}
