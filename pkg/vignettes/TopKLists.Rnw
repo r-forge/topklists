@@ -19,12 +19,6 @@
 <<echo=FALSE, results='hide', eval=TRUE, message=FALSE, warning=FALSE>>=
 require(knitr)
 options(width=60)
-#options(global.device=TRUE)
-#  listing <- function(x, options) {
-#    paste("\\begin{lstlisting}[basicstyle=\\ttfamily,breaklines=true]\n",
-#      x, "\\end{lstlisting}\n", sep = "")
-#  }
-#  knit_hooks$set(source=listing, output=listing)
 @
 
 
@@ -194,7 +188,7 @@ L1=1:30
 L2=c(1:10,31:40,11:15)
 L3=c(1:10,16:20,11:15)
 input=list(L1,L2,L3)
-space=list(1:50,1:45,1:40)
+space=list(1:40,1:40,1:40)
 @
 
 As can be seen from the compositions of the three lists, they are of different lengths (30, 25, and 20
@@ -253,8 +247,7 @@ sum(outBorda$Scores-outBorda1$Scores)
 sum(outBorda$Scores-outBorda2$Scores)
 @
 
-Comment 1: Objects 1-40, union of the three top-\emph{k} lists, are contained in all three spaces, whereas
- objects 41-50 are not in any of the list. As such, the results for which the spaces were explicitly
+Comment 1: Objects 1-40, union of the three top-k lists, are contained in all three spaces. As such, the results for which the spaces were explicitly
 specified should be the same as those with the common space assumption, which was exactly what we saw above. On the 
 other hand, the underlying space-dependent results were different from the results
 assuming top-\emph{k} spaces (i.e., all lists were full ranked lists).
@@ -429,7 +422,7 @@ outCEMC=CEMC(input, space)
 
 <<>>=
 set.seed(1234)
-outCEMC1 = CEMC(input, k=30) 
+outCEMC1 = CEMC(input) 
 # "space" is not specified, so it is the same as common space (1-40)
 @
 
@@ -511,7 +504,7 @@ better than the rest, confirming our heuristic interpretation of the results.
 
 
 \subsection{Application to the breast cancer example dataset}
-Here the three MC algorithms and the CEMC method are applied to the breast cancer dataset:
+We apply the Borda, MC, and CEMC algorithms to the breast cancer data to illustrate their usage in real data application.
 <<>>=
 data(breast)
 @
@@ -544,13 +537,13 @@ agg=list(ARM=outBorda$TopK[,1],MED=outBorda$TopK[,2],GEO=outBorda$TopK[,3],L2N=o
 head(do.call(cbind, agg))
 @ 
 
+Additionally, we can plot the results from the different function.
 
 <<aggplot, out.width='8cm', out.height='8cm', fig.pos="ht!", fig.cap="Results from different algorithms for the breast cancer example data", fig.align='center'>>=
 Kendall.plot(input,agg,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3","CEMC"))
 @ 
 
-Note: The results indicate that CEMC performs better with  a smaller distance
-between the aggregate and individual lists (\ref{fig:aggplot}).
+Note: The results indicate that Borda with the median function and CEMC perform the best in this example as they lead to the smallest distance between the aggregate and individual lists (\ref{fig:aggplot}).
 
 
 
@@ -576,9 +569,9 @@ is associated with a distinct decline in the number of 0's. Generally one should
 
 
 <<>>=
-deltaplot.dir <- paste0(tempdir(), "/deltaplot")
+deltaplot.dir =  paste0(tempdir(), "/deltaplot")
 dir.create(deltaplot.dir, showWarnings = FALSE)
-subplot.dir <- paste0(tempdir(), "/subplot")
+subplot.dir = paste0(tempdir(), "/subplot")
 dir.create(subplot.dir, showWarnings = FALSE)
 @ 
 
