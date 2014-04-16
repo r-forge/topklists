@@ -52,6 +52,7 @@ For these two tasks this package offers several options which can be selected fr
 \textbf{Whenever you refer to the package \texttt{TopKLists}, please cite \cite{haschi} and \cite{linding}.} In the following sections, we illustrate the usage of these modules.
 
 \subsection{The breast cancer data}
+\label{subsec:breastdata}
 
 For illustrating the usage of this package, we selected three breast cancer microarray datasets (MDCC, TransBig and Pusztai) that include information on estrogen receptor positivity (ER+ vs ER-), which is one of the prognostic markers for breast cancer (for the accession numbers see Table \ref{tab:data}):
 
@@ -506,7 +507,7 @@ outMC=MC(input,space)
 outCEMC=CEMC(input,space,N=2000)
 @
 
-Display results in a matrix form for comparison
+Finally, we can display the results in a matrix form for comparison
 <<>>=
 agg=list(ARM=outBorda$TopK[,1],MED=outBorda$TopK[,2],GEO=outBorda$TopK[,3],L2N=outBorda$TopK[,4],MC1=outMC$MC1.TopK,MC2=outMC$MC2.TopK,MC3=outMC$MC3.TopK,CEMC=outCEMC$TopK)
 head(do.call(cbind, agg))
@@ -518,13 +519,13 @@ Additionally, we can plot the results from the different function.
 Kendall.plot(input,agg,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3","CEMC"))
 @ 
 
-Note: The results indicate that Borda with the median function and CEMC perform the best in this example as they lead to the smallest distance between the aggregate and individual lists (\ref{fig:aggplot}).
+Note: The results indicate that Borda with the median function and CEMC perform the best in this example as they lead to the smallest distance between the aggregate and individual lists (Figure \ref{fig:aggplot}).
 
 
 
 \section{Using TopKGraphics}
 
-The \texttt{TopKGraphics} module comprises three graphical tools: namely, the deltaplot, the aggregation map, and the Venn diagram. All are introduced in the following sections and illustrated using example data.
+The \texttt{TopKGraphics} module comprises three graphical tools: namely, the deltaplot, the aggregation map, and the Venn diagram. All are introduced in the following subsections and illustrated using example data.
 
 
 \subsection{Deltaplot}
@@ -557,14 +558,14 @@ a=deltaplot(breast, deltas = seq(0,300, by=5), directory=deltaplot.dir)
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{\Sexpr{gsub("\\\\", replacement="/", deltaplot.dir)}/deltaplotL2-3.pdf}\\
-\caption{Deltaplot for lists MDCC vs. Pusztai}
+\caption{Deltaplot for lists MDCC vs. Pusztai and vice versa}
 \label{fig:deltaplot_complete}
 \end{figure}
 
-When observing the deltaplot for the first two breast cancer dataset lists (Figure \ref{fig:deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used. This is because there is no visible point where the \texttt{deltaplot}'s decrease changes its direction. 
+When observing the deltaplot for the first two breast cancer lists (Figure \ref{fig:deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used. This is because there is no visible point where the \texttt{deltaplot}'s decrease changes its direction. 
 
 
-It can also be observed from the Figure~\ref{fig:deltaplot_complete} that switching the reference list from, for example \texttt{Putsztai} to \texttt{MDCC} or vice versa, has little impact on the graph.
+It can also be observed from Figure~\ref{fig:deltaplot_complete} that switching the reference list from, for example \texttt{Putsztai} to \texttt{MDCC} or vice versa, has little impact on the graph.
 In order to choose a suitable value for $\delta$, we must limit the deltaplot calculation to a smaller subset of the investigated lists, for example the first 200 objects. Additionally, the \texttt{subplot} parameter can be used, which magnifies a selected range of small $\delta$-values in a subplot, defined by the \texttt{perc.subplot} parameter.
 
 <<fig.show='hide'>>=
@@ -578,7 +579,7 @@ a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplo
 \caption{Deltaplot for lists MDCC vs. Pusztai for first 200 objects}
 \label{fig:deltaplot_subset200}
 \end{figure}
-In Figure \ref{fig:deltaplot_subset200} it can be seen that after, say, $\delta=6$ the decrease of \textit{deltaplot} is not as pronounced as for lower values of $\delta$. Therefore, it would be logical to concentrate on those results where $\delta$ is set to between 4 and 10. 
+In Figure \ref{fig:deltaplot_subset200} it can be seen that after, say, $\delta=6$ the decrease of deltaplot is not as pronounced as for lower values of $\delta$. Therefore, it would be logical to concentrate on those results where $\delta$ is set to between 4 and 10. 
 
 The calculation of the overall truncation index \texttt{maxK} for pre-specified values of $\delta$ and $\nu$ is performed using the \texttt{j0.multi} function. 
 This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's, and then estimates the $\hat{j}_0$. 
@@ -606,7 +607,7 @@ ranked higher in $L$ with respect to $L^0$.
   \item[c)] The rectangular of a symbol takes on the color `grey' when the \textbf{percentage} of $d \leq \delta$ across the columns of a group is above 
 some prespecified threshold, and `white' otherwise.
 \end{description}
-The aggregation map of the breast cancer dataset can be seen in Figure \ref{aggmap} for instance.
+The aggregation map of the breast cancer dataset can be seen in Figure \ref{aggmap}.
 
 \subsection{Venn diagram}
 The Venn diagram can only be accessed via \texttt{TopKListsGUI} (see Section~\ref{subsec:resultspanel}).
@@ -621,7 +622,7 @@ The suite of functions supported by \texttt{TopKGUI} facilitates the exploratory
 Interactive input facilities (such as a slider for the dynamic specification of the distance $\delta$) allow for the real-time analysis and visualization of results. These results correspond to the distance $\delta$ or the pilot sample size $\nu$ (note that, for large list lengths of $N$, many numbers of calculations must be performed and longer waiting times should be expected). 
 
 \subsection{The graphical user interface}
-To open the GUI using the breast cancer data introduced in \ref{sec:introduction}, run
+To open the GUI using the breast cancer data introduced in section \ref{subsec:breastdata}, run
 <<eval=FALSE>>=
 TopKListsGUI(breast)
 @ 
@@ -633,21 +634,21 @@ The window shown in Figure~\ref{topkguistart} appears, allowing the user to perf
 \caption{Main windows of the \texttt{TopKListsGUI}
 \label{topkguistart}}
 \end{figure}
-The TopKListsGUI window is divided into four panels: Arguments, Delta-slider, Results and Analysis Status.
+The TopKListsGUI window is divided into four panels: arguments, analysis status, delta-slider and results.
 
 \subsubsection{Arguments}
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{TopKListsGUI-1-Arguments.png}\\
-\caption{The Arguments panel of the \texttt{TopKListsGUI} main window
+\caption{The arguments panel of the \texttt{TopKListsGUI} main window
 \label{topkgui}}
 \end{figure}
 
 In this panel, the user is informed about the number of lists and objects in the dataset. Further, the user can set up variable values for the top-\emph{k} list computation. 
 The user must select $\nu$ (default value is 10) and choose the $\delta$ range for which the top-\emph{k} lists should be calculated (the default is from 0 to 10, in steps of 1). 
 A threshold for the minimum percentage of top lists comprising an object, used for gray-shading in the aggregation map, can also be selected (default is 50). 
-Finally, the \texttt{TopKSpace} algorithm for the generation of the aggregate list can be chosen, the default being \texttt{CEMC}. Last but not least, this panel contains the Calculate button, which starts the analysis.
+Finally, the \texttt{TopKSpace} algorithm for the generation of the aggregate list can be chosen, the default being \texttt{CEMC}. Last but not least, this panel contains the calculate button, which starts the analysis.
 
 
 \subsubsection{Analysis status panel and delta-slider}
@@ -661,12 +662,12 @@ In the bottom section of \texttt{TopKListsGUI} the status of the analysis is sho
 \label{topkgui}}
 \end{figure}
 
-Once the analysis is complete, the delta-slider allows the user to switch between the results obtained using different values for $\delta$ interactively. The moving bar shows the current value of $\delta$, and the aggregation map updates accordingly. Moving the bar to the left or right allows the user to see results for smaller or larger $\delta$ values.
+Once the analysis is complete, the delta-slider allows the user to switch between the results, obtained using different values for $\delta$ interactively. The moving bar shows the current value of $\delta$, and the aggregation map updates accordingly. Moving the bar to the left or right allows the user to see results for smaller or larger $\delta$ values.
 
 
 \subsubsection{Results panel}
 \label{subsec:resultspanel}
-Once the analysis phase is complete, this section serves as the visualization for the results for the selected $\delta$ value (the position of the delta-slider). The results of the analysis are separated into three tabs, described below.
+Once the analysis is complete, this section serves the visualization of the results for selected $\delta$ value (the position of the delta-slider). The results of the analysis are displayed in three tabs, described below.
 
 \begin{itemize}
 \item{\texttt{Aggregation map}}
@@ -677,11 +678,12 @@ Once the analysis phase is complete, this section serves as the visualization fo
 \caption{\texttt{TopKListsGUI} aggregation map result
 \label{aggmap}}
 \end{figure}
+\end{itemize}
 
-As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the MDCC and Transbig lists against the Pusztai list, for $\delta = 6$ (see Section~\ref{sec:introduction} for a description of the example datasets). The estimated $\hat{k}$ is 14, with 12 genes in the top-\emph{k} lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (with a distance of 0 in both MDCC and TransBig compared to Pusztai).\\
+As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the MDCC and Transbig lists against the Pusztai list, for $\delta = 6$ (see Section~\ref{sec:introduction} for a description of the example data). The estimated $\hat{k}$ is 14, with 12 genes in the top-\emph{k} lists of at least two datasets. In the visualization of Transbig with respect to MDCC, 10 genes are grey-shaded. Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists (with a distance of 0 in both MDCC and TransBig compared to Pusztai).\\
 
-
-\item{\texttt{Summary table}}:\\ The summary table displays a table of objects present in at least one of the top-\emph{k} lists, as shown in the aggregation map. The table describes each object name, position of the object in each of the lists, sum of ranks, frequency in the input lists, and frequency in the truncated lists. Please note, that the objects assigned the value `YES' in the first column are in the top-\emph{k} set of genes (as selected by the \texttt{CEMC} function explained in Section~\ref{sec:topkspace}).
+\begin{itemize}
+\item{\texttt{Summary table}}:\\ The summary table displays a table of objects present in at least one of the top-\emph{k} lists, as shown in the aggregation map. The table describes each object name, position of the object in each of the lists, sum of ranks, frequency in the input lists, and frequency in the truncated lists. Please note, that the objects which have assigned the value `YES' in the first column are in the top-\emph{k} set of genes (as selected by the \texttt{CEMC} function explained in Section~\ref{sec:topkspace}).
 
 \begin{figure}[H]
 \centering
@@ -689,9 +691,11 @@ As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the M
 \caption{Summary table result of \texttt{TopKListsGUI}
 \label{topkgui}}
 \end{figure}
+\end{itemize}
 
 The table is ordered in ascending order with regard to the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes SCUBE2, EVL, FBP1, CIRBP, and BTG2 are also consistently present in the top-\emph{k} truncated lists, but at different positions. Genes FUT8, C1orf106 and QDPR are found in only two of the truncated lists and at varying positions.
 
+\begin{itemize}
 \item{\texttt{Venn-diagram and Venn-table}}:\\ The outputted Venn diagram and Venn table show overlaps of objects in the top-\emph{k} lists of all input lists in the analysis. The asterisk-highlighted objects, in this example the genes, are those that belong to the final aggregate list as returned by the \texttt{TopKSpace} module.
 
 \begin{figure}[H]
