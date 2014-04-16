@@ -491,10 +491,10 @@ res$maxK
 @
 Each of the three lists is truncated to the 14 most highly ranked genes. The set
  of genes contained in each list is not identical and each list can contain a di
-fferent set of 14 top genes. Since each of the top-14 gene lists come from the c
-ommon set of 917 genes, one way to set the common underlying space, without loss
- of information, is to make it the set of all the genes present in these 3 trunc
-ated lists. In this case there are 22 unique genes. 
+fferent set of 14 top genes. Since each of the top-14 gene lists come from the 
+common set of 917 genes, one way to set the common underlying space, without loss
+ of information, is to make it the set of all the genes present in these 3 truncated lists. 
+In this case there are 22 unique genes. 
 <<>>=
 l1=as.character(breast[1:res$maxK,1])
 l2=as.character(breast[1:res$maxK,2])
