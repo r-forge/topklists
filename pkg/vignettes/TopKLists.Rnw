@@ -27,7 +27,7 @@ options(width=60)
 \title{TopKLists: Analyzing multiple ranked lists}
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Usage of TopKLists} 
-\author{Michael G. Schimek, Eva Budinska, Shili Lin, Jie Ding, \\ Karl G. Kugler and Vendula Svendova}
+\author{Michael G. Schimek, Eva Budinska, Jie Ding, Karl G. Kugler, \\ Vendula Svendova and Shili Lin}
 
 \begin{document}
 %%\opts_chunk$set(concordance=TRUE)
@@ -218,7 +218,7 @@ relative performances of different algorithms.
 \subsection{Function calling}
 \subsubsection{The Borda algorithm}
 Four Borda scores are implemented in the \texttt{Borda} function of \texttt{TopKSpace}, namely the arithmetic mean (ARM), median (MED),
-geometric mean (GEO), and L2-norm (L2N). The output is a list with two elements: \texttt{Top-K} provides
+geometric mean (GEO), and L2-norm (L2N). The output is a list with two elements: \texttt{TopK} provides
 the aggregate rankings and \texttt{Scores} gives the corresponding Borda scores
 for each of the four functions.
 Of the three arguments in \texttt{Borda}, only the first one ({\em input}) is required. If argument {\em space} is not
@@ -248,7 +248,7 @@ sum(outBorda$Scores-outBorda1$Scores)
 sum(outBorda$Scores-outBorda2$Scores)
 @
 
-Comment 1: Objects 1-40, union of the three top-k lists, are contained in all three spaces. As such, the results for which the spaces were explicitly
+Comment 1: Objects 1-40, union of the three top-\emph{k} lists, are contained in all three spaces. As such, the results for which the spaces were explicitly
 specified should be the same as those with the common space assumption, which was exactly what we saw above. On the 
 other hand, the underlying space-dependent results were different from the results
 assuming top-\emph{k} spaces (i.e., all lists were full ranked lists).
@@ -262,8 +262,8 @@ despite our expectation that objects 11-15, in that order, should be ranked 11-1
 objects 16-20, the results were more of a mix of these two groups, but with the correct
 relative orders preserved within each group. The results are quite similar among the four scoring 
 functions.
-This result is not surprising
-due to degradation of ranking information beyond the top 10. 
+This is not surprising
+due to degradation of ranking information beyond the top-10. 
 Such information degradation can be seen by plotting the 
 Borda scores as described in the following.   
 \\[2ex]
@@ -339,7 +339,7 @@ sum(abs(outMC$MC2.TopK-outMCb$MC2.TopK))
 Comment 1: 
 Similar to the discussion for running the \texttt{Borda} function, 
  the results for which the space was explicitly
-specified were expected to be the same as those run with the common space
+specified were expected to be the same as those obtained under the common space
 assumption, which was exactly what we saw above (the two stationary distributions were identical). On the
 other hand, the common-space results were different from those assuming 
 top-\emph{k} space (there were large discrepancies in the aggregated top-\emph{k} lists).
@@ -366,7 +366,7 @@ A plot of the ordered stationary probabilities versus the ranking using the abov
 regarding the relative rankings of objects. 
 For example, Figure~\ref{fig:equil} shows that 
 for \texttt{MC2}, there was considerable information for ranking objects in the top-20,
-but there was practically no information ranking any object after that (all 
+but there was practically no information ranking any object after that position (all 
 stationary probabilities are the same). This was the reason why the rankings for objects
 21-40 were completely wrong as we saw in the output.
 On the other hand, for \texttt{MC1}, there was less information for ranking
@@ -408,7 +408,7 @@ modified, the file can be directly supplied as an input argument without having 
 each tuning parameter separately.
 Other than {\em input.par}, there are two more elements in the output list. 
 One is the 
-aggregate top-\emph{k} list ({\em TopK}). The other is the multinomial probability matrix ({\em ProbMatrix};
+aggregate top-\emph{k} list (\texttt{TopK}). The other is the multinomial probability matrix (\texttt{ProbMatrix};
 each column 
 represents the probability vector of a multinomial distribution and thus sum to 1, albeit with
 small rounding
@@ -432,7 +432,7 @@ Comment 1: From the submatrix shown above for \texttt{CEMC}, it can be seen that
 outCEMC$input.par
 @
 
-Comment 2: This file contains all the tuning parameter values (defaults) for running \texttt{CEMC}. User may
+Comment 2: This file contains all the tuning parameter values (defaults) for running \texttt{CEMC}. The user may
 modify this file and use it as the input to the {\em input.par} argument in
 the \texttt{CEMC} function.
 
@@ -455,7 +455,7 @@ The output of \texttt{Kendall} is the \texttt{MKD}, a single number. However, it
 to compare \texttt{MKD}s accross results from different algorithms to assess their relative
 performances. This can be achieved by invoking the \texttt{Kendall.plot} function, which not only 
 provide a vector of \texttt{MKD}s but also provide a plot of the \texttt{MKD}s for ease of comparison visually.
-There are also two mandatory input arguments, {\em input} and {\em all.aggregates},
+There are also two mandatory input arguments, \texttt{input} and \texttt{all.aggregates},
 where \texttt{all.aggregates} is a list comprising of aggregate top-\emph{k} lists from different 
 algorithms to be compared. 
 
@@ -480,7 +480,7 @@ better than the rest, confirming our heuristic interpretation of the results.
 
 
 \subsection{Application to the breast cancer example dataset}
-We apply the Borda, MC, and CEMC algorithms to the breast cancer data to illustrate their usage in real data application.
+We apply the Borda, MC, and CEMC algorithms to the breast cancer data to illustrate their usage in practical application.
 <<>>=
 data(breast)
 @
@@ -507,7 +507,7 @@ outMC=MC(input,space)
 outCEMC=CEMC(input,space,N=2000)
 @
 
-Finally, we can display the results in a matrix form for comparison
+Finally, we can display the results in matrix form for comparison
 <<>>=
 agg=list(ARM=outBorda$TopK[,1],MED=outBorda$TopK[,2],GEO=outBorda$TopK[,3],L2N=outBorda$TopK[,4],MC1=outMC$MC1.TopK,MC2=outMC$MC2.TopK,MC3=outMC$MC3.TopK,CEMC=outCEMC$TopK)
 head(do.call(cbind, agg))
@@ -675,7 +675,7 @@ Once the analysis is complete, this section serves the visualization of the resu
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{TopKListsGUI-2-Results.png}\\
-\caption{\texttt{TopKListsGUI} aggregation map result
+\caption{Aggregation map result of the \texttt{TopKListsGUI}
 \label{aggmap}}
 \end{figure}
 \end{itemize}
@@ -688,7 +688,7 @@ As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the M
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{TopKListsGUI-2-SummaryTable.png}\\
-\caption{Summary table result of \texttt{TopKListsGUI}
+\caption{Summary table result of the \texttt{TopKListsGUI}
 \label{topkgui}}
 \end{figure}
 \end{itemize}
@@ -696,12 +696,12 @@ As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the M
 The table is ordered in ascending order with regard to the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes SCUBE2, EVL, FBP1, CIRBP, and BTG2 are also consistently present in the top-\emph{k} truncated lists, but at different positions. Genes FUT8, C1orf106 and QDPR are found in only two of the truncated lists and at varying positions.
 
 \begin{itemize}
-\item{\texttt{Venn-diagram and Venn-table}}:\\ The outputted Venn diagram and Venn table show overlaps of objects in the top-\emph{k} lists of all input lists in the analysis. The asterisk-highlighted objects, in this example the genes, are those that belong to the final aggregate list as returned by the \texttt{TopKSpace} module.
+\item{\texttt{Venn diagram and Venn table}}:\\ The outputted Venn diagram and Venn table show overlaps of objects in the top-\emph{k} lists of all input lists in the analysis. The asterisk-highlighted objects, in this example the genes, are those that belong to the final aggregate list as returned by the \texttt{TopKSpace} module.
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{TopKListsGUI-2-Venn.png}\\
-\caption{\texttt{TopKListsGUI} Venn-diagram and Venn-table results
+\caption{\texttt{TopKListsGUI} Venn diagram and Venn table results of the TopKListsGUI
 \label{venn}}
 \end{figure}
 
