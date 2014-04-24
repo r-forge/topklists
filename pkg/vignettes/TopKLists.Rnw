@@ -631,7 +631,7 @@ The window shown in Figure~\ref{topkguistart} appears, allowing the user to perf
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{TopKListsGUI-1.png}\\
-\caption{Main windows of the \texttt{TopKListsGUI}
+\caption{Main window of the \texttt{TopKListsGUI}
 \label{topkguistart}}
 \end{figure}
 The TopKListsGUI window is divided into four panels: arguments, analysis status, delta-slider and results.
