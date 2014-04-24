@@ -22,7 +22,7 @@ The package consists of three modules and a graphical user interface
 Highly convenient is a new aggregation mapping tool called \code{aggmap} in \verb{TopKGraphics}. The GUI allows the non-statistician an easy access to the practically most relevant techniques provided in \verb{TopKInference}, \verb{TopKSpace}, and \verb{TopKGraphics}. Due to the exploratory nature of the implemented methods, tuning parameters are required. All those having a strong impact on the results can be controlled via the GUI. For additional program details and a bioscience application see Schimek et al. (2011). For aspects of modelling the rank order of Web search engine results see Schimek and Bloice (2012). A Springer monograph by Schimek, Lin and Wang of the title ``Statistical Integration of Omics Data'' is in preparation.} 
 
 \author{
-Michael G. Schimek, Eva Budinska, Shili Lin, Jie Ding, Karl G. Kugler, Vendula Svendova. 
+Michael G. Schimek, Eva Budinska, Jie Ding, Karl G. Kugler, Vendula Svendova, Shili Lin. 
 }
 \seealso{
 Project homepage: \url{http://topklists.r-forge.r-project.org}
