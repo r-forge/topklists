@@ -480,7 +480,7 @@ better than the rest, confirming our heuristic interpretation of the results.
 
 
 \subsection{Application to the breast cancer example dataset}
-We apply the Borda, MC, and CEMC algorithms to the breast cancer data to illustrate their usage in practical application.
+We apply the Borda, MC, and CEMC algorithms to the breast cancer data to illustrate their usage in practical applications.
 <<>>=
 data(breast)
 @
@@ -701,7 +701,7 @@ The table is ordered in ascending order with regard to the sum of ranks of the o
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.35]{TopKListsGUI-2-Venn.png}\\
-\caption{\texttt{TopKListsGUI} Venn diagram and Venn table results of the TopKListsGUI
+\caption{Venn diagram and Venn table results of the \texttt{TopKListsGUI}
 \label{venn}}
 \end{figure}
 
