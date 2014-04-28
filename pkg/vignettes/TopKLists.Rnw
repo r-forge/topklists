@@ -276,7 +276,7 @@ This can be similarly observed for the scores under the
 top-\emph{k} space assumption (Figure~\ref{fig:borda}(b)). \\
 
 
-<<borda, fig.cap='Plotting Borda\'s scores', fig.subcap=c('underlying space-dependent analysis','top-k space analysis'), out.width='.49\\linewidth', fig.pos='ht!', fig.align='center'>>=
+<<borda, fig.cap='Plotting Borda\'s scores', fig.subcap=c('Underlying space-dependent analysis','Top-k space analysis'), out.width='.49\\linewidth', fig.pos='ht!', fig.align='center'>>=
 Borda.plot(outBorda, k=40) # plot scores from underlying space-dependent analysis
 Borda.plot(outBorda2) # plot scores from top-k space analysis
 @
