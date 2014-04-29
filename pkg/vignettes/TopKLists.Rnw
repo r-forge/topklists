@@ -1,5 +1,5 @@
 \documentclass[a4paper,10pt]{article}
-\usepackage[utf8x]{inputenc}
+\usepackage[utf8]{inputenc}
 
 \usepackage{float}
 \usepackage{listings}
@@ -721,7 +721,7 @@ The table is ordered in ascending order with regard to the sum of ranks of the o
 
 \bibitem{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
 
-\bibitem{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
+\bibitem{schimybu} Schimek, M. G., Mysickova, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
 \bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol}, \textbf{28}, 827-838. 
 
