@@ -3,7 +3,7 @@
 
 \usepackage{float}
 \usepackage{listings}
-\usepackage{inconsolata}
+%% \usepackage{inconsolata}
 \usepackage{hyperref}
 \usepackage{subfig}
 \renewcommand*{\familydefault}{\sfdefault} 
