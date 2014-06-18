@@ -244,6 +244,8 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
           dev.off()
         }
       }, error = function(e) {
+          print(e)
+          traceback()
                                         #catch errors while calculating the data set
         wid$status$push(info, paste("Error in the current calculation for delta =", i))
         wid$error <- TRUE
