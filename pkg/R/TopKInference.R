@@ -116,11 +116,11 @@ calculate.maxK <- function(lists, L, d, v, threshold=50) {
               temp.distances = c(1:length(gnp)) - match(gnp, as.character(lists[, ilor_final[[fln]][l]]))
               temp.countgray[,2] = temp.countgray[,2]+c(abs(temp.distances)<=d)
 
-              temp.sumtrunclists[[ilor_final[[fln]][l]]] <- lists[, ilor_final[[fln]][l]][1:(as.numeric(temp2[ilor_final[[fln]][l],2]))]
-
-                                        #check for gray-shade of an object in the truncated list
+              ##temp.sumtrunclists[[ilor_final[[fln]][l]]] <- lists[, ilor_final[[fln]][l]][1:(as.numeric(temp2[ilor_final[[fln]][l],2]))]
+              temp.sumtrunclists[[ilor_final[[fln]][l]]] <- lists[, ilor_final[[fln]][l]][1:length(resS$TopK)]
+              ##check for gray-shade of an object in the truncated list
               temp.grayshade = abs(temp.distances)<=d
-                                        #add the truncated list
+              ##add the truncated list
               ctr <- ctr + 1
               compared.lists[[paste("R", crl, "_T", ctr, sep = "")]] <- temp.distances
               grayL[[paste("R", crl, "_T", ctr, sep = "")]] <- temp.grayshade
