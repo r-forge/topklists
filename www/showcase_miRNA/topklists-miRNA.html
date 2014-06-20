@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+.knitr.inline {
+  background-color: #f7f7f7;
+  border:solid 1px #B0B0B0;
+}
+.error {
+	font-weight: bold;
+	color: #FF0000;
+},
+.warning {
+	font-weight: bold;
+}
+.message {
+	font-style: italic;
+}
+.source, .output, .warning, .error, .message {
+	padding: 0em 1em;
+  border:solid 1px #F7F7F7;
+}
+.source {
+  background-color: #f5f5f5;
+}
+.rimage.left {
+  text-align: left;
+}
+.rimage.right {
+  text-align: right;
+}
+.rimage.center {
+  text-align: center;
+}
+.hl.num {
+  color: #AF0F91;
+}
+.hl.str {
+  color: #317ECC;
+}
+.hl.com {
+  color: #AD95AF;
+  font-style: italic;
+}
+.hl.opt {
+  color: #000000;
+}
+.hl.std {
+  color: #585858;
+}
+.hl.kwa {
+  color: #295F94;
+  font-weight: bold;
+}
+.hl.kwb {
+  color: #B05A65;
+}
+.hl.kwc {
+  color: #55aa55;
+}
+.hl.kwd {
+  color: #BC5A65;
+  font-weight: bold;
+}
+</style>
+  <title>TopKLists show case for integrating miRNA measurements</title>
+<style>
+* {font-family: sans}
+</style>
+</head>
+<body>
+<h2>TopKLists show case for integrating miRNA measurements</h2>
+<p>Using the R package <a href="http://topklists.r-forge.r-project.org/" target="_blank">TopKlists</a> different ranked lists can be integrated given a common set of item identifiers. This show case illustrates how to integrate ranked lists derived from different miRNA abundance measurement techniques. The sample data is based on data available on GEO (<a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51508" target="_blank">Series GSE51508</a>, <a href="http://www.ncbi.nlm.nih.gov/pubmed/24445778" target="_blank">Pubmed ID:24445778</a>):
+<ul>
+<li>GSE51501 - Comparison of microRNA Profiling Platforms (BeadChip)</li>
+<li>GSE51504 - Comparison of microRNA Profiling Platforms (NanoString)</li>
+<li>GSE51507 - Comparison of microRNA Profiling Platforms (HTS)</li>
+</ul>
+
+<p>For more detailed information about the functions provided by TopKLists, please have a look at the package <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> and the <a href="http://cran.r-project.org/web/packages/TopKLists/TopKLists.pdf" target="_blank">reference manual</a>.
+
+<h3>Preparing the separate data sets</h3>
+The raw datasets GSE51501 (BeadChip) and GSE51504 (NanoString) were normalized with the function 'normalize.quantiles' from the Bioconductor package '<a href="http://www.bioconductor.org/packages/release/bioc/html/preprocessCore.html" target="_blank">preprocessCore</a>'. Principal component analysis (PCA) was then used to verify, that the samples cluster into cell line and xenograft groups. Illumina probe names were aligned with Illumina miRNA names using the GEO annotation file GPL8179. For the final significance analysis, function 'SAM' from the R package '<a href="http://cran.r-project.org/web/packages/samr/index.html" target="_blank">samr</a>' was used. The p-values were obtained using the function 'samr.pvalues.from.perms' (also 'samr' package). Differential expression analysis was applied to the raw counts from GSE51507 (HTS), with function 'DESeq' from the Bioconductor package '<a href="http://www.bioconductor.org/packages/release/bioc/html/DESeq2.html" target="_blank">DESeq2</a>'.<br/>
+The preprocessed files (<i>space-separated and quoted</i>) are available from the data directory (<a href="data/GSE51501_results.txt">GSE51501</a>, <a href="data/GSE51504_results.txt">GSE51504</a>, <a href="data/GSE51507_results.txt">GSE51507</a>). Note, that the list entries are ordered by their respective p-values.
+
+
+<h3>Initiating the analysis</h3>
+To run this example you have to load the TopKlists package, which is available on <a href="http://cran.r-project.org/" target="_">CRAN</a> and can be installed using the following command. Note that for making use of the GUI several dependencies must be met.
+<div class="chunk" id="unnamed-chunk-1"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">install.packages</span><span class="hl std">(</span><span class="hl str">&quot;TopKLists&quot;</span><span class="hl std">)</span>
+</pre></div>
+</div></div>
+
+<p>Once TopKlists has been installed, it can be loaded.</p>
+<div class="chunk" id="unnamed-chunk-2"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">library</span><span class="hl std">(TopKLists)</span>
+</pre></div>
+</div></div>
+
+<h3>Loading and filtering the data</h3>
+First, the sample data for the three sets is loaded. Note, that each of the three lists contains the miRNA identifier and the p-values, which was used for ranking the items.
+
+<div class="chunk" id="unnamed-chunk-3"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl std">res_51501</span> <span class="hl kwb">=</span> <span class="hl kwd">read.table</span><span class="hl std">(</span><span class="hl str">&quot;data/GSE51501_results.txt&quot;</span><span class="hl std">,</span> <span class="hl kwc">header</span><span class="hl std">=</span><span class="hl num">TRUE</span><span class="hl std">,</span> <span class="hl kwc">quote</span><span class="hl std">=</span><span class="hl str">&quot;\&quot;&quot;</span><span class="hl std">,</span> <span class="hl kwc">stringsAsFactors</span><span class="hl std">=</span><span class="hl num">FALSE</span><span class="hl std">)</span>
+    <span class="hl std">res_51504</span> <span class="hl kwb">=</span> <span class="hl kwd">read.table</span><span class="hl std">(</span><span class="hl str">&quot;data/GSE51504_results.txt&quot;</span><span class="hl std">,</span> <span class="hl kwc">header</span><span class="hl std">=</span><span class="hl num">TRUE</span><span class="hl std">,</span> <span class="hl kwc">quote</span><span class="hl std">=</span><span class="hl str">&quot;\&quot;&quot;</span><span class="hl std">,</span> <span class="hl kwc">stringsAsFactors</span><span class="hl std">=</span><span class="hl num">FALSE</span><span class="hl std">)</span>
+    <span class="hl std">res_51507</span> <span class="hl kwb">=</span> <span class="hl kwd">read.table</span><span class="hl std">(</span><span class="hl str">&quot;data/GSE51507_results.txt&quot;</span><span class="hl std">,</span> <span class="hl kwc">header</span><span class="hl std">=</span><span class="hl num">TRUE</span><span class="hl std">,</span> <span class="hl kwc">quote</span><span class="hl std">=</span><span class="hl str">&quot;\&quot;&quot;</span><span class="hl std">,</span> <span class="hl kwc">stringsAsFactors</span><span class="hl std">=</span><span class="hl num">FALSE</span><span class="hl std">)</span>
+</pre></div>
+</div></div>
+
+<p>Next, missing values are removed.</p>
+<div class="chunk" id="unnamed-chunk-4"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl std">res_51507</span> <span class="hl kwb">=</span> <span class="hl std">res_51507[</span><span class="hl kwd">complete.cases</span><span class="hl std">(res_51507),]</span>
+    <span class="hl std">res_51501</span> <span class="hl kwb">=</span> <span class="hl std">res_51501[</span><span class="hl kwd">complete.cases</span><span class="hl std">(res_51501),]</span>
+    <span class="hl std">res_51504</span> <span class="hl kwb">=</span> <span class="hl std">res_51504[</span><span class="hl kwd">complete.cases</span><span class="hl std">(res_51504),]</span>
+</pre></div>
+</div></div>
+
+<p>As the final analysis should only consider items that are common to all three lists, we filter for these entries.</p>
+<div class="chunk" id="unnamed-chunk-5"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl std">common</span> <span class="hl kwb">=</span> <span class="hl kwd">intersect</span><span class="hl std">(</span><span class="hl kwd">intersect</span><span class="hl std">(res_51501</span><span class="hl opt">$</span><span class="hl std">mirname, res_51507</span><span class="hl opt">$</span><span class="hl std">mirname), res_51504</span><span class="hl opt">$</span><span class="hl std">mirname)</span>
+    <span class="hl kwd">length</span><span class="hl std">(common)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">## [1] 531
+</pre></div>
+</div></div>
+
+<p>We see that there are 531 common miRNAs left for further analysis. In the next step, each data set is reduced to contain the common items only. Then, we filter for the common entries and create a data.frame containing the common items ordered by their respective p-values.</p>
+<div class="chunk" id="unnamed-chunk-6"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl std">res_51507_common</span> <span class="hl kwb">=</span> <span class="hl std">res_51507[res_51507</span><span class="hl opt">$</span><span class="hl std">mirname</span> <span class="hl opt">%in%</span> <span class="hl std">common,]</span>
+    <span class="hl std">res_51501_common</span> <span class="hl kwb">=</span> <span class="hl std">res_51501[res_51501</span><span class="hl opt">$</span><span class="hl std">mirname</span> <span class="hl opt">%in%</span> <span class="hl std">common,]</span>
+    <span class="hl std">res_51504_common</span> <span class="hl kwb">=</span> <span class="hl std">res_51504[res_51504</span><span class="hl opt">$</span><span class="hl std">mirname</span> <span class="hl opt">%in%</span> <span class="hl std">common,]</span>
+    <span class="hl std">data_common</span> <span class="hl kwb">=</span> <span class="hl kwd">data.frame</span><span class="hl std">(</span><span class="hl kwc">HTS</span> <span class="hl std">= res_51507_common</span><span class="hl opt">$</span><span class="hl std">mirname,</span> <span class="hl kwc">BeadChip</span> <span class="hl std">= res_51501_common</span><span class="hl opt">$</span><span class="hl std">mirname,</span> <span class="hl kwc">NanoString</span> <span class="hl std">= res_51504_common</span><span class="hl opt">$</span><span class="hl std">mirname,</span> <span class="hl kwc">stringsAsFactors</span><span class="hl std">=</span><span class="hl num">FALSE</span><span class="hl std">)</span>
+    <span class="hl kwd">dim</span><span class="hl std">(data_common)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">## [1] 531   3
+</pre></div>
+<div class="source"><pre class="knitr r">    <span class="hl kwd">head</span><span class="hl std">(data_common)</span>
+</pre></div>
+<div class="output"><pre class="knitr r">##               HTS       BeadChip      NanoString
+## 1     hsa-miR-143 hsa-miR-576-5p hsa-miR-199a-5p
+## 2     hsa-miR-451 hsa-miR-490-5p     hsa-miR-451
+## 3     hsa-miR-223 hsa-miR-139-5p     hsa-miR-144
+## 4     hsa-miR-144    hsa-miR-223     hsa-miR-223
+## 5 hsa-miR-199a-5p   hsa-miR-1233     hsa-miR-143
+## 6    hsa-miR-133a   hsa-miR-1284     hsa-miR-150
+</pre></div>
+</div></div>
+
+
+<h3>Starting the GUI</h3>
+Finally, we can run the GUI to integrate the three lists, providing the combined lists data.frame as input parameter.
+<div class="chunk" id="unnamed-chunk-7"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">TopKListsGUI</span><span class="hl std">(data_common)</span>
+</pre></div>
+</div></div>
+<p>For the show case data, data exploration  (see the TopKLists  <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for explanation) lead to a choice of &delta;=40 and &nu;=22 for the inference. This resulted in a kmax of 12, at which the input lists were cut (see screenshot).</p>
+<p><img src="img/screenshot-mirna.png" lat="Screenshot of TopKlistsGUI for the miRNA show case"/><p>
+
+<h2>Sessioninfo</h2>
+<div class="chunk" id="unnamed-chunk-8"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">print</span><span class="hl std">(</span><span class="hl kwd">sessionInfo</span><span class="hl std">())</span>
+</pre></div>
+<div class="output"><pre class="knitr r">## R version 3.1.0 (2014-04-10)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=de_DE.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] gWidgetsRGtk2_0.0-82 gWidgets_0.0-52      RGtk2_2.20.25       
+## [4] TopKLists_1.0.2      knitr_1.6           
+## 
+## loaded via a namespace (and not attached):
+##  [1] cluster_1.15.2      evaluate_0.5.5      formatR_0.10       
+##  [4] Formula_1.1-1       gdata_2.13.2        gplots_2.11.3      
+##  [7] grid_3.1.0          gtools_3.0.0        highr_0.3          
+## [10] Hmisc_3.14-4        lattice_0.20-29     latticeExtra_0.6-26
+## [13] RColorBrewer_1.0-5  splines_3.1.0       stringr_0.6.2      
+## [16] survival_2.37-7     tools_3.1.0
+</pre></div>
+</div></div>
+<p style="text-alignment: center">Last update: <code class="knitr inline">Fri Jun 20 16:25:01 2014</code></p>
+
+</body>
+</html>

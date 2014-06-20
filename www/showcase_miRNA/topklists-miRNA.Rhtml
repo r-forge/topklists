@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TopKLists show case for integrating miRNA measurements</title>
+<style>
+* {font-family: sans}
+</style>
+</head>
+<body>
+<h2>TopKLists show case for integrating miRNA measurements</h2>
+<p>Using the R package <a href="http://topklists.r-forge.r-project.org/" target="_blank">TopKlists</a> different ranked lists can be integrated given a common set of item identifiers. This show case illustrates how to integrate ranked lists derived from different miRNA abundance measurement techniques. The sample data is based on data available on GEO (<a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51508" target="_blank">Series GSE51508</a>, <a href="http://www.ncbi.nlm.nih.gov/pubmed/24445778" target="_blank">Pubmed ID:24445778</a>):
+<ul>
+<li>GSE51501 - Comparison of microRNA Profiling Platforms (BeadChip)</li>
+<li>GSE51504 - Comparison of microRNA Profiling Platforms (NanoString)</li>
+<li>GSE51507 - Comparison of microRNA Profiling Platforms (HTS)</li>
+</ul>
+
+<p>For more detailed information about the functions provided by TopKLists, please have a look at the package <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> and the <a href="http://cran.r-project.org/web/packages/TopKLists/TopKLists.pdf" target="_blank">reference manual</a>.
+
+<h3>Preparing the separate data sets</h3>
+The raw datasets GSE51501 (BeadChip) and GSE51504 (NanoString) were normalized with the function 'normalize.quantiles' from the Bioconductor package '<a href="http://www.bioconductor.org/packages/release/bioc/html/preprocessCore.html" target="_blank">preprocessCore</a>'. Principal component analysis (PCA) was then used to verify, that the samples cluster into cell line and xenograft groups. Illumina probe names were aligned with Illumina miRNA names using the GEO annotation file GPL8179. For the final significance analysis, function 'SAM' from the R package '<a href="http://cran.r-project.org/web/packages/samr/index.html" target="_blank">samr</a>' was used. The p-values were obtained using the function 'samr.pvalues.from.perms' (also 'samr' package). Differential expression analysis was applied to the raw counts from GSE51507 (HTS), with function 'DESeq' from the Bioconductor package '<a href="http://www.bioconductor.org/packages/release/bioc/html/DESeq2.html" target="_blank">DESeq2</a>'.<br/>
+The preprocessed files (<i>space-separated and quoted</i>) are available from the data directory (<a href="data/GSE51501_results.txt">GSE51501</a>, <a href="data/GSE51504_results.txt">GSE51504</a>, <a href="data/GSE51507_results.txt">GSE51507</a>). Note, that the list entries are ordered by their respective p-values.
+
+
+<h3>Initiating the analysis</h3>
+To run this example you have to load the TopKlists package, which is available on <a href="http://cran.r-project.org/" target="_">CRAN</a> and can be installed using the following command. Note that for making use of the GUI several dependencies must be met.
+<!--begin.rcode eval=FALSE
+    install.packages("TopKLists")
+    end.rcode-->
+
+<p>Once TopKlists has been installed, it can be loaded.</p>
+<!--begin.rcode
+    library(TopKLists)
+    end.rcode-->
+
+<h3>Loading and filtering the data</h3>
+First, the sample data for the three sets is loaded. Note, that each of the three lists contains the miRNA identifier and the p-values, which was used for ranking the items.
+
+<!--begin.rcode
+    res_51501 = read.table("data/GSE51501_results.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE) 
+    res_51504 = read.table("data/GSE51504_results.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE) 
+    res_51507 = read.table("data/GSE51507_results.txt", header=TRUE, quote="\"", stringsAsFactors=FALSE)
+end.rcode -->
+
+<p>Next, missing values are removed.</p>
+<!--begin.rcode
+    res_51507 = res_51507[complete.cases(res_51507),]
+    res_51501 = res_51501[complete.cases(res_51501),]
+    res_51504 = res_51504[complete.cases(res_51504),]
+    end.rcode -->
+
+<p>As the final analysis should only consider items that are common to all three lists, we filter for these entries.</p>
+<!--begin.rcode
+    common = intersect(intersect(res_51501$mirname, res_51507$mirname), res_51504$mirname)
+    length(common)
+    end.rcode -->
+
+<p>We see that there are 531 common miRNAs left for further analysis. In the next step, each data set is reduced to contain the common items only. Then, we filter for the common entries and create a data.frame containing the common items ordered by their respective p-values.</p>
+<!--begin.rcode
+    res_51507_common = res_51507[res_51507$mirname %in% common,]
+    res_51501_common = res_51501[res_51501$mirname %in% common,]
+    res_51504_common = res_51504[res_51504$mirname %in% common,]
+    data_common = data.frame(HTS = res_51507_common$mirname, BeadChip = res_51501_common$mirname, NanoString = res_51504_common$mirname, stringsAsFactors=FALSE)
+    dim(data_common)
+    head(data_common)
+    end.rcode-->
+
+
+<h3>Starting the GUI</h3>
+Finally, we can run the GUI to integrate the three lists, providing the combined lists data.frame as input parameter.
+<!--begin.rcode message=FALSE
+    TopKListsGUI(data_common)
+    end.rcode-->
+<p>For the show case data, data exploration  (see the TopKLists  <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for explanation) lead to a choice of &delta;=40 and &nu;=22 for the inference. This resulted in a kmax of 12, at which the input lists were cut (see screenshot).</p>
+<p><img src="img/screenshot-mirna.png" lat="Screenshot of TopKlistsGUI for the miRNA show case"/><p>
+
+<h2>Sessioninfo</h2>
+<!--begin.rcode
+    print(sessionInfo())
+    end.rcode-->
+<p style="text-alignment: center">Last update: <!--rinline date() --></p>
+
+</body>
+</html>

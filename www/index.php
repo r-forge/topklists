@@ -32,6 +32,12 @@ Results that can be obtained are a sublist of highly conforming objects in a new
 <P>When using TopKLists for the first time it is helpful to make use of <B>reproducible examples</B>, which can be found in the <A HREF="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" TARGET="_blank">Vignette</A> 
 (comprises the modules TopKInference, TopKSpace, TopKGraphics;  the graphical user interface TopKListsGUI is described as well).</P>
 </div>
+<H2>Show case</H2>
+<div style="max-width:750px">
+<table style="border: 1">
+<tr><td>Comparison of miRNA measurements</td><td><a href="showcase_miRNA/topklists-miRNA.html">website</a></td><td><a href="showcase_miRNA/topklists-miRNA.R">R code</a></td></tr>
+</table>
+</div>
 <H2>Citation Information</H2>
 <div style="max-width:750px">
 <P>When using TopKLists in your work please refer to it by
