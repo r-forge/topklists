@@ -692,7 +692,7 @@ As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the M
 \end{figure}
 \end{itemize}
 
-The table is ordered in ascending order with regard to the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes SCUBE2, EVL, FBP1, CIRBP, and BTG2 are also consistently present in the top-\emph{k} truncated lists, but at different positions. Genes FUT8, C1orf106 and QDPR are found in only two of the truncated lists and at varying positions.
+The table is ordered in ascending order with regard to the sum of ranks of the objects in the three lists. The first object is gene ESR1, followed by TBC1D9. Genes SCUBE2, EVL, FBP1, CIRBP,  BTG2, and FUT8 are also consistently present in the top-\emph{k} truncated lists, but at different positions. GenesC1orf106, QDPR, RHOB, and IDUA are found in only two of the truncated lists and at varying positions.
 
 \begin{itemize}
 \item{\texttt{Venn diagram and Venn table}}:\\ The outputted Venn diagram and Venn table show overlaps of objects in the top-\emph{k} lists of all input lists in the analysis. The asterisk-highlighted objects, in this example the genes, are those that belong to the final aggregate list as returned by the \texttt{TopKSpace} module.
