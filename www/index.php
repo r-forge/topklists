@@ -35,7 +35,7 @@ Results that can be obtained are a sublist of highly conforming objects in a new
 <H2>Show case</H2>
 <div style="max-width:750px">
 <table style="border: 1">
-<tr><td>Comparison of miRNA measurements</td><td><a href="showcase_miRNA/topklists-miRNA.html">website</a></td><td><a href="showcase_miRNA/topklists-miRNA.R">R code</a></td></tr>
+<tr><td>Comparison of miRNA measurements</td><td><a href="showcase_miRNA/topklists-miRNA.html">website</a></td><td><a href="showcase_miRNA/topklists-miRNA.R">R code</a></td><td><a href="showcase_miRNA/topklists-miRNA-sampledata.zip">data</a></td></tr>
 </table>
 </div>
 <H2>Citation Information</H2>

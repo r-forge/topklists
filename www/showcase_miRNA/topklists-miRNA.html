@@ -93,10 +93,14 @@ To run this example you have to load the TopKlists package, which is available o
 <p>Once TopKlists has been installed, it can be loaded.</p>
 <div class="chunk" id="unnamed-chunk-2"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">library</span><span class="hl std">(TopKLists)</span>
 </pre></div>
+<div class="message"><pre class="knitr r">## KernSmooth 2.23 loaded
+## Copyright M. P. Wand 1997-2009
+</pre></div>
 </div></div>
 
 <h3>Loading and filtering the data</h3>
-First, the sample data for the three sets is loaded. Note, that each of the three lists contains the miRNA identifier and the p-values, which was used for ranking the items.
+First, the sample data for the three sets is loaded. Note, that each of the three lists contains the miRNA identifier and the p-values, which was used for ranking the items.<br/>
+The compressed show case data can be downloaded <a href="topklists-miRNA-sampledata.zip">here</a> (right click and "save as").
 
 <div class="chunk" id="unnamed-chunk-3"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl std">res_51501</span> <span class="hl kwb">=</span> <span class="hl kwd">read.table</span><span class="hl std">(</span><span class="hl str">&quot;data/GSE51501_results.txt&quot;</span><span class="hl std">,</span> <span class="hl kwc">header</span><span class="hl std">=</span><span class="hl num">TRUE</span><span class="hl std">,</span> <span class="hl kwc">quote</span><span class="hl std">=</span><span class="hl str">&quot;\&quot;&quot;</span><span class="hl std">,</span> <span class="hl kwc">stringsAsFactors</span><span class="hl std">=</span><span class="hl num">FALSE</span><span class="hl std">)</span>
     <span class="hl std">res_51504</span> <span class="hl kwb">=</span> <span class="hl kwd">read.table</span><span class="hl std">(</span><span class="hl str">&quot;data/GSE51504_results.txt&quot;</span><span class="hl std">,</span> <span class="hl kwc">header</span><span class="hl std">=</span><span class="hl num">TRUE</span><span class="hl std">,</span> <span class="hl kwc">quote</span><span class="hl std">=</span><span class="hl str">&quot;\&quot;&quot;</span><span class="hl std">,</span> <span class="hl kwc">stringsAsFactors</span><span class="hl std">=</span><span class="hl num">FALSE</span><span class="hl std">)</span>
@@ -152,16 +156,16 @@ Finally, we can run the GUI to integrate the three lists, providing the combined
 <h2>Sessioninfo</h2>
 <div class="chunk" id="unnamed-chunk-8"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">print</span><span class="hl std">(</span><span class="hl kwd">sessionInfo</span><span class="hl std">())</span>
 </pre></div>
-<div class="output"><pre class="knitr r">## R version 3.1.0 (2014-04-10)
-## Platform: x86_64-pc-linux-gnu (64-bit)
+<div class="output"><pre class="knitr r">## R version 3.0.2 (2013-09-25)
+## Platform: x86_64-unknown-linux-gnu (64-bit)
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
-##  [3] LC_TIME=de_DE.UTF-8        LC_COLLATE=en_US.UTF-8    
-##  [5] LC_MONETARY=de_DE.UTF-8    LC_MESSAGES=en_US.UTF-8   
-##  [7] LC_PAPER=de_DE.UTF-8       LC_NAME=C                 
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
 ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
-## [11] LC_MEASUREMENT=de_DE.UTF-8 LC_IDENTIFICATION=C       
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -171,15 +175,16 @@ Finally, we can run the GUI to integrate the three lists, providing the combined
 ## [4] TopKLists_1.0.2      knitr_1.6           
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] cluster_1.15.2      evaluate_0.5.5      formatR_0.10       
-##  [4] Formula_1.1-1       gdata_2.13.2        gplots_2.11.3      
-##  [7] grid_3.1.0          gtools_3.0.0        highr_0.3          
-## [10] Hmisc_3.14-4        lattice_0.20-29     latticeExtra_0.6-26
-## [13] RColorBrewer_1.0-5  splines_3.1.0       stringr_0.6.2      
-## [16] survival_2.37-7     tools_3.1.0
+##  [1] bitops_1.0-6        caTools_1.17        cluster_1.14.4     
+##  [4] compiler_3.0.2      evaluate_0.5.5      formatR_0.10       
+##  [7] Formula_1.1-1       gdata_2.13.3        gplots_2.13.0      
+## [10] grid_3.0.2          gtools_3.4.0        highr_0.3          
+## [13] Hmisc_3.14-4        KernSmooth_2.23-10  lattice_0.20-29    
+## [16] latticeExtra_0.6-26 RColorBrewer_1.0-5  splines_3.0.2      
+## [19] stringr_0.6.2       survival_2.37-7     tools_3.0.2
 </pre></div>
 </div></div>
-<p style="text-alignment: center">Last update: <code class="knitr inline">Fri Jun 20 16:25:01 2014</code></p>
+<p style="text-alignment: center">Last update: <code class="knitr inline">Thu Jun 26 09:20:39 2014</code></p>
 
 </body>
 </html>
