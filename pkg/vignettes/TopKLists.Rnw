@@ -115,8 +115,9 @@ The truncation point $j_0$, where noise takes over for a pair of ranked lists (i
 
 <<tidy=FALSE>>=
 k = 30
-set.seed = 11
+set.seed(1234)
 x = c(rep(1,k), rbinom(100, 1, 0.2))
+x
 @
 
 Now let us estimate $j_0$ for different values of $\nu$ using the \texttt{compute.stream} function. This outputs a list of estimated  $j_0$ values, as well as other details of the algorithm's convergency.
@@ -144,7 +145,7 @@ table(resF[,2])
 The following plot (Figure~\ref{fig:truncPlot}) summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. Small values of $\nu$ are the most appropriate here.
 
 <<truncPlot, out.width='8cm', out.height='8cm', fig.pos="ht!", fig.cap="Estimation of $j_0$ for different values of $\\nu$", fig.align='center'>>=
-plot(resF[,1], resF[,2], pch=19, ylim=c(0, length(x)), 
+plot(resF[,1], resF[,2], pch=19, ylim=c(25, 40), 
 xlab=substitute(nu), ylab=substitute(paste(hat(j)[0])))
 abline(a=31, b=0, col="red")
 lines(resF[,1], resF[,2])
@@ -464,7 +465,8 @@ Borda algorithm \texttt{ARM}.
 
 <<>>=
 KendallMLists(input,space, outBorda$TopK[,1])
-all.aggregates=list(outBorda$TopK[,1],outBorda$TopK[,2],outBorda$TopK[,3],outBorda$TopK[,4],outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK,outCEMC$TopK)
+all.aggregates=list(outBorda$TopK[,1],outBorda$TopK[,2],outBorda$TopK[,3],
+  outBorda$TopK[,4],outMC$MC1.TopK,outMC$MC2.TopK,outMC$MC3.TopK,outCEMC$TopK)
 @
 <<plotKendall, include=TRUE, tidy=TRUE, echo=TRUE, out.width='8cm', out.height='8cm', fig.pos='H',fig.cap="Comparison of the modified Kendall distances across several algorithms", fig.align='center'>>=
 Kendall.plot(input,all.aggregates,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3","CEMC"))
@@ -508,7 +510,9 @@ outCEMC=CEMC(input,space,N=2000)
 
 Finally, we can display the results in matrix form for comparison
 <<>>=
-agg=list(ARM=outBorda$TopK[,1],MED=outBorda$TopK[,2],GEO=outBorda$TopK[,3],L2N=outBorda$TopK[,4],MC1=outMC$MC1.TopK,MC2=outMC$MC2.TopK,MC3=outMC$MC3.TopK,CEMC=outCEMC$TopK)
+agg=list(ARM=outBorda$TopK[,1],MED=outBorda$TopK[,2],GEO=outBorda$TopK[,3],
+  L2N=outBorda$TopK[,4],MC1=outMC$MC1.TopK,
+  MC2=outMC$MC2.TopK,MC3=outMC$MC3.TopK,CEMC=outCEMC$TopK)
 head(do.call(cbind, agg))
 @ 
 
@@ -568,7 +572,8 @@ It can also be observed from Figure~\ref{fig:deltaplot_complete} that switching 
 In order to choose a suitable value for $\delta$, we must limit the deltaplot calculation to a smaller subset of the investigated lists, for example the first 200 objects. Additionally, the \texttt{subplot} parameter can be used, which magnifies a selected range of small $\delta$-values in a subplot, defined by the \texttt{perc.subplot} parameter.
 
 <<fig.show='hide'>>=
-a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, perc.subplot=50, directory=subplot.dir)
+a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, 
+  perc.subplot=50, directory=subplot.dir)
 @
 
 
