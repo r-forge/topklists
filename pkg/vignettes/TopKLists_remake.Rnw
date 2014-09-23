@@ -472,7 +472,7 @@ Borda algorithm \texttt{ARM}, whereas the \texttt{Kendall.plot} function returns
 the first one matching the output from the \texttt{Kendall} function.
 Figure~\ref{fig:plotKendall} is the graphical component of the \texttt{Kendall.plot} output.
 As we can see, the range on the y-axis is very small, indicating similar performance of 
-all algorithms, especially those from \texttt{Borda}. The results show that \texttt{MC3} and \texttt{CEMC} perform a little bit better than the rest, confirming our heuristic interpretation of the results.
+all algorithms, especially those from \texttt{Borda}. 
 
 
 
