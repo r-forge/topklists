@@ -139,6 +139,8 @@ head(resF)
 
 table(resF[,2])
 @
+The \texttt{compute.stream} function outputs the index \texttt{j0est}, where the information between the lists degenerates into noise; index \texttt{k=j0est-1}; the sequence of estimated \texttt{j0}s in each run ($J_s$);
+the reason why computation has ended (\texttt{reason.break}); and the preselected value of the parameter $\nu$ (\texttt{v}).
 
 \subsubsection{Visualization of the truncation results}
 \label{different_nu}
@@ -603,16 +605,18 @@ As mentioned in the introduction, user can achieve the results using the console
 
 The calculation of the overall truncation index $k$ for pre-specified values of $\delta$ and $\nu$ (see section \ref{sec:parameterselection} about their choice) is performed using the \texttt{j0.multi} function. 
 This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's (see section \ref{subsec:topkinference}), and then estimates the $\hat{j}_0=\hat{k}+1$. 
-Finally, the $k$ is calculated as the maximum of all pairwise $\hat{k}$ values, and outputted as \texttt{maxK}. 
+Finally, the $k$ is calculated as the maximum of all pairwise $\hat{k}$ values, and outputted as \texttt{maxK}. Besides that, the function outputs partial results for each pair of lists (under \texttt{L}), and the \texttt{Idata} vector for each pair of lists (under \texttt{Idata}).
 
 <<>>=
+library(TopKLists)
+data(breast)
 res = j0.multi(breast, d=6, v=10)
 sapply(res, head)
 @
 
 We can see that the estimated $k$ is 14, i.e. there is a strong concordance between the first 14 objects of the input lists and any concordance below the rank 14 is most likely at random.\\
 
-The function \texttt{j0.multi} itself uses the functions \texttt{prepare.idata} to prepare the \texttt{Idata} vector of 0's and 1's, and the function \texttt{compute.stream} to calculate the point of degradation $\hat{j}_0=\hat{k}+1$ (see the \href{http://cran.r-project.org/web/packages/TopKLists/TopKLists.pdf}{Reference manual} for more information).\\
+The function \texttt{j0.multi} itself uses the functions \texttt{prepare.idata} to prepare the \texttt{Idata} vector of 0's and 1's, and the function \texttt{compute.stream} to calculate the point of degradation $\hat{j}_0=\hat{k}+1$ (see the \href{http://cran.r-project.org/web/packages/TopKLists/TopKLists.pdf}{Reference manual} for more information on these functions).\\
 \quad\newline
 
  \subsubsection{Aggregate lists}
