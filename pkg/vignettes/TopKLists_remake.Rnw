@@ -115,7 +115,7 @@ The truncation point $j_0$, where noise takes over for a pair of ranked lists (i
 
 <<tidy=FALSE>>=
 k = 30
-set.seed(1234)
+set.seed(123)
 x = c(rep(1,k), rbinom(100, 1, 0.2))
 x
 @
@@ -186,31 +186,31 @@ Although this example is contrived, it is realistic in terms of the lengths and 
 
 <<>>=
 set.seed(1234)
-L1=paste("O",1:30,sep="")
-L2=paste("O",c(1:10,31:40,11:15),sep="")
-L3=paste("O",c(1:10,16:20,11:15),sep="")
+L1=paste("Obj",1:30,sep="")
+L2=paste("Obj",c(1:10,31:40,11:15),sep="")
+L3=paste("Obj",c(1:10,16:20,11:15),sep="")
 input=list(L1,L2,L3)
-space1=space2=space3=paste("O",1:40,sep="")
+space1=space2=space3=paste("Obj",1:40,sep="")
 space=list(space1,space2,space3)
 @
 
 As can be seen from the compositions of the three lists, they are of different lengths (30, 25, and 20
 for L1, L2, and L3, respectively). Further, the
-aggregate candidate set is objects O1-O40, although two of the underlying spaces are larger, indicating that
-objects O41-O50 were not selected in the top-\emph{k} of the two corresponding lists. Fifteen of these 40 objects 
-appear in all 3 lists, with objects O1-O10
-ranked 1-10, in that order, in all three lists;  objects O11-O15, however,
+aggregate candidate set is objects Obj1-Obj40, although two of the underlying spaces are larger, indicating that
+objects Obj41-Obj50 were not selected in the top-\emph{k} of the two corresponding lists. Fifteen of these 40 objects 
+appear in all 3 lists, with objects Obj1-Obj10
+ranked 1-10, in that order, in all three lists;  objects Obj11-Obj15, however,
 have different rankings 
 (they are ranked 11-15 for L1, 20-25 for L2, and 16-20 for L3). 
-Five objects, O16-O20, appear in two of the lists, with rankings of 16-20 for L1 and 11-15 for L3.
-The remaining 20 objects, O21-O40, appear on only one list (objects O21-O30 
-are ranked 21-30 in L1, while objects O31-O40 are ranked 11-20 in L2). Since the number of 
+Five objects, Obj16-Obj20, appear in two of the lists, with rankings of 16-20 for L1 and 11-15 for L3.
+The remaining 20 objects, Obj21-Obj40, appear on only one list (objects Obj21-Obj30 
+are ranked 21-30 in L1, while objects Obj31-Obj40 are ranked 11-20 in L2). Since the number of 
 potential aggregate top-40 lists is more than $8 \times 10^{47}$, enumerating all of them to find the 
 ``true'' answer is not possible, but it would be reasonable to make a fairly
 accurate guess. There should be
-overwhelming information for ranking objects O1-O10 in the top-10. Objects O11-O15 should come next, followed
-by O16-O20. For the remaining of the objects, O31-O40 should be ranked ahead of
-O21-O30. In the following subsection, we will demonstrate the use of the three classes of algorithms (\texttt{Borda}, \texttt{MC}, \texttt{CEMC}) for aggregation of these three ranked lists.
+overwhelming information for ranking objects Obj1-Obj10 in the top-10. Objects Obj11-Obj15 should come next, followed
+by Obj16-Obj20. For the remaining of the objects, Obj31-Obj40 should be ranked ahead of
+Obj21-Obj30. In the following subsection, we will demonstrate the use of the three classes of algorithms (\texttt{Borda}, \texttt{MC}, \texttt{CEMC}) for aggregation of these three ranked lists.
 We will also demonstrate the use of an objective evaluation criterion to compare the
 relative performances of different algorithms.
 
@@ -237,7 +237,7 @@ outBorda=Borda(input,space)
 
 <<>>=
 outBorda1=Borda(input) 
-#"space" is not specified; all lists are assumed to come from the common space (objects 1-40)
+#"space" is not specified; all lists are assumed to come from the common space (objects Obj1-Obj40)
 
 @
 
@@ -251,7 +251,7 @@ sum(outBorda$Scores-outBorda1$Scores)
 sum(outBorda$Scores-outBorda2$Scores)
 @
 
-Comment 1: Objects O1-O40, union of the three top-\emph{k} lists, are contained in all three spaces. As such, the results for which the spaces were explicitly
+Comment 1: Objects Obj1-Obj40, union of the three top-\emph{k} lists, are contained in all three spaces. As such, the results for which the spaces were explicitly
 specified should be the same as those with the common space assumption, which was exactly what we saw above. On the 
 other hand, the underlying space-dependent results were different from the results
 assuming top-\emph{k} spaces (i.e., all lists were full ranked lists).
@@ -260,9 +260,9 @@ assuming top-\emph{k} spaces (i.e., all lists were full ranked lists).
 as.list(outBorda$TopK)
 @
 
-Comment 2: All four scoring functions ranked objects O1-O10, in that order, in the top-10. However,
-despite our expectation that objects O11-O15, in that order, should be ranked 11-15, followed by
-objects O16-O20, the results were more of a mix of these two groups, but with the correct
+Comment 2: All four scoring functions ranked objects Obj1-Obj10, in that order, in the top-10. However,
+despite our expectation that objects Obj11-Obj15, in that order, should be ranked 11-15, followed by
+objects Obj16-Obj20, the results were more of a mix of these two groups, but with the correct
 relative orders preserved within each group. The results are quite similar among the four scoring 
 functions. This is not surprising due to degradation of ranking information beyond the top-10. 
 Such information degradation can be seen by plotting the Borda scores as described in the following.   
@@ -349,10 +349,10 @@ list(outMC$MC1.TopK, outMC$MC2.TopK, outMC$MC3.TopK)
 
 
 
-Comment 2: All three \texttt{MC} algorithms ranked objects O1-O10, in that order, in the top-10. \texttt{MC2} also ranked the next two groups, O11-O15 and O16-O20 in the correct 
-order. However, the remaining objects (O21-O40) were ranked in the reverse of
+Comment 2: All three \texttt{MC} algorithms ranked objects Obj1-Obj10, in that order, in the top-10. \texttt{MC2} also ranked the next two groups, Obj11-Obj15 and Obj16-Obj20 in the correct 
+order. However, the remaining objects (Obj21-Obj40) were ranked in the reverse of
 the expected order. \texttt{MC3}, on the other hand, had all the correct ordering 
-except a transposition between the order of objects O15 and (O16, O17).
+except a transposition between the order of objects Obj15 and (Obj16, Obj17).
 The stationary probabilities can be visualized using the plotting function (described in
 the following), which can be used to detect information degradation heuristically.
 \\[2ex]
@@ -367,9 +367,9 @@ For example, Figure~\ref{fig:equil} shows that
 for \texttt{MC2}, there was considerable information for ranking objects in the top-20,
 but there was practically no information ranking any object after that position (all 
 stationary probabilities are the same). This was the reason why the rankings for objects
-O21-O40 were completely wrong as we saw in the output.
+Obj21-Obj40 were completely wrong as we saw in the output.
 On the other hand, for \texttt{MC1}, there was less information for ranking
-objects beyond the top-10 compared to \texttt{MC2}, thus objects O11-O20 were not ranked
+objects beyond the top-10 compared to \texttt{MC2}, thus objects Obj11-Obj20 were not ranked
 correctly. \texttt{MC3} appears to be a compromise between \texttt{MC1} and \texttt{MC2}, leading to a better 
 aggregate ranked 
 list.
