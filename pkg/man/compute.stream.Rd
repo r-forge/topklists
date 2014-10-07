@@ -31,7 +31,7 @@ Denotes a technical constant determining the starting point from which the proba
 \value{
 A named list containing:
  \item{j0_est}{Is the estimated index for which the \code{Idata} degenerate into noise}
- \tem{k}{\eqn{k=j0_est-1}}
+ \item{k}{\eqn{k=j0_est-1}}
  \item{reason.break}{The reason why the computation has ended - convergence or break condition}
  \item{js}{Is the sequence of estimated \eqn{j_0} in each iteration run, also showing the convergence behaviour}
  \item{v}{Is the preselected value of the parameter \eqn{\nu}}
