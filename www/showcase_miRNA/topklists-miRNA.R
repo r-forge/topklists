@@ -46,7 +46,7 @@
 	common=unique(unlist(input))
 	space=list(common,common,common)
 	outCEMC.kendall = CEMC(input, space, dm = "k")
-	outCEMC.spearman = CEMC(input, space, dm = "s")
+	outCEMC.spearman = CEMC(input, space,dm = "s")
 
 ## ------------------------------------------------------------------------
     print(sessionInfo())

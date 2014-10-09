@@ -73,21 +73,21 @@ Finally, we can run the GUI to integrate the three lists, providing the combined
     TopKListsGUI(data_common)
     end.rcode-->
 <p>For the show case data, data exploration  (see the TopKLists  <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for explanation) lead to a choice of &delta;=40 and &nu;=22 for the inference. This resulted in a kmax of 12, at which the input lists were cut (see screenshot).</p>
-<p><img src="img/screenshot-mirna.png" lat="Screenshot of TopKlistsGUI for the miRNA show case"/><p>
+<p><img src="img/screenshot-mirna.png" lat="Screenshot of TopKlistsGUI for the miRNA show case"/></p>
 
-<h3>Calculation of a consolidated aggregate list<\h3>
+<h3>Calculation of a consolidated aggregate list</h3>
 <p>The TopKListsGUI Summary table already includes the aggregated miRNAs (denoted by asterisks) as a result of the Cross Entropy Monte Carlo (CEMC) function. 
 To be able to obtain the optimized rank order of the miRNAs, and to compare the CEMC results when different distance measures are applied (Kendall's tau is the default method and is used in the GUI; Spearman's footrule is another option), 
-one must execute the CEMC function from the console.<\p>
+one must execute the CEMC function from the console.</p>
 
-<p>First, we estimate the overall list length k_max using the function j0.multi (for the selection of delta and nu see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a>),<\p>
+<p>First, we estimate the overall list length k_max using the function j0.multi (for the selection of delta and nu see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a>),</p>
 <!--begin.rcode
 	set.seed(123)
 	res = j0.multi(data_common, d=40, v=22)
 end.rcode-->
 
 <p>The value of k_max is saved in res$maxK. Then we obtain partial lists by truncating the original full lists at that length and save them in a list object.
-<\p>
+</p>
 <!--begin.rcode
 	l1 =  as.character(data_common[1:res$maxK,1])
 	l2 =  as.character(data_common[1:res$maxK,2])
@@ -96,12 +96,12 @@ end.rcode-->
 end.rcode-->
 
 <p>Next, we need to define the underlying space (see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for an explanation); in this case as a union of all miRNAs present in all three lists.
-<\p>
+</p>
 <!--begin.rcode
 	common=unique(unlist(input))
 	space=list(common,common,common)
 end.rcode-->
-<p>Finally, we can run the CEMC function for the two different distance measures (the tuning parameters are set to their default values).<\p>
+<p>Finally, we can run the CEMC function for the two different distance measures. Because the union of all miRNAs only comprises 28 items, one has to increase the number of samples, N, in each iteration in the order of a few thousand (the other tuning parameters are set to their default values).</p>
 <!--begin.rcode
 	outCEMC.kendall = CEMC(input, space, dm = "k")
 	outCEMC.spearman = CEMC(input, space, dm = "s")
