@@ -35,7 +35,18 @@
 
 ## ----message=FALSE-------------------------------------------------------
     TopKListsGUI(data_common)
-
+	
+## ------------------------------------------------------------------------
+	set.seed(123)
+	res = j0.multi(data_common, d=40, v=22)	
+	l1 =  as.character(data_common[1:res$maxK,1])
+	l2 =  as.character(data_common[1:res$maxK,2])
+	l3 =  as.character(data_common[1:res$maxK,3])
+	input=list(l1,l2,l3)
+	common=unique(unlist(input))
+	space=list(common,common,common)
+	outCEMC.kendall = CEMC(input, space, dm = "k")
+	outCEMC.spearman = CEMC(input, space, dm = "s")
 
 ## ------------------------------------------------------------------------
     print(sessionInfo())
