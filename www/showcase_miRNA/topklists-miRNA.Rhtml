@@ -8,7 +8,7 @@
 </head>
 <body>
 <h2>TopKLists show case for integrating miRNA measurements</h2>
-<p>Using the R package <a href="http://topklists.r-forge.r-project.org/" target="_blank">TopKlists</a> different ranked lists can be integrated given a common set of item identifiers. This show case illustrates how to integrate ranked lists derived from different miRNA abundance measurement techniques. The sample data is based on data available on GEO (<a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51508" target="_blank">Series GSE51508</a>, <a href="http://www.ncbi.nlm.nih.gov/pubmed/24445778" target="_blank">Pubmed ID:24445778</a>):
+<p>With the R package <a href="http://topklists.r-forge.r-project.org/" target="_blank">TopKlists</a>, different ranked lists can be integrated given a common set of item identifiers. This show case illustrates how to integrate ranked lists derived from different miRNA abundance measurement techniques. The sample data is based on data available on GEO (<a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51508" target="_blank">Series GSE51508</a>, <a href="http://www.ncbi.nlm.nih.gov/pubmed/24445778" target="_blank">Pubmed ID:24445778</a>):
 <ul>
 <li>GSE51501 - Comparison of microRNA Profiling Platforms (BeadChip)</li>
 <li>GSE51504 - Comparison of microRNA Profiling Platforms (NanoString)</li>
@@ -23,7 +23,7 @@ The preprocessed files (<i>space-separated and quoted</i>) are available from th
 
 
 <h3>Initiating the analysis</h3>
-To run this example you have to load the TopKlists package, which is available on <a href="http://cran.r-project.org/" target="_">CRAN</a> and can be installed using the following command. Note that for making use of the GUI several dependencies must be met.
+To run this example you have to load the TopKlists package, which is available on <a href="http://cran.r-project.org/" target="_">CRAN</a> and can be installed using the following command. Note that for making use of the GUI, several dependencies must be met.
 <!--begin.rcode eval=FALSE
     install.packages("TopKLists")
     end.rcode-->
@@ -72,21 +72,21 @@ Finally, we can run the GUI to integrate the three lists, providing the combined
 <!--begin.rcode message=FALSE
     TopKListsGUI(data_common)
     end.rcode-->
-<p>For the show case data, data exploration  (see the TopKLists  <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for explanation) lead to a choice of &delta;=40 and &nu;=22 for the inference. This resulted in a kmax of 12, at which the input lists were cut (see screenshot).</p>
+<p>For the show case data, data exploration  (see the TopKLists  <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for explanation) lead to a choice of &delta;=40 and &nu;=22 for the inference. Note that the pairwise deltaplots for the three lists might indicate slightly different &delta;-values. An appropriate range of &nu;-values is the one which has little impact on the estimate of maxK. This setting resulted in maxK=12, at which the input lists were cut (see screenshot).</p>
 <p><img src="img/screenshot-mirna.png" lat="Screenshot of TopKlistsGUI for the miRNA show case"/></p>
 
 <h3>Calculation of a consolidated aggregate list</h3>
-<p>The TopKListsGUI Summary table already includes the aggregated miRNAs (denoted by asterisks) as a result of the Cross Entropy Monte Carlo (CEMC) function. 
+<p>The TopKListsGUI Summary Table already includes the aggregated miRNAs (tagged by YES) as a result of the Cross Entropy Monte Carlo (CEMC) function (tuning parameters set to default). 
 To be able to obtain the optimized rank order of the miRNAs, and to compare the CEMC results when different distance measures are applied (Kendall's tau is the default method and is used in the GUI; Spearman's footrule is another option), 
 one must execute the CEMC function from the console.</p>
 
-<p>First, we estimate the overall list length k_max using the function j0.multi (for the selection of delta and nu see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a>),</p>
+<p>First, we estimate the overall list length maxK using the function j0.multi (for the selection of delta and nu see above),</p>
 <!--begin.rcode
 	set.seed(123)
 	res = j0.multi(data_common, d=40, v=22)
 end.rcode-->
 
-<p>The value of k_max is saved in res$maxK. Then we obtain partial lists by truncating the original full lists at that length and save them in a list object.
+<p>The value of maxK is saved in res$maxK. Then we obtain partial lists by truncating the original full lists at that length and save them in a list object.
 </p>
 <!--begin.rcode
 	l1 =  as.character(data_common[1:res$maxK,1])
@@ -95,7 +95,7 @@ end.rcode-->
 	input=list(l1,l2,l3)
 end.rcode-->
 
-<p>Next, we need to define the underlying space (see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for an explanation); in this case as a union of all miRNAs present in all three lists.
+<p>Next, we need to define the underlying space (see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for an explanation); in this case as the union of all miRNAs present in all three lists.
 </p>
 <!--begin.rcode
 	common=unique(unlist(input))

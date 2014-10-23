@@ -70,7 +70,7 @@
 </head>
 <body>
 <h2>TopKLists show case for integrating miRNA measurements</h2>
-<p>Using the R package <a href="http://topklists.r-forge.r-project.org/" target="_blank">TopKlists</a> different ranked lists can be integrated given a common set of item identifiers. This show case illustrates how to integrate ranked lists derived from different miRNA abundance measurement techniques. The sample data is based on data available on GEO (<a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51508" target="_blank">Series GSE51508</a>, <a href="http://www.ncbi.nlm.nih.gov/pubmed/24445778" target="_blank">Pubmed ID:24445778</a>):
+<p>With the R package <a href="http://topklists.r-forge.r-project.org/" target="_blank">TopKlists</a>, different ranked lists can be integrated given a common set of item identifiers. This show case illustrates how to integrate ranked lists derived from different miRNA abundance measurement techniques. The sample data is based on data available on GEO (<a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51508" target="_blank">Series GSE51508</a>, <a href="http://www.ncbi.nlm.nih.gov/pubmed/24445778" target="_blank">Pubmed ID:24445778</a>):
 <ul>
 <li>GSE51501 - Comparison of microRNA Profiling Platforms (BeadChip)</li>
 <li>GSE51504 - Comparison of microRNA Profiling Platforms (NanoString)</li>
@@ -85,7 +85,7 @@ The preprocessed files (<i>space-separated and quoted</i>) are available from th
 
 
 <h3>Initiating the analysis</h3>
-To run this example you have to load the TopKlists package, which is available on <a href="http://cran.r-project.org/" target="_">CRAN</a> and can be installed using the following command. Note that for making use of the GUI several dependencies must be met.
+To run this example you have to load the TopKlists package, which is available on <a href="http://cran.r-project.org/" target="_">CRAN</a> and can be installed using the following command. Note that for making use of the GUI, several dependencies must be met.
 <div class="chunk" id="unnamed-chunk-1"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">install.packages</span><span class="hl std">(</span><span class="hl str">&quot;TopKLists&quot;</span><span class="hl std">)</span>
 </pre></div>
 </div></div>
@@ -146,25 +146,22 @@ The compressed show case data can be downloaded <a href="topklists-miRNA-sampled
 Finally, we can run the GUI to integrate the three lists, providing the combined lists data.frame as input parameter.
 <div class="chunk" id="unnamed-chunk-7"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">TopKListsGUI</span><span class="hl std">(data_common)</span>
 </pre></div>
-<div class="warning"><pre class="knitr r">## Warning: package 'RGtk2' was built under R version 3.0.3
-## Warning: package 'gWidgets' was built under R version 3.0.3
-</pre></div>
 </div></div>
-<p>For the show case data, data exploration  (see the TopKLists  <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for explanation) lead to a choice of &delta;=40 and &nu;=22 for the inference. This resulted in a kmax of 12, at which the input lists were cut (see screenshot).</p>
+<p>For the show case data, data exploration  (see the TopKLists  <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for explanation) lead to a choice of &delta;=40 and &nu;=22 for the inference. Note that the pairwise deltaplots for the three lists might indicate slightly different &delta;-values. An appropriate range of &nu;-values is the one which has little impact on the estimate of maxK. This setting resulted in maxK=12, at which the input lists were cut (see screenshot).</p>
 <p><img src="img/screenshot-mirna.png" lat="Screenshot of TopKlistsGUI for the miRNA show case"/></p>
 
 <h3>Calculation of a consolidated aggregate list</h3>
-<p>The TopKListsGUI Summary table already includes the aggregated miRNAs (denoted by asterisks) as a result of the Cross Entropy Monte Carlo (CEMC) function. 
+<p>The TopKListsGUI Summary Table already includes the aggregated miRNAs (tagged by YES) as a result of the Cross Entropy Monte Carlo (CEMC) function (tuning parameters set to default). 
 To be able to obtain the optimized rank order of the miRNAs, and to compare the CEMC results when different distance measures are applied (Kendall's tau is the default method and is used in the GUI; Spearman's footrule is another option), 
 one must execute the CEMC function from the console.</p>
 
-<p>First, we estimate the overall list length k_max using the function j0.multi (for the selection of delta and nu see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a>),</p>
+<p>First, we estimate the overall list length maxK using the function j0.multi (for the selection of delta and nu see above),</p>
 <div class="chunk" id="unnamed-chunk-8"><div class="rcode"><div class="source"><pre class="knitr r">        <span class="hl kwd">set.seed</span><span class="hl std">(</span><span class="hl num">123</span><span class="hl std">)</span>
         <span class="hl std">res</span> <span class="hl kwb">=</span> <span class="hl kwd">j0.multi</span><span class="hl std">(data_common,</span> <span class="hl kwc">d</span><span class="hl std">=</span><span class="hl num">40</span><span class="hl std">,</span> <span class="hl kwc">v</span><span class="hl std">=</span><span class="hl num">22</span><span class="hl std">)</span>
 </pre></div>
 </div></div>
 
-<p>The value of k_max is saved in res$maxK. Then we obtain partial lists by truncating the original full lists at that length and save them in a list object.
+<p>The value of maxK is saved in res$maxK. Then we obtain partial lists by truncating the original full lists at that length and save them in a list object.
 </p>
 <div class="chunk" id="unnamed-chunk-9"><div class="rcode"><div class="source"><pre class="knitr r">        <span class="hl std">l1</span> <span class="hl kwb">=</span>  <span class="hl kwd">as.character</span><span class="hl std">(data_common[</span><span class="hl num">1</span><span class="hl opt">:</span><span class="hl std">res</span><span class="hl opt">$</span><span class="hl std">maxK,</span><span class="hl num">1</span><span class="hl std">])</span>
         <span class="hl std">l2</span> <span class="hl kwb">=</span>  <span class="hl kwd">as.character</span><span class="hl std">(data_common[</span><span class="hl num">1</span><span class="hl opt">:</span><span class="hl std">res</span><span class="hl opt">$</span><span class="hl std">maxK,</span><span class="hl num">2</span><span class="hl std">])</span>
@@ -173,7 +170,7 @@ one must execute the CEMC function from the console.</p>
 </pre></div>
 </div></div>
 
-<p>Next, we need to define the underlying space (see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for an explanation); in this case as a union of all miRNAs present in all three lists.
+<p>Next, we need to define the underlying space (see the <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a> for an explanation); in this case as the union of all miRNAs present in all three lists.
 </p>
 <div class="chunk" id="unnamed-chunk-10"><div class="rcode"><div class="source"><pre class="knitr r">        <span class="hl std">common</span><span class="hl kwb">=</span><span class="hl kwd">unique</span><span class="hl std">(</span><span class="hl kwd">unlist</span><span class="hl std">(input))</span>
         <span class="hl std">space</span><span class="hl kwb">=</span><span class="hl kwd">list</span><span class="hl std">(common,common,common)</span>
@@ -198,27 +195,23 @@ one must execute the CEMC function from the console.</p>
 ## [5] LC_TIME=German_Austria.1252    
 ## 
 ## attached base packages:
-## [1] grid      stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] gWidgetsRGtk2_0.0-82 gWidgets_0.0-54      RGtk2_2.20.31       
-##  [4] knitr_1.6            permute_0.8-3        matrixcalc_1.0-3    
-##  [7] MASS_7.3-34          vcd_1.3-2            mc2d_0.1-14         
-## [10] mvtnorm_1.0-0        RRHO_1.0.0           VennDiagram_1.6.7   
-## [13] TopKLists_1.0.3     
+## [1] gWidgetsRGtk2_0.0-82 gWidgets_0.0-54      RGtk2_2.20.31       
+## [4] TopKLists_1.0.3      knitr_1.6           
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] bitops_1.0-6        caTools_1.17        cluster_1.15.3     
-##  [4] colorspace_1.2-4    evaluate_0.5.5      formatR_1.0        
-##  [7] Formula_1.1-2       gdata_2.13.3        gplots_2.14.1      
+##  [4] evaluate_0.5.5      formatR_1.0         Formula_1.1-2      
+##  [7] gdata_2.13.3        gplots_2.14.1       grid_3.0.2         
 ## [10] gtools_3.4.1        highr_0.3           Hmisc_3.14-4       
 ## [13] KernSmooth_2.23-12  lattice_0.20-29     latticeExtra_0.6-26
 ## [16] RColorBrewer_1.0-5  splines_3.0.2       stringr_0.6.2      
 ## [19] survival_2.37-7     tools_3.0.2
 </pre></div>
 </div></div>
-<p style="text-alignment: center">Last update: <code class="knitr inline">Mon Oct 20 13:39:51 2014</code></p>
+<p style="text-alignment: center">Last update: <code class="knitr inline">Thu Oct 23 16:29:46 2014</code></p>
 
 </body>
 </html>
