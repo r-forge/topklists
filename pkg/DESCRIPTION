@@ -1,7 +1,7 @@
 Package: TopKLists
 Type: Package
 Title: Inference, aggregation and visualization for top-k ranked lists
-Date: 2014-10-27
+Date: 2014-10-28
 Version: 1.0.3
 Author: Michael G. SchimekEva Budinska, Jie Ding, Karl G. Kugler, Vendula Svendova, Shili Lin
 Maintainer: Michael G. Schimek <michael.schimek@medunigraz.at>

@@ -15,7 +15,7 @@ void topksamplec (double *p, int *k, int *n, int *ns, int *samp, int *seed)
 
   p1 = (double *) malloc(sizeof(double)*tn);
 
-  srand(*seed); //random seed
+  //srand(*seed); //random seed
  
   while (i<tns) {
     for (j=0; j<tk; j++) {
