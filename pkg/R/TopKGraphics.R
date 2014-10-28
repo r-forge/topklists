@@ -99,6 +99,10 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
                                         #update the allowed range for delta (based on the nu-value)
   update.deltarange <- function() {
+    require(RGtk2)
+    require(gWidgets)
+    require(gWidgetsRGtk2)
+    
                                         #check if allowed range for delta should be updated
     if (autorange.delta) {
       deltarange <- .determineDeltaRange(lists, as.numeric(svalue(wid$N)), dim(lists)[2], as.numeric(svalue(wid$v)))
@@ -111,7 +115,11 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
   }
 
                                         #update the calculated data set (aggmap, summary-table and Venn) in the three tabs
-  load.data <- function(truncated.lists) {		
+  load.data <- function(truncated.lists) {
+    require(RGtk2)
+    require(gWidgets)
+    require(gWidgetsRGtk2)
+    
                                         #update is only performed when delta slider is enabled
     if (enabled(wid$delta.slider)) {
                                         #check if calculated data set can be shown in the GUI (no file = error in the calculation for this delta-value)
@@ -167,6 +175,10 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
   
                                         #calculates aggmap, summary-table and Venn for each delta in the given range for delta
   calculate.all.truncationlists <- function() {
+    require(RGtk2)
+    require(gWidgets)
+    require(gWidgetsRGtk2)
+    
                                         #check if entered values are valid
     if ((as.numeric(svalue(wid$delta.start)) < 0) || (as.numeric(svalue(wid$delta.stop)) < 0) || (svalue(wid$delta.start) > svalue(wid$delta.stop))) {
       gmessage("Invalid range for delta entered.\nPlease check your input.", title = "Invalid range", icon = "error")
