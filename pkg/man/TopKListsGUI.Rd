@@ -61,11 +61,9 @@ Eva Budinska <budinska@iba.muni.cz>, Karl G. Kugler <kg.kugler@gmail.com>, Micha
   \code{\link{CEMC}}
 }
 \examples{
-##using a GUI
 \dontrun{
-data(TopKGUISampleInput)
-TopKListsGUI(lists)
-# Run for nu=10, delta from 2 to 10
+data(breast)
+TopKListsGUI(breast)
 }
 
 }
