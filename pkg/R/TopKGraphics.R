@@ -1,7 +1,7 @@
 TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,  venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100) {
-  require(RGtk2)
-  require(gWidgets)
-  require(gWidgetsRGtk2)
+  require("RGtk2")
+  require("gWidgets2")
+  require("gWidgetsRGtk2")
   options("guiToolkit"="RGtk2")
 
   ##setting up the directory
@@ -17,188 +17,188 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
                               #check if given lists are of type 'data.frame' and contains data
   if (!is.data.frame(lists)) {
-    gmessage("ERROR:\nGiven list-object is not of type data.frame!\nProgram will exit.", title = "Incorrect input", icon = "error")
+    gWidgets2::gmessage("ERROR:\nGiven list-object is not of type data.frame!\nProgram will exit.", title = "Incorrect input", icon = "error")
     return("TopKLists GUI Error: Given list-object is not of type data.frame!")
   } else if ((dim(lists)[1] < 2) | (dim(lists)[2] < 2)) {
-    gmessage("ERROR:\nGiven list-object has eighter only one feature or only one list!\nProgram will exit.", title = "Incorrect input", icon = "error")
+    gWidgets2::gmessage("ERROR:\nGiven list-object has eighter only one feature or only one list!\nProgram will exit.", title = "Incorrect input", icon = "error")
     return("TopKLists GUI Error: Given list-object has either only one feature or only one list!")
   }
 
-  win <- gwindow("TopKLists GUI", visible = FALSE, width = gui.size[1], height = gui.size[2]) #main window
-  maingroup <- ggroup(horizontal = FALSE, container = win, expand = TRUE) #main container
+  win <- gWidgets2::gwindow("TopKLists GUI", visible = FALSE, width = gui.size[1], height = gui.size[2]) #main window
+  maingroup <- gWidgets2::ggroup(horizontal = FALSE, container = win, expand = TRUE) #main container
   wid <- environment() #contains all the widgets
   current.arguments <- environment() #contains all the arguments (N,L,v,....) of the current calculation
 
                                         #create input area for arguments
-  calcframe <- gframe("ARGUMENTS", pos = 0.5, container = maingroup)
-  calcgroup <- ggroup(horizontal = FALSE, container = calcframe, expand = TRUE)
-  agroup <- ggroup(horizontal = TRUE, container = calcgroup, expand = TRUE)
-  a1frame <- gframe("Multiple ranked lists input", container = agroup, expand = TRUE)
-  a2frame <- gframe("Select nu and choose range of delta", container = agroup, expand = TRUE)
-  a3frame <- gframe("Threshold", container = agroup, expand = TRUE)
+  calcframe <- gWidgets2::gframe("ARGUMENTS", pos = 0.5, container = maingroup)
+  calcgroup <- gWidgets2::ggroup(horizontal = FALSE, container = calcframe, expand = TRUE)
+  agroup <- gWidgets2::ggroup(horizontal = TRUE, container = calcgroup, expand = TRUE)
+  a1frame <- gWidgets2::gframe("Multiple ranked lists input", container = agroup, expand = TRUE)
+  a2frame <- gWidgets2::gframe("Select nu and choose range of delta", container = agroup, expand = TRUE)
+  a3frame <- gWidgets2::gframe("Threshold", container = agroup, expand = TRUE)
 
-  wid$calculate <- gbutton("Calculate", container = calcgroup, handler = function(h,...) { calculate.all.truncationlists() })	
-  svalue(calcgroup) <- 10
+  wid$calculate <- gWidgets2::gbutton("Calculate", container = calcgroup, handler = function(h,...) { calculate.all.truncationlists() })	
+  gWidgets2::svalue(calcgroup) <- 10
 
                                         #layout of the first argument input area
-  tbl1 <- glayout(spacing = 10,container = a1frame)
-  tbl1[2,2, anchor = c(1,0)] <- glabel("N", container = tbl1)
-  tbl1[2,3] <- wid$N <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = dim(lists)[1], container = tbl1)
-  tbl1[2,4, anchor = c(-1,0)] <- glabel("number of objects" ,container = tbl1)
-  tbl1[3,2, anchor = c(1,0)] <- glabel("L ", container = tbl1)
-  tbl1[3,3, anchor = c(1,0)] <- glabel(dim(lists)[2], container = tbl1)
-  tbl1[3,4, anchor = c(-1,0)] <- glabel("number of lists", container = tbl1)
+  tbl1 <- gWidgets2::glayout(spacing = 10,container = a1frame)
+  tbl1[2,2, anchor = c(1,0)] <- gWidgets2::glabel("N", container = tbl1)
+  tbl1[2,3] <- wid$N <- gWidgets2::gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = dim(lists)[1], container = tbl1)
+  tbl1[2,4, anchor = c(-1,0)] <- gWidgets2::glabel("number of objects" ,container = tbl1)
+  tbl1[3,2, anchor = c(1,0)] <- gWidgets2::glabel("L ", container = tbl1)
+  tbl1[3,3, anchor = c(1,0)] <- gWidgets2::glabel(dim(lists)[2], container = tbl1)
+  tbl1[3,4, anchor = c(-1,0)] <- gWidgets2::glabel("number of lists", container = tbl1)
 
                                         #layout of the second argument input area
-  tbl2 <- glayout(spacing = 10, container = a2frame)
-  tbl2[2,2, anchor = c(1,0)] <- glabel(expression(nu), container = tbl2)
-  tbl2[2,3] <- wid$v <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 10, container = tbl2, handler = function(h,...) { update.deltarange() })
-  tbl2[2,4:5, anchor = c(1,0)] <- glabel("for list truncation", container = tbl2)
-  tbl2[3,2, anchor = c(1,0)] = glabel(expression(delta), container = tbl2)
-  tbl2[3,3] <- wid$delta.start <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2)
+  tbl2 <- gWidgets2::glayout(spacing = 10, container = a2frame)
+  tbl2[2,2, anchor = c(1,0)] <- gWidgets2::glabel(expression(nu), container = tbl2)
+  tbl2[2,3] <- wid$v <- gWidgets2::gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 10, container = tbl2, handler = function(h,...) { update.deltarange() })
+  tbl2[2,4:5, anchor = c(1,0)] <- gWidgets2::glabel("for list truncation", container = tbl2)
+  tbl2[3,2, anchor = c(1,0)] = gWidgets2::glabel(expression(delta), container = tbl2)
+  tbl2[3,3] <- wid$delta.start <- gWidgets2::gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 0, container = tbl2)
   if (autorange.delta) {
-    enabled(wid$delta.start) <- FALSE
+    gWidgets2::enabled(wid$delta.start) <- FALSE
   }
-  tbl2[3,4, anchor = c(0,0)] = glabel("<- between ->", container = tbl2)
-  tbl2[3,5] <- wid$delta.stop <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 10, container = tbl2)
-  tbl2[3,6, anchor = c(0,0)] = glabel("by", container = tbl2)
-  tbl2[3,7] <- wid$delta.by <- gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 1, container = tbl2)############
+  tbl2[3,4, anchor = c(0,0)] = gWidgets2::glabel("<- between ->", container = tbl2)
+  tbl2[3,5] <- wid$delta.stop <- gWidgets2::gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 10, container = tbl2)
+  tbl2[3,6, anchor = c(0,0)] = gWidgets2::glabel("by", container = tbl2)
+  tbl2[3,7] <- wid$delta.by <- gWidgets2::gspinbutton(from = 0, to = dim(lists)[1], by = 1, value = 1, container = tbl2)############
   if (autorange.delta) {
-    enabled(wid$delta.stop) <- FALSE
+    gWidgets2::enabled(wid$delta.stop) <- FALSE
   }
 
                                         #layout of the third argument input area
-  tbl3 <- glayout(spacing = 10, container = a3frame)
-  tbl3[2,2, anchor = c(1,0)] <- glabel("min", container = tbl3)
-  tbl3[2,3] <- wid$threshold <- gedit(text = "50", width = 3, container = tbl3)
-  tbl3[2,4, anchor = c(-1,0)] <- glabel("%" ,container = tbl3)
-  tbl3[3,2:4, anchor = c(1,0)] <- glabel("for gray-shading of objects", container = tbl3)
+  tbl3 <- gWidgets2::glayout(spacing = 10, container = a3frame)
+  tbl3[2,2, anchor = c(1,0)] <- gWidgets2::glabel("min", container = tbl3)
+  tbl3[2,3] <- wid$threshold <- gWidgets2::gedit(text = "50", width = 3, container = tbl3)
+  tbl3[2,4, anchor = c(-1,0)] <- gWidgets2::glabel("%" ,container = tbl3)
+  tbl3[3,2:4, anchor = c(1,0)] <- gWidgets2::glabel("for gray-shading of objects", container = tbl3)
 
                                         #create the delta slider for choosing the desired delta value (and to show the calculated data for the selected delta value)
-  sldrframe <- gframe("DELTA-SLIDER", pos = 0.5, container = maingroup)
+  sldrframe <- gWidgets2::gframe("DELTA-SLIDER", pos = 0.5, container = maingroup)
                                         #the parameters 'from' and 'to' are dummy values because the slider will be updated after the calculation
-  wid$delta.slider <- gslider(from = 1, to = 2, by = 1, container = sldrframe, expand = TRUE, handler = function(h,...) { load.data() })
-  enabled(wid$delta.slider) <- FALSE
+  wid$delta.slider <- gWidgets2::gslider(from = 1, to = 2, by = 1, container = sldrframe, expand = TRUE, handler = function(h,...) { load.data() })
+  gWidgets2::enabled(wid$delta.slider) <- FALSE
 
                                         #create four tabs for presenting the results of the calculation
-  nb <- gnotebook(container = maingroup, expand = TRUE)
-  aggmapg <- ggroup(horizontal = FALSE, container = nb, label = "Aggregation map", use.scrollwindow = TRUE)
-  summtblg <- ggroup(horizontal = FALSE, container = nb, label = "Summary table")
-  venng <- ggroup(horizontal = TRUE, container = nb, label = "Venn-diagram & Venn-table")
-  svalue(nb) <- 1 #set the first tab as the selected tab
+  nb <- gWidgets2::gnotebook(container = maingroup, expand = TRUE)
+  aggmapg <- gWidgets2::ggroup(horizontal = FALSE, container = nb, label = "Aggregation map", use.scrollwindow = TRUE)
+  summtblg <- gWidgets2::ggroup(horizontal = FALSE, container = nb, label = "Summary table")
+  venng <- gWidgets2::ggroup(horizontal = TRUE, container = nb, label = "Venn-diagram & Venn-table")
+  gWidgets2::svalue(nb) <- 1 #set the first tab as the selected tab
 
                                         #create a status bar to inform the user of the current status
-  wid$status <- gtkStatusbar()
-  add(maingroup, wid$status)
+  wid$status <- RGtk2::gtkStatusbar()
+  gWidgets2::add(maingroup, wid$status)
   info <- wid$status$getContextId("info")
   wid$status$push(info, "GUI started")
 
                                         #create a progress bar to show the progress of the calculation
-  wid$progress <- gtkProgressBar(show = TRUE)
-  add(maingroup, wid$progress)	
+  wid$progress <- RGtk2::gtkProgressBar(show = TRUE)
+  gWidgets2::add(maingroup, wid$progress)	
 
                                         #update the allowed range for delta (based on the nu-value)
   update.deltarange <- function() {
-    require(RGtk2)
-    require(gWidgets)
-    require(gWidgetsRGtk2)
+    require("RGtk2")
+    require("gWidgets2")
+    require("gWidgetsRGtk2")
     
                                         #check if allowed range for delta should be updated
     if (autorange.delta) {
-      deltarange <- .determineDeltaRange(lists, as.numeric(svalue(wid$N)), dim(lists)[2], as.numeric(svalue(wid$v)))
-      svalue(wid$delta.start) <- deltarange[1]
-      svalue(wid$delta.stop) <- deltarange[2]
-      enabled(wid$delta.start) <- TRUE
-      enabled(wid$delta.stop) <- TRUE
-      wid$status$push(info, expression(paste("Recalculated allowed range for delta with ",nu," =", ss), list(ss=svalue(wid$v))))
+      deltarange <- .determineDeltaRange(lists, as.numeric(gWidgets2::svalue(wid$N)), dim(lists)[2], as.numeric(gWidgets2::svalue(wid$v)))
+      gWidgets2::svalue(wid$delta.start) <- deltarange[1]
+      gWidgets2::svalue(wid$delta.stop) <- deltarange[2]
+      gWidgets2::enabled(wid$delta.start) <- TRUE
+      gWidgets2::enabled(wid$delta.stop) <- TRUE
+      wid$status$push(info, expression(paste("Recalculated allowed range for delta with ",nu," =", ss), list(ss=gWidgets2::svalue(wid$v))))
     }
   }
 
                                         #update the calculated data set (aggmap, summary-table and Venn) in the three tabs
   load.data <- function(truncated.lists) {
-    require(RGtk2)
-    require(gWidgets)
-    require(gWidgetsRGtk2)
+    require("RGtk2")
+    require("gWidgets2")
+    require("gWidgetsRGtk2")
     
                                         #update is only performed when delta slider is enabled
-    if (enabled(wid$delta.slider)) {
+    if (gWidgets2::enabled(wid$delta.slider)) {
                                         #check if calculated data set can be shown in the GUI (no file = error in the calculation for this delta-value)
-      if (file.exists(paste(directory, "/N" , current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))) {
+      if (file.exists(paste(directory, "/N" , current.arguments$val.N, "_L", current.arguments$val.L, "_delta", gWidgets2::svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))) {
                                         #load the calculated data set
-        load(paste(directory, "/N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))
+        load(paste(directory, "/N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", gWidgets2::svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".Rdata", sep = ""))
 
                                         #first tab: show aggmap
         if (!is.null(wid$aggmap)) {
 					#delete current aggmap image
-          delete(aggmapg, wid$aggmap)
+          gWidgets2::delete(aggmapg, wid$aggmap)
         }
-        wid$aggmap <- gimage(paste(directory, "/aggmap_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = aggmapg)
+        wid$aggmap <- gWidgets2::gimage(paste(directory, "/aggmap_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", gWidgets2::svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = aggmapg)
 
 
                                        #second tab: show summary-table
         if (!is.null(wid$sumtable)) {
 					#delete current summary-table
-          delete(summtblg, wid$sumtable)
+          gWidgets2::delete(summtblg, wid$sumtable)
         }
-        wid$sumtable <- gtable(truncated.lists$summarytable, container = summtblg, expand = TRUE)#########################
+        wid$sumtable <- gWidgets2::gtable(truncated.lists$summarytable, container = summtblg, expand = TRUE)#########################
 
                                         #third tab: show Venn-diagram and Venn-table (only if L <= 4)
         if (current.arguments$val.L <= 4) {			
           if (!is.null(wid$venndiag) & !is.null(wid$venntbl)) {
                                         #delete current Venn-diagram and Venn-table
-            delete(venng, wid$venndiag)
-            delete(venng, wid$venntbl)
+            gWidgets2::delete(venng, wid$venndiag)
+            gWidgets2::delete(venng, wid$venntbl)
           }
           if (!is.null(wid$nodraw) & !is.null(wid$nodrawimage)) {
                                         #delete the icon and message
-            delete(venng, wid$nodrawimage)
-            delete(venng, wid$nodraw)
+            gWidgets2::delete(venng, wid$nodrawimage)
+            gWidgets2::delete(venng, wid$nodraw)
           }
-          wid$venndiag <- gimage(paste(directory, "/venn_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = venng)
+          wid$venndiag <- gWidgets2::gimage(paste(directory, "/venn_N", current.arguments$val.N, "_L", current.arguments$val.L, "_delta", gWidgets2::svalue(wid$delta.slider), "_v", current.arguments$val.v, "_thrshld", current.arguments$val.threshold, ".png", sep = ""), container = venng)
           mydata <- as.data.frame(truncated.lists$venntable)
           mydata <- matrix(unlist(mydata), byrow=FALSE,ncol=2)
-          wid$venntbl <- gtable(mydata, multiple=TRUE, container = venng, expand = TRUE, drop=FALSE, index=TRUE)
+          wid$venntbl <- gWidgets2::gtable(mydata, multiple=TRUE, container = venng, expand = TRUE, drop=FALSE, index=TRUE)
 
         } else {
 					#output message that Venn-diagram and Venn-table are not shown for L > 4
           if (is.null(wid$nodrawimage) & is.null(wid$nodraw)) {
-            wid$nodrawimage <- gimage("info", dirname = "stock", container = venng)
-            wid$nodraw <- glabel("There are more than four input lists.\nVenn-diagram and Venn-table are only drawn to a maximum of four input lists.", container = venng)
+            wid$nodrawimage <- gWidgets2::gimage("info", dirname = "stock", container = venng)
+            wid$nodraw <- gWidgets2::glabel("There are more than four input lists.\nVenn-diagram and Venn-table are only drawn to a maximum of four input lists.", container = venng)
           }
         }# end for third tab if
   
       } else {
-        gmessage("There is no data to show in the GUI!\nThis is caused by an error in the calculation.\nYou may have to adjust the arguments!", title = "Loading data failed", icon = "error")
+        gWidgets2::gmessage("There is no data to show in the GUI!\nThis is caused by an error in the calculation.\nYou may have to adjust the arguments!", title = "Loading data failed", icon = "error")
       }
     }
   }
   
                                         #calculates aggmap, summary-table and Venn for each delta in the given range for delta
   calculate.all.truncationlists <- function() {
-    require(RGtk2)
-    require(gWidgets)
-    require(gWidgetsRGtk2)
+    require("RGtk2")
+    require("gWidgets2")
+    require("gWidgetsRGtk2")
     
                                         #check if entered values are valid
-    if ((as.numeric(svalue(wid$delta.start)) < 0) || (as.numeric(svalue(wid$delta.stop)) < 0) || (svalue(wid$delta.start) > svalue(wid$delta.stop))) {
-      gmessage("Invalid range for delta entered.\nPlease check your input.", title = "Invalid range", icon = "error")
+    if ((as.numeric(gWidgets2::svalue(wid$delta.start)) < 0) || (as.numeric(gWidgets2::svalue(wid$delta.stop)) < 0) || (gWidgets2::svalue(wid$delta.start) > gWidgets2::svalue(wid$delta.stop))) {
+      gWidgets2::gmessage("Invalid range for delta entered.\nPlease check your input.", title = "Invalid range", icon = "error")
       return()
     }
-    temp.threshold <- as.numeric(svalue(wid$threshold))
+    temp.threshold <- as.numeric(gWidgets2::svalue(wid$threshold))
     if (is.na(temp.threshold) || (temp.threshold < 0) || (temp.threshold > 100)) {
-      gmessage("The entered threshold is not a valid number!\nPlease enter a threshold between 0 and 100.", title = "Threshold invalid", icon = "error")
+      gWidgets2::gmessage("The entered threshold is not a valid number!\nPlease enter a threshold between 0 and 100.", title = "Threshold invalid", icon = "error")
       return()
     }
 
     wid$status$push(info, "Begin calculation for the selected range of delta")
-    gtkProgressBarSetFraction(wid$progress, 0) #set progress-bar to start-value
-    gtkMainIterationDo(FALSE)
+    RGtk2::gtkProgressBarSetFraction(wid$progress, 0) #set progress-bar to start-value
+    RGtk2::gtkMainIterationDo(FALSE)
 
                                         #disable delta-slider to prevent sliding while calculating
-    enabled(wid$delta.slider) <- FALSE
+    gWidgets2::enabled(wid$delta.slider) <- FALSE
 
                                         #calculate data set for each delta in the given range for delta
-    temp.tocalc <- length(seq(as.numeric(svalue(wid$delta.start)),as.numeric(svalue(wid$delta.stop)),by=as.numeric(svalue(wid$delta.by))))
+    temp.tocalc <- length(seq(as.numeric(gWidgets2::svalue(wid$delta.start)),as.numeric(gWidgets2::svalue(wid$delta.stop)),by=as.numeric(gWidgets2::svalue(wid$delta.by))))
     temp.loopcounter <- 0
     wid$error <- FALSE
 
@@ -214,43 +214,43 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
         rm(Mdelta)
 
-    for (i in seq(as.numeric(svalue(wid$delta.start)),as.numeric(svalue(wid$delta.stop)),by=as.numeric(svalue(wid$delta.by)))) {
-      gtkMainIterationDo(FALSE)
+    for (i in seq(as.numeric(gWidgets2::svalue(wid$delta.start)),as.numeric(gWidgets2::svalue(wid$delta.stop)),by=as.numeric(gWidgets2::svalue(wid$delta.by)))) {
+      RGtk2::gtkMainIterationDo(FALSE)
                                         #try to calculate data set for current delta and selected N
       tryCatch({
-        truncated.lists <- calculate.maxK(lists[1:as.numeric(svalue(wid$N)),], dim(lists)[2], i, as.numeric(svalue(wid$v)), as.numeric(svalue(wid$threshold)))
+        truncated.lists <- calculate.maxK(lists[1:as.numeric(gWidgets2::svalue(wid$N)),], dim(lists)[2], i, as.numeric(gWidgets2::svalue(wid$v)), as.numeric(gWidgets2::svalue(wid$threshold)))
                                         #save calculated truncated lists for current delta in the destination directory
-        save(truncated.lists, file = paste(directory, "/N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".Rdata", sep = ""))
+        save(truncated.lists, file = paste(directory, "/N", as.numeric(gWidgets2::svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(gWidgets2::svalue(wid$v)), "_thrshld", as.numeric(gWidgets2::svalue(wid$threshold)), ".Rdata", sep = ""))
 
         #draw the aggmap and save it as pdf-image in the destination directory
-	      if(is.null(truncated.lists)){max.length=10}else{max.length <- min(length(truncated.lists$comparedLists[[1]]), as.numeric(svalue(wid$N)))}
+	      if(is.null(truncated.lists)){max.length=10}else{max.length <- min(length(truncated.lists$comparedLists[[1]]), as.numeric(gWidgets2::svalue(wid$N)))}
 
-      	png(filename = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = 870, height = 60+28*max.length, res=aggmap.res, type="cairo-png")
+      	png(filename = paste(directory, "/aggmap_N", as.numeric(gWidgets2::svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(gWidgets2::svalue(wid$v)), "_thrshld", as.numeric(gWidgets2::svalue(wid$threshold)), ".png", sep = ""), width = 870, height = 60+28*max.length, res=aggmap.res, type="cairo-png")
         aggmap(truncated.lists)
         dev.off()
         
-        pdf(file = paste(directory, "/aggmap_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = 9, height = 0.8+0.29*max.length)
+        pdf(file = paste(directory, "/aggmap_N", as.numeric(gWidgets2::svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(gWidgets2::svalue(wid$v)), "_thrshld", as.numeric(gWidgets2::svalue(wid$threshold)), ".pdf", sep = ""), width = 9, height = 0.8+0.29*max.length)
         aggmap(truncated.lists)
         dev.off()
         
 
                                         #draw the Venn-diagram and save it as pdf-image in the destination directory (only if L is between 2 and 4 & if there is a j0 estimated)
         if((dim(lists)[2] >= 2) & (dim(lists)[2] <= 4) & !is.null(truncated.lists)) {
-          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
+          pdf(file = paste(directory, "/venn_N", as.numeric(gWidgets2::svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(gWidgets2::svalue(wid$v)), "_thrshld", as.numeric(gWidgets2::svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
           venn(truncated.lists$vennlists)
           dev.off()
 
 
-          png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
+          png(filename = paste(directory, "/venn_N", as.numeric(gWidgets2::svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(gWidgets2::svalue(wid$v)), "_thrshld", as.numeric(gWidgets2::svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
           venn(truncated.lists$vennlists)
           dev.off()
         }else{
-          pdf(file = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
+          pdf(file = paste(directory, "/venn_N", as.numeric(gWidgets2::svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(gWidgets2::svalue(wid$v)), "_thrshld", as.numeric(gWidgets2::svalue(wid$threshold)), ".pdf", sep = ""), width = venndiag.pdf.size[1], height = venndiag.pdf.size[2], bg = "transparent")
           plot(1,1, type="n", axes=FALSE)
           text(1,1,"No overlap on selected parameters")
           dev.off()
 
- 	      png(filename = paste(directory, "/venn_N", as.numeric(svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(svalue(wid$v)), "_thrshld", as.numeric(svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
+ 	      png(filename = paste(directory, "/venn_N", as.numeric(gWidgets2::svalue(wid$N)), "_L", dim(lists)[2], "_delta", i, "_v", as.numeric(gWidgets2::svalue(wid$v)), "_thrshld", as.numeric(gWidgets2::svalue(wid$threshold)), ".png", sep = ""), width = venndiag.size[1], height = venndiag.size[2], bg = "transparent", res=venndiag.res)
           plot(1,1, type="n", axes=FALSE)
           text(1,1,"No overlap on selected parameters")
           dev.off()
@@ -273,8 +273,8 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
                                         #update progress bar
       temp.loopcounter <- temp.loopcounter + 1
       temp.fraction <- (1 / temp.tocalc) * temp.loopcounter
-      gtkProgressBarSetFraction(wid$progress, temp.fraction)
-      gtkMainIterationDo(FALSE)
+      RGtk2::gtkProgressBarSetFraction(wid$progress, temp.fraction)
+      RGtk2::gtkMainIterationDo(FALSE)
     }
 
                                         #if errors are overridden, the calculation continues (but there is no data to view in the GUI for this delta value)
@@ -282,7 +282,7 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
       if(override.errors) {
         wid$status$push(info, "Finished calculation of data sets for range of delta (with errors occurred)")
       } else {
-        enabled(wid$delta.slider) <- FALSE
+        gWidgets2::enabled(wid$delta.slider) <- FALSE
         return()
       }
       wid$error <- FALSE
@@ -291,29 +291,29 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
     }
 
                                         #update the range of the delta-slider
-    wid$delta.slider[] <- seq(as.numeric(svalue(wid$delta.start)), as.numeric(svalue(wid$delta.stop)), by = as.numeric(svalue(wid$delta.by)))
+    wid$delta.slider[] <- seq(as.numeric(gWidgets2::svalue(wid$delta.start)), as.numeric(gWidgets2::svalue(wid$delta.stop)), by = as.numeric(gWidgets2::svalue(wid$delta.by)))
 
                                         #set the start position of the slider and enable slider
     if (temp.tocalc > 2) {
-      svalue(wid$delta.slider) <- as.numeric(svalue(wid$delta.start)) + round((temp.tocalc - 1) / 2)
+      gWidgets2::svalue(wid$delta.slider) <- as.numeric(gWidgets2::svalue(wid$delta.start)) + round((temp.tocalc - 1) / 2)
     } else {
-      svalue(wid$delta.slider) <- as.numeric(svalue(wid$delta.start))
+      gWidgets2::svalue(wid$delta.slider) <- as.numeric(gWidgets2::svalue(wid$delta.start))
     }
-    enabled(wid$delta.slider) <- TRUE
+    gWidgets2::enabled(wid$delta.slider) <- TRUE
 
                                         #save the current arguments
                                         #(this prevents errors when sliding through the delta-values - otherwise changing the arguments in the GUI could cause errors when showing the calculated data)
-    current.arguments$val.N <- as.numeric(svalue(wid$N))
+    current.arguments$val.N <- as.numeric(gWidgets2::svalue(wid$N))
     current.arguments$val.L <- dim(lists)[2]
-    current.arguments$val.v <- as.numeric(svalue(wid$v))
-    current.arguments$val.threshold <- as.numeric(svalue(wid$threshold))
+    current.arguments$val.v <- as.numeric(gWidgets2::svalue(wid$v))
+    current.arguments$val.threshold <- as.numeric(gWidgets2::svalue(wid$threshold))
     
                                         #show the data in the tabs
     load.data()
   }#end calculate.all.truncationlists
   
                                         #show the GUI
-  visible(win) <- TRUE
+  gWidgets2::visible(win) <- TRUE
 }
 
 
