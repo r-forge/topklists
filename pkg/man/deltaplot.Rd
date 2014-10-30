@@ -47,12 +47,12 @@ new device will be opened.
 
 \examples{
 set.seed(1234)
-data(TopKGUISampleInput)
+data(breast)
 ##plot subplot
-a = deltaplot(lists, deltas = 1:50, subplot=TRUE)
+a = deltaplot(breast, deltas = 1:50, subplot=TRUE)
 
 ##don't plot subplot (default)
-a = deltaplot(lists, deltas=1:50, subplot = FALSE)
+a = deltaplot(breast, deltas=1:50, subplot = FALSE)
 }
 
 

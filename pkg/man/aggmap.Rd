@@ -34,8 +34,8 @@ Schimek, M. G. and Bloice, M. (2012). Modelling the rank order of Web search eng
 
 \examples{
 set.seed(1234)
-data(TopKGUISampleInput)
-truncated.lists = calculate.maxK(lists, d=10, v=10, L=3, threshold=50)
+data(breast)
+truncated.lists = calculate.maxK(breast, d=10, v=10, L=3, threshold=50)
 \dontrun{
 aggmap(truncated.lists)
 }

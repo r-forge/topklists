@@ -58,8 +58,8 @@ Hall, P. and Schimek, M. G. (2012). Moderate deviation-based inference for rando
 }
 \examples{
 set.seed(1234)
-data(TopKGUISampleInput)
-truncated.lists = calculate.maxK(lists, d=10, v=10, L=3, threshold=50)
+data(breast)
+truncated.lists = calculate.maxK(breast, d=10, v=10, L=3, threshold=50)
 \dontrun{
 aggmap(truncated.lists, N=80, L=3, d=10, v=10, lists=lists, threshold=50)
 }
