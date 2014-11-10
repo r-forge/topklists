@@ -143,22 +143,22 @@ The compressed show case data can be downloaded <a href="topklists-miRNA-sampled
 
 
 <h3>Starting the GUI</h3>
-Finally, we can run the GUI to integrate the three lists, providing the combined lists data.frame as input parameter.
+Finally, we can run the GUI in order to integrate the three lists, by passing the combined data.frame lists as an input parameter.
 <div class="chunk" id="unnamed-chunk-7"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">TopKListsGUI</span><span class="hl std">(data_common)</span>
 </pre></div>
 </div></div>
 	
-The iterative inference algorithm requires the specification of two tuning parameters, the distance &delta; and the pilot sample size &nu;, because unique results do not exist for the top-k list length problem. The selection of both parameters is described in detail in the TopKLists <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a>. The deltaplot is a helpful tool, which helps to identify a suitable range of &delta;-values. Adequate values are found where the rate of the deltaplot's decrease begins to slow noticeably. The user is encouraged to use the GUI to explore the results for the suggested &delta;-values and to select the most appropriate one, while keeping it as small as possible.
+The iterative inference algorithm requires the specification of two tuning parameters, the distance &delta; and the pilot sample size &nu;; this is because unique results do not exist for the top-k list length problem. The selection of both parameters is described in detail in the TopKLists <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a>. The deltaplot is a helpful tool which helps to identify a suitable range of &delta;-values. Adequate values are found where the rate of the deltaplot's decrease begins to slow noticeably. The user is encouraged to use the GUI to explore the results for the suggested &delta;-values and to select the most appropriate one, while keeping it as small as possible.
 <div class="chunk" id="unnamed-chunk-8"><div class="rcode"><div class="source"><pre class="knitr r">        <span class="hl std">a</span><span class="hl kwb">=</span><span class="hl kwd">deltaplot</span><span class="hl std">(data_common,</span><span class="hl kwc">subset.lists</span><span class="hl std">=</span><span class="hl num">300</span><span class="hl std">,</span><span class="hl kwc">deltas</span><span class="hl std">=</span><span class="hl num">1</span><span class="hl opt">:</span><span class="hl num">100</span><span class="hl std">)</span>
 </pre></div>
 </div></div>
-For three input lists the graphical output (see below) is one deltaplot for each pair of lists, in our case 6 plots. We can see that the pairwise deltaplots indicate values in the range of 18 to 80 and averaging over all plots is a good compromise. When we calculate the truncation index via the GUI, the results are almost the same for &delta;-values between 40 and 70. Therefore we are choosing &delta;=40. 
+For three input lists the graphical output (see below) is one deltaplot for each pair of lists, in our case 6 plots. We can see that the pairwise deltaplots indicate values in the range of 18 to 80 and averaging over all plots is a good compromise. When we calculate the truncation index via the GUI, the results are almost the same for &delta;-values between 40 and 70. Therefore we choose &delta;=40. 
 
  <p><img src="img/delta1.png" lat="Deltaplot12"/></p>
  <p><img src="img/delta2.png" lat="Deltaplot13"/></p>
  <p><img src="img/delta3.png" lat="Deltaplot23"/></p>
    
-<p>An appropriate range of &nu;-values is the one which has little impact on the estimate of maxK. Its appropriateness can be again tested using the GUI. A general recommendation is a value between 2 and 10 for small datasets and one in the order of tens for larger datasets (10 is used as default). The selected value of &nu;=22 satisfies this requirement. This setting resulted in maxK=12, at which the input lists were cut (see screenshot). </p>
+<p>An appropriate range of &nu;-values is that which has little impact on the estimate of maxK. Its appropriateness can be again tested using the GUI. A general recommendation is a value between 2 and 10 for small datasets and one in the order of tens for larger datasets (10 is used as default). The selected value of &nu;=22 satisfies this requirement. These settings resulted in maxK=12, at which the input lists were cut (see screenshot). </p>
 
 <p><img src="img/screenshot-mirna.png" lat="Screenshot of TopKlistsGUI for the miRNA show case"/></p>
 
@@ -207,25 +207,30 @@ one must execute the CEMC function from the console.</p>
 ## [5] LC_TIME=German_Austria.1252    
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] parallel  grid      stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] gWidgets2RGtk2_1.0-2 memoise_0.2.1        gWidgetsRGtk2_0.0-82
-## [4] gWidgets_0.0-54      gWidgets2_1.0-5      digest_0.6.4        
-## [7] RGtk2_2.20.31        TopKLists_1.0.3      knitr_1.7           
+##  [1] gtools_3.4.1         bioDist_1.34.0       KernSmooth_2.23-13  
+##  [4] Biobase_2.22.0       BiocGenerics_0.8.0   GA_2.1              
+##  [7] permute_0.8-3        matrixcalc_1.0-3     MASS_7.3-35         
+## [10] vcd_1.3-2            mc2d_0.1-15          mvtnorm_1.0-0       
+## [13] gWidgets2RGtk2_1.0-2 memoise_0.2.1        gWidgetsRGtk2_0.0-82
+## [16] gWidgets_0.0-54      gWidgets2_1.0-5      digest_0.6.4        
+## [19] RGtk2_2.20.31        TopKLists_1.0.3      knitr_1.7           
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] acepack_1.3-3.3     bitops_1.0-6        caTools_1.17.1     
-##  [4] cluster_1.15.3      evaluate_0.5.5      foreign_0.8-61     
-##  [7] formatR_1.0         Formula_1.1-2       gdata_2.13.3       
-## [10] gplots_2.14.2       grid_3.0.2          gtools_3.4.1       
-## [13] highr_0.4           Hmisc_3.14-5        KernSmooth_2.23-13 
-## [16] lattice_0.20-29     latticeExtra_0.6-26 nnet_7.3-8         
-## [19] RColorBrewer_1.0-5  rpart_4.1-8         splines_3.0.2      
-## [22] stringr_0.6.2       survival_2.37-7     tools_3.0.2
+##  [4] cluster_1.15.3      colorspace_1.2-4    evaluate_0.5.5     
+##  [7] foreign_0.8-61      formatR_1.0         Formula_1.1-2      
+## [10] gdata_2.13.3        gplots_2.14.2       highr_0.4          
+## [13] Hmisc_3.14-5        lattice_0.20-29     latticeExtra_0.6-26
+## [16] nnet_7.3-8          RColorBrewer_1.0-5  rpart_4.1-8        
+## [19] splines_3.0.2       stringr_0.6.2       survival_2.37-7    
+## [22] tools_3.0.2
 </pre></div>
 </div></div>
-<p style="text-alignment: center">Last update: <code class="knitr inline">Mon Nov 10 10:09:29 2014</code></p>
+<p style="text-alignment: center">Last update: <code class="knitr inline">Mon Nov 10 15:06:53 2014</code></p>
 
 </body>
 </html>
