@@ -146,14 +146,6 @@ The compressed show case data can be downloaded <a href="topklists-miRNA-sampled
 Finally, we can run the GUI to integrate the three lists, providing the combined lists data.frame as input parameter.
 <div class="chunk" id="unnamed-chunk-7"><div class="rcode"><div class="source"><pre class="knitr r">    <span class="hl kwd">TopKListsGUI</span><span class="hl std">(data_common)</span>
 </pre></div>
-<div class="warning"><pre class="knitr r">## Warning: package 'RGtk2' was built under R version 3.0.3
-</pre></div>
-<div class="warning"><pre class="knitr r">## Warning: package 'gWidgets' was built under R version 3.0.3
-</pre></div>
-<div class="warning"><pre class="knitr r">## Warning: package 'gWidgets2RGtk2' was built under R version 3.0.3
-</pre></div>
-<div class="warning"><pre class="knitr r">## Warning: package 'memoise' was built under R version 3.0.3
-</pre></div>
 </div></div>
 	
 The iterative inference algorithm requires the specification of two tuning parameters, the distance &delta; and the pilot sample size &nu;, because unique results do not exist for the top-k list length problem. The selection of both parameters is described in detail in the TopKLists <a href="http://cran.r-project.org/web/packages/TopKLists/vignettes/TopKLists.pdf" target="_blank">Vignette</a>. The deltaplot is a helpful tool, which helps to identify a suitable range of &delta;-values. Adequate values are found where the rate of the deltaplot's decrease begins to slow noticeably. The user is encouraged to use the GUI to explore the results for the suggested &delta;-values and to select the most appropriate one, while keeping it as small as possible.
@@ -233,7 +225,7 @@ one must execute the CEMC function from the console.</p>
 ## [22] stringr_0.6.2       survival_2.37-7     tools_3.0.2
 </pre></div>
 </div></div>
-<p style="text-alignment: center">Last update: <code class="knitr inline">Mon Nov 10 09:59:34 2014</code></p>
+<p style="text-alignment: center">Last update: <code class="knitr inline">Mon Nov 10 10:09:29 2014</code></p>
 
 </body>
 </html>
