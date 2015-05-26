@@ -40,11 +40,17 @@ Results that can be obtained are a sublist of highly conforming objects in a new
 </div>
 <H2>Citation Information</H2>
 <div style="max-width:750px">
-<P>When using TopKLists in your work please refer to it by
-citing:
+<P>When using TopKLists in your work please cite:
+<UL>
+	<li>Schimek, M. G. et al. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. Stat. Appl. Genet. Mol. Biol. 05/2015.  [open access]</li>
+</UL>
+When referring to the module TopKInference in your work please cite:
 <UL>
 	<li>Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. J. Amer. Statist. Assoc., 107, 661-672.</li>
-<BR><li>Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. Biometrics, 65, 9-18.</li>
+</UL>
+When referring to the module TopKSpace in your work please cite:
+<UL>
+	<li>Lin, S. and Ding, J. (2009). Integration of ranked lists via Cross Entropy Monte Carlo with applications to mRNA and microRNA studies. Biometrics, 65, 9-18.</li>
 </UL>
 </div>
 <H2>Examples for the Usage</H2>
