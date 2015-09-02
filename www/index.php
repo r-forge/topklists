@@ -42,7 +42,7 @@ Results that can be obtained are a sublist of highly conforming objects in a new
 <div style="max-width:750px">
 <P>When using TopKLists in your work please cite:
 <UL>
-	<li>Schimek, M. G. et al. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. Stat. Appl. Genet. Mol. Biol. 05/2015.  [open access]</li>
+	<li><a href="http://www.degruyter.com/doi/10.1515/sagmb-2014-0093" target="_blank">Schimek, M. G. et al. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. Stat Appl Genet Mol Biol. 2015 Jun;14(3):311-6. doi: 10.1515/sagmb-2014-0093.</a></li>
 </UL>
 When referring to the module TopKInference in your work please cite:
 <UL>
