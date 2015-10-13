@@ -1,7 +1,7 @@
 TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,  venndiag.pdf.size = c(7, 7), venndiag.size = c(380, 420), gui.size = c(900, 810), directory = NULL, venndiag.res = 70, aggmap.res = 100) {
-  require("RGtk2")
-  require("gWidgets2")
-  require("gWidgetsRGtk2")
+  requireNamespace("RGtk2")
+  requireNamespace("gWidgets2")
+  requireNamespace("gWidgetsRGtk2")
   options("guiToolkit"="RGtk2")
 
   ##setting up the directory
@@ -99,9 +99,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
                                         #update the allowed range for delta (based on the nu-value)
   update.deltarange <- function() {
-    require("RGtk2")
-    require("gWidgets2")
-    require("gWidgetsRGtk2")
+    requireNamespace("RGtk2")
+    requireNamespace("gWidgets2")
+    requireNamespace("gWidgetsRGtk2")
     
                                         #check if allowed range for delta should be updated
     if (autorange.delta) {
@@ -116,9 +116,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
 
                                         #update the calculated data set (aggmap, summary-table and Venn) in the three tabs
   load.data <- function(truncated.lists) {
-    require("RGtk2")
-    require("gWidgets2")
-    require("gWidgetsRGtk2")
+    requireNamespace("RGtk2")
+    requireNamespace("gWidgets2")
+    requireNamespace("gWidgetsRGtk2")
     
                                         #update is only performed when delta slider is enabled
     if (gWidgets2::enabled(wid$delta.slider)) {
@@ -175,9 +175,9 @@ TopKListsGUI <- function(lists, autorange.delta = FALSE, override.errors = TRUE,
   
                                         #calculates aggmap, summary-table and Venn for each delta in the given range for delta
   calculate.all.truncationlists <- function() {
-    require("RGtk2")
-    require("gWidgets2")
-    require("gWidgetsRGtk2")
+    requireNamespace("RGtk2")
+    requireNamespace("gWidgets2")
+    requireNamespace("gWidgetsRGtk2")
     
                                         #check if entered values are valid
     if ((as.numeric(gWidgets2::svalue(wid$delta.start)) < 0) || (as.numeric(gWidgets2::svalue(wid$delta.stop)) < 0) || (gWidgets2::svalue(wid$delta.start) > gWidgets2::svalue(wid$delta.stop))) {
