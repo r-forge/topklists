@@ -38,6 +38,10 @@ Results that can be obtained are a sublist of highly conforming objects in a new
 <tr><td>Comparison of miRNA measurements</td><td><a href="showcase_miRNA/topklists-miRNA.html">website</a></td><td><a href="showcase_miRNA/topklists-miRNA.R">R code</a></td><td><a href="showcase_miRNA/topklists-miRNA-sampledata.zip">data</a></td></tr>
 </table>
 </div>
+<H2>Installation</H2>
+<div style="max-width:750px">
+<P>The TopKLists GUI requires the RGtk2 package, which itself requires an installation of GTK+ version 2.8.0, or higher. If you are experiencing problems with RGtk2/GTK+ installation, please see <A HREF="https://gist.github.com/sebkopf/9405675" TARGET="_blank">this website</A> for possible solution.</P>
+</div>
 <H2>Citation Information</H2>
 <div style="max-width:750px">
 <P>When using TopKLists in your work please cite:
