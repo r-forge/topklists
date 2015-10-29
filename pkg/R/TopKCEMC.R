@@ -25,13 +25,13 @@ function(input,space=NULL,k=NULL,dm="k",kp=0.5,N=NULL, N1=NULL,rho=0.1,
   ##d.w: weights for distances from different input lists
   ##input.par: input parameters in a dataframe
 
-if (missing(input))
-	stop("You need to input the top-k lists to be aggregated")
+  if (missing(input))
+    stop("You need to input the top-k lists to be aggregated")
   if (!is.null(input.par)) {
     for (p.n in names(input.par))
       assign(p.n,input.par[1,p.n])
   }
-
+  
   time.start <- proc.time()
 
   topK.input <- input
@@ -43,9 +43,11 @@ if (missing(input))
     k.a[i] <- length(input[[i]])
   item <- sort(unique(unlist(input))) # all items in the input top K lists
   n <- length(item)
-#added to allow for k to be NULL
-if (is.null(k)==TRUE) k=n
-        else {if (k>n) k=n}
+  ##added to allow for k to be NULL
+  if (is.null(k)) 
+    k <- n
+  else if (k>n) 
+    k <- n
   if (extra > 0) {
     n <- n + extra
     k <- k + extra
@@ -78,7 +80,7 @@ if (is.null(k)==TRUE) k=n
   p <- init.p(input,n,k,init.m,init.w)
   p2 <- p
   y <- 0
-  samp2 <- TopKSample.c(.blur(p,b),N1)
+  samp2 <- TopKSample.c(.blur(p,b),N1)[1:k,]
   iter <- 0
   y.count <- 0 # counter used in stopping rule
   
@@ -87,7 +89,7 @@ if (is.null(k)==TRUE) k=n
   
   repeat {
     iter <- iter + 1
-    samp <- cbind(samp2,TopKSample.c(.blur(p,b),N-N1))
+    samp <- cbind(samp2,TopKSample.c(.blur(p,b),N-N1)[1:k,])
 
  ##   if (iter == 10)
  ##     samp[,N] <- new.c
@@ -112,7 +114,8 @@ if (is.null(k)==TRUE) k=n
     for (i in 1:k)
       for (j in 1:n)
         p2[j,i] <- sum(samp3[i,]==j)/n.samp3
-    p2[,k+1] <- 1 - apply(p2[,1:k],1,sum)
+    if (k < n) 
+      p2[,k+1] <- 1 - apply(p2[,1:k],1,sum)
     if (abs(y-y2) < e2) y.count <- y.count + 1
     else y.count <- 0
     y <- y2
@@ -123,7 +126,10 @@ if (is.null(k)==TRUE) k=n
   result <- samp[,order(dist)[1]]
   rank.result <- rep(k+1,n)
   rank.result[result] <- 1:k
-  dimnames(p) <- list(c(item,rep(0,extra)),1:(k+1))
+  if (k < n) 
+    dimnames(p) <- list(c(item,rep(0,extra)),1:(k+1))
+  else
+    dimnames(p) <- list(c(item,rep(0,extra)),1:k)
 
   diff.p <- mean(abs(p[result,1:k] - diag(k)))
   #difference between sorted p and the identity matrix
@@ -154,22 +160,22 @@ if (is.null(k)==TRUE) k=n
 `TopKSample` <-
 function(p,N) {
   #Sampler to generate N top K lists according to p
-  #p: matrix of dimension n*(k+1), n is the number of items
+  #p: matrix of dimension n*k, n is the number of items
   #N: the number of samples
 
-  k <- dim(p)[2] - 1
+  k <- dim(p)[2]
   n <- dim(p)[1]
   item <- 1:n
   samp <- matrix(0,nrow=k,ncol=N)
 
   i <- 1
-  fail <- F
+  fail <- FALSE
   repeat {
     samp[1,i] <- which(rmultinom(1,1,p[,1])==1)
     for (j in 2:k) {
       remain <- item[-samp[1:(j-1),i]]
       if (sum(p[remain,j]) == 0) {
-        fail <- T
+        fail <- TRUE
         break
       }
       samp[j,i] <- remain[which(rmultinom(1,1,p[remain,j])==1)]
@@ -185,7 +191,7 @@ function(p,N) {
 
   #this version calls a C subroutine for faster sampling
 
-  k <- dim(p)[2] - 1
+  k <- dim(p)[2]
   n <- dim(p)[1]
   samp <- matrix(0,nrow=k,ncol=N)
   seed <- round(runif(1,10000,3000000))
@@ -253,8 +259,13 @@ function(topK,n,k,init.m="p",init.w=0) {
   #        "cs" smooth using composite ranks
   #init.w: initialization weight
  
-  p.u <- matrix(1/n,nrow=n,ncol=k+1)
-  p.u[,k+1] <- 1-k/n
+  if (k < n) {
+    p.u <- matrix(1/n,nrow=n,ncol=k+1)
+    p.u[,k+1] <- 1-k/n
+  }
+  else {
+    p.u <- matrix(1/n,nrow=n,ncol=k)
+  }
   
   a <- length(topK)
   
@@ -263,8 +274,10 @@ function(topK,n,k,init.m="p",init.w=0) {
     for (i in 1:a) {
       k.a <- length(topK[[i]])
       p.e[cbind(topK[[i]],1:k.a)] <- 1/a + p.e[cbind(topK[[i]],1:k.a)]
-      p.e[(1:n)[-match(topK[[i]],1:n)],(k.a+1):n] <-
-        1/((n-k.a)*a) + p.e[(1:n)[-match(topK[[i]],1:n)],(k.a+1):n]
+      if (k.a < n) {
+	p.e[(1:n)[-match(topK[[i]],1:n)],(k.a+1):n] <-
+	  1/((n-k.a)*a) + p.e[(1:n)[-match(topK[[i]],1:n)],(k.a+1):n]
+      }
     }
 #    if ((k+1)<n)
 #      p.e <- cbind(p.e[,1:k],apply(p.e[,(k+1):n],1,sum))
@@ -294,7 +307,8 @@ function(topK,n,k,init.m="p",init.w=0) {
       }
       p.e <- p.e %*% weight
      }
-  p.e <- cbind(p.e[,1:k],1-apply(p.e[,1:k],1,sum))
+  if (k < n) 
+    p.e <- cbind(p.e[,1:k],1-apply(p.e[,1:k],1,sum))
   p.u*(1-init.w) + p.e*init.w
 }
 
