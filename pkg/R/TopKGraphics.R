@@ -636,10 +636,10 @@ L=truncated.lists$L
             pushViewport(viewport(width = wid, height = hei, layout.pos.col = i + 1, layout.pos.row = y + 1))
             if (!is.na(distance)) {
               grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = red.orange.white[abs(distance)/N*10 + 1]))
-              grid.text(-distance, x = 0.9, y = 0.4, gp = gpar(cex = 0.7))
+              grid.text(-distance, x = 0.9, y = 0.4, gp = gpar(fontsize = 6)) #  cex = 0.7
             } else {
               grid.polygon(x = c(1, 1, 0), y = c(0, 1, 0), gp = gpar(col = "black", fill = "white"))
-              grid.text("NA", x = 0.9, y = 0.4, gp = gpar(cex = 0.7))
+              grid.text("NA", x = 0.9, y = 0.4, gp = gpar(fontsize = 6)) #cex = 0.7
             }
             bg <- "white"
             if (!is.na(grayshaded.lists[[i]][y])) { if(grayshaded.lists[[i]][y]==1) {
