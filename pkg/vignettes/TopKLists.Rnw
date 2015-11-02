@@ -6,7 +6,7 @@
 %%\usepackage{inconsolata}
 \usepackage{hyperref}
 \usepackage{subfig}
-\renewcommand*{\familydefault}{\sfdefault} 
+\renewcommand*{\familydefault}{\sfdefault}
 \addtolength{\oddsidemargin}{-.875in}
 \addtolength{\evensidemargin}{-.875in}
 \addtolength{\textwidth}{1.75in}
@@ -26,7 +26,7 @@ options(width=60)
 %opening
 \title{TopKLists: Analyzing multiple ranked lists}
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Usage of TopKLists} 
+%\VignetteIndexEntry{Usage of TopKLists}
 \author{Michael G. Schimek, Eva Budinska, Jie Ding, Karl G. Kugler, \\ Vendula Svendova and Shili Lin}
 
 \begin{document}
@@ -38,7 +38,7 @@ options(width=60)
 \newpage
 \section{Introduction}
 \label{sec:introduction}
-The ranking of distinct items has become mainstream in recent years. Examples include Web search engine results for query terms, institution league tables in higher education, preference rankings of brands, betting results in sports, results from microarray platforms in biotechnology, and meta-analysis of multiple study findings in medicine, among many others. The rank position of an object or institution might be the result of measuring the strength of evidence or of assessment based on expert knowledge or preference. The underlying space can be a person or a technical device. Typically, such lists are between several thousand and several tens of thousands of items in length. However, only a comparably small subset of \emph{k} top-ranked items is usually informative. These are characterized by a strong overlap of their rank positions when they are ranked by several independent assessors.
+The ranking of distinct items has become mainstream in recent years. Examples include Web search engine results for query terms, institution league tables in higher education, preference rankings of brands, betting results in sports, results from microarray platforms in biotechnology, and meta-analysis of multiple study findings in medicine, among many others. The rank position of an object or institution might be the result of measuring the strength of evidence or of assessment based on expert knowledge or preference. The assessors can be a person or a technical device. Typically, such lists are between several thousand and several tens of thousands of items in length. However, only a comparably small subset of \emph{k} top-ranked items is usually informative. These are characterized by a strong overlap of their rank positions when they are ranked by several independent assessors.
 
 There are two basic statistical tasks: (i) Identification of the top-\emph{k} most conforming items. For this task, two lists are analyzed together (multiple lists in a pairwise manner). (ii) Calculation of a consolidated top-\emph{k} sublist with a new optimized ordering of the conforming items from two or more lists. For long ranked lists, (i) is a prerequisite of (ii) because for any kind of rank aggregation the top-$k$ list lengths of the individual top-$k$ lists need to be specified.
 
@@ -53,8 +53,8 @@ For these two tasks this package offers several options which can be selected fr
 
 \subsection{Input data}
 The input data should be either lists of ranked object names (see the breast cancer example below), or lists of their actual rank positions.
-Data should be prepared in a \texttt{data.frame} format (for the truncation functions \texttt{compute.stream}, \texttt{j0.multi}, \texttt{TopKListsGUI}, \texttt{deltaplot},...) or a \texttt{list} format (for the aggregation functions \texttt{Borda}, \texttt{MC} and \texttt{CEMC}). 
-The truncation functions allow for incomplete data sets (NA values). After loading the data, user can continue working in the console using all the functions directly, or start the graphical user interface (GUI) by running the \texttt{TopKListsGUI} function. 
+Data should be prepared in a \texttt{data.frame} format (for the truncation functions \texttt{compute.stream}, \texttt{j0.multi}, \texttt{TopKListsGUI}, \texttt{deltaplot},...) or a \texttt{list} format (for the aggregation functions \texttt{Borda}, \texttt{MC} and \texttt{CEMC}).
+The truncation functions allow for incomplete data sets (NA values). After loading the data, user can continue working in the console using all the functions directly, or start the graphical user interface (GUI) by running the \texttt{TopKListsGUI} function.
 
 \subsection{The breast cancer data}
 \label{subsec:breastdata}
@@ -80,7 +80,7 @@ For illustrating the usage of this package, we selected three breast cancer micr
 \end{center}
 \end{table}
 
-The presence of an estrogene receptor on cancer cells discriminates between two groups of breast cancer and therefore we expected ESR1 (estrogen receptor 1 gene) to be in the first place among the differentially expressed genes. 
+The presence of an estrogene receptor on cancer cells discriminates between two groups of breast cancer and therefore we expected ESR1 (estrogen receptor 1 gene) to be in the first place among the differentially expressed genes.
 Given the study designs, we also expected a substantial overlap in the top ranked genes.
 We begin by loading the data set and displaying the first part of the data frame, as described below.
 
@@ -148,7 +148,7 @@ the reason why computation has ended (\texttt{reason.break}); and the preselecte
 The following plot (Figure~\ref{fig:truncPlot}) summarizes the obtained estimation results $\hat{j}_0$ for the specified range of pilot sample sizes $\nu$ and the assumed point of degeneration $j_0=31$. Small values of $\nu$ are the most appropriate here.
 
 <<truncPlot, out.width='8cm', out.height='8cm', fig.pos="ht!", fig.cap="Estimation of $j_0$ for different values of $\\nu$", fig.align='center'>>=
-plot(resF[,1], resF[,2], pch=19, ylim=c(25, 40), 
+plot(resF[,1], resF[,2], pch=19, ylim=c(25, 40),
 xlab=substitute(nu), ylab=substitute(paste(hat(j)[0])))
 abline(a=31, b=0, col="red")
 lines(resF[,1], resF[,2])
@@ -157,20 +157,20 @@ lines(resF[,1], resF[,2])
 \subsection{TopKSpace}
 \label{sec:topkspace}
 The principle of the \texttt{TopKSpace} module is to consolidate information from
-the $l$ top-\emph{k} lists to arrive at an aggregate list, $AL$. 
+the $l$ top-\emph{k} lists to arrive at an aggregate list, $AL$.
 As shown in Figure \ref{fig:topkspace}, the top-\emph{k} lists
-($L_1, L_2, \ldots, L_l$) may not only be of different lengths, they may also come from studies or assessments that consider different sets of objects, hence the underlying spaces ($S_1, S_2, \ldots, S_l$) from which the top-\emph{k} lists are derived may actually be different. The goal of the inference in \texttt{TopKSpace} is to therefore find the top-\emph{k} list, $AL$, from the aggregate new space ($\cup_{i=1}^l L_i$), 
+($L_1, L_2, \ldots, L_l$) may not only be of different lengths, they may also come from studies or assessments that consider different sets of objects, hence the underlying spaces ($S_1, S_2, \ldots, S_l$) from which the top-\emph{k} lists are derived may actually be different. The goal of the inference in \texttt{TopKSpace} is to therefore find the top-\emph{k} list, $AL$, from the aggregate new space ($\cup_{i=1}^l L_i$),
 such that the weighted sum of distances between each of the input lists and $AL$ will be the minimum among lists of the same length.
-Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. Both take the differences in the underlying spaces into account \cite{lin2010}. 
-There are three common assumptions about the underlying spaces: {\em common-space} (all top-\emph{k} lists come from a single common space), {\em underlying space-dependent}, i.e. {\em assessment-} or {\em platform-dependent} (using the known spaces from which the top-\emph{k} lists were generated), and {\em top-k-space} 
+Two distance measures, Kendall's $\tau$ and Spearman's footrule, are available in the package. Both take the differences in the underlying spaces into account \cite{lin2010}.
+There are three common assumptions about the underlying spaces: {\em common-space} (all top-\emph{k} lists come from a single common space), {\em underlying space-dependent}, i.e. {\em assessment-} or {\em platform-dependent} (using the known spaces from which the top-\emph{k} lists were generated), and {\em top-k-space}
 (treating each top-\emph{k} list as its own space). Since underlying space-dependent represents the true underlying scenario, this method is recommended if such information is available.
 
 There are three classes of algorithms implemented in \texttt{TopKSpace}, namely
-Borda's method, Markov Chain (MC) algorithms \cite{lin}, 
+Borda's method, Markov Chain (MC) algorithms \cite{lin},
 and a Cross Entropy Monte Carlo (CEMC) method taking advantage of the new Order Explicit Algorithm (OEA) as described by \cite{linding}.
 The Borda and Markov Chain methods consist of heuristic algorithms which do not directly optimize the objective function (i.e., minimizing the weighted distances), whereas the CEMC method employs a Monte Carlo search procedure for achieving this optimization. Borda and Markov Chain algorithms run much faster than the Cross Entropy Monte Carlo algorithm, however the latter usually achieves better results. Nevertheless, simulation studies indicate that taking the underlying space into consideration has a much greater impact than using different algorithms.
-These three algorithms are implemented in three top-level functions within \texttt{TopKSpace}: \texttt{Borda}, \texttt{MC}, 
-and \texttt{CEMC}. There are also two plotting functions: \texttt{Borda.plot} and \texttt{MC.plot} that help the user to visualize 
+These three algorithms are implemented in three top-level functions within \texttt{TopKSpace}: \texttt{Borda}, \texttt{MC},
+and \texttt{CEMC}. There are also two plotting functions: \texttt{Borda.plot} and \texttt{MC.plot} that help the user to visualize
 and compare the results.
 
 \begin{figure}[h]
@@ -197,15 +197,15 @@ space=list(space1,space2,space3)
 As can be seen from the compositions of the three lists, they are of different lengths (30, 25, and 20
 for L1, L2, and L3, respectively). Further, the
 aggregate candidate set is objects Obj1-Obj40, although two of the underlying spaces are larger, indicating that
-objects Obj41-Obj50 were not selected in the top-\emph{k} of the two corresponding lists. Fifteen of these 40 objects 
+objects Obj41-Obj50 were not selected in the top-\emph{k} of the two corresponding lists. Fifteen of these 40 objects
 appear in all 3 lists, with objects Obj1-Obj10
 ranked 1-10, in that order, in all three lists;  objects Obj11-Obj15, however,
-have different rankings 
-(they are ranked 11-15 for L1, 20-25 for L2, and 16-20 for L3). 
+have different rankings
+(they are ranked 11-15 for L1, 20-25 for L2, and 16-20 for L3).
 Five objects, Obj16-Obj20, appear in two of the lists, with rankings of 16-20 for L1 and 11-15 for L3.
-The remaining 20 objects, Obj21-Obj40, appear on only one list (objects Obj21-Obj30 
-are ranked 21-30 in L1, while objects Obj31-Obj40 are ranked 11-20 in L2). Since the number of 
-potential aggregate top-40 lists is more than $8 \times 10^{47}$, enumerating all of them to find the 
+The remaining 20 objects, Obj21-Obj40, appear on only one list (objects Obj21-Obj30
+are ranked 21-30 in L1, while objects Obj31-Obj40 are ranked 11-20 in L2). Since the number of
+potential aggregate top-40 lists is more than $8 \times 10^{47}$, enumerating all of them to find the
 ``true'' answer is not possible, but it would be reasonable to make a fairly
 accurate guess. There should be
 overwhelming information for ranking objects Obj1-Obj10 in the top-10. Objects Obj11-Obj15 should come next, followed
@@ -227,15 +227,15 @@ Of the three arguments in \texttt{Borda}, only the first one ({\em input}) is re
 provided, then the underlying space is assumed to be common among all top-\emph{k} lists implicitly, and the union of
 the top-\emph{k} lists is treated as the common space. If argument {\em k} is not specified, then the full ranked
 list (all elements in the union) is outputted.
- 
+
 
 <<>>=
-outBorda=Borda(input,space) 
+outBorda=Borda(input,space)
 # "space" is explicitly specified; underlying space-dependent
 @
 
 <<>>=
-outBorda1=Borda(input) 
+outBorda1=Borda(input)
 #"space" is not specified; all lists are assumed to come from the common space (objects Obj1-Obj40)
 
 @
@@ -251,27 +251,27 @@ sum(outBorda$Scores-outBorda2$Scores)
 @
 
 Comment 1: Objects Obj1-Obj40, union of the three top-\emph{k} lists, are contained in all three spaces. As such, the results for which the spaces were explicitly
-specified should be the same as those with the common space assumption, which was exactly what we saw above. On the 
+specified should be the same as those with the common space assumption, which was exactly what we saw above. On the
 other hand, the underlying space-dependent results were different from the results
 assuming top-\emph{k} spaces (i.e., all lists were full ranked lists).
 
-<<>>=  
+<<>>=
 as.list(outBorda$TopK)
 @
 
 Comment 2: All four scoring functions ranked objects Obj1-Obj10, in that order, in the top-10. However,
 despite our expectation that objects Obj11-Obj15, in that order, should be ranked 11-15, followed by
 objects Obj16-Obj20, the results were more of a mix of these two groups, but with the correct
-relative orders preserved within each group. The results are quite similar among the four scoring 
-functions. This is not surprising due to degradation of ranking information beyond the top-10. 
-Such information degradation can be seen by plotting the Borda scores as described in the following.   
+relative orders preserved within each group. The results are quite similar among the four scoring
+functions. This is not surprising due to degradation of ranking information beyond the top-10.
+Such information degradation can be seen by plotting the Borda scores as described in the following.
 \\[2ex]
 
 Plotting the Borda scores against the ranking can frequently reveal when information for
 ranking starts to diminish. For example, Figure~\ref{fig:borda}(a) shows that for the
-underlying space-dependent approach, a large gap appears between the Borda scores 
+underlying space-dependent approach, a large gap appears between the Borda scores
 at rankings 10--11, and that the changes of the scores also slow down after this point.
-This can be similarly observed for the scores under the 
+This can be similarly observed for the scores under the
 top-\emph{k} space assumption (Figure~\ref{fig:borda}(b)). \\
 
 
@@ -283,8 +283,8 @@ Borda.plot(outBorda2, k=40) # plot scores from top-k space analysis
 
 
 
-Note that the first argument of the \texttt{Borda.plot} function is the output from the Borda function, which is 
-mandatory. If the number of ranked objects (second argument) is not specified, the plot will show 
+Note that the first argument of the \texttt{Borda.plot} function is the output from the Borda function, which is
+mandatory. If the number of ranked objects (second argument) is not specified, the plot will show
 scores for all objects in the union set. \\
 \quad\\
 %% \begin{figure}[h]
@@ -294,7 +294,7 @@ scores for all objects in the union set. \\
 %% %@
 %% 	\includegraphics[scale=0.6]{bordaPlot.pdf}\\
 %% \end{center}
-%% \caption{Plot of Borda scores against ranking: (a) results from platform-dependent 
+%% \caption{Plot of Borda scores against ranking: (a) results from platform-dependent
 %% analysis; (b) results from top-k space analysis.}
 
 %% \label{borda}
@@ -302,29 +302,29 @@ scores for all objects in the union set. \\
 
 \paragraph{Three MC algorithms}
 Three Markov Chain (MC) algorithms are implemented in the \texttt{MC} function in
-\texttt{TopKSpace}: MC1 (spam sensitive), 
-MC2 (majority rule), and MC3 (proportional). 
+\texttt{TopKSpace}: MC1 (spam sensitive),
+MC2 (majority rule), and MC3 (proportional).
 Among them, \texttt{MC3} may be more appropriate for multi-platform omics problems given the potential of unique features of each data type.
-The output is a list with two elements for each of the \texttt{MC} algorithms (aggregate top-\emph{k} list: \texttt{MC1.TopK}, \texttt{MC2.TopK}, or \texttt{MC3.TopK}; stationary probability distribution: \texttt{MC1.Prob}, \texttt{MC2.Prob}, or \texttt{MC3.Prob}). 
+The output is a list with two elements for each of the \texttt{MC} algorithms (aggregate top-\emph{k} list: \texttt{MC1.TopK}, \texttt{MC2.TopK}, or \texttt{MC3.TopK}; stationary probability distribution: \texttt{MC1.Prob}, \texttt{MC2.Prob}, or \texttt{MC3.Prob}).
 Of the arguments in \texttt{MC}, only the first one, {\em input}, is required. If argument {\em space} is not provided, it is assumed that the underlying space is common among all top-\emph{k} lists, and the union of
 the top-\emph{k} list is supplied as the common space. If argument {\em k} is not specified, then the full ranked list (all elements in the union) is outputted.
 The other two arguments ($a$ and $delta$; the latter different from $\delta$ in \texttt{TopKInference}) are tuning parameters, whose default values were shown to work well in a number of examples.
 
 
 <<>>=
-outMC=MC(input,space) 
+outMC=MC(input,space)
 # "space" is explicitly specified; underlying space-dependent
 @
 
 
 <<>>=
-outMCa=MC(input,k=30) 
+outMCa=MC(input,k=30)
 # "space" is not specified, so it is the same as common space (O1-O40)
 @
 
 
 <<>>=
-outMCb=MC(input,space=input) 
+outMCb=MC(input,space=input)
 # "space = input" indicates that this is the top-k space
 @
 
@@ -334,12 +334,12 @@ sum(outMC$MC2.Prob-outMCa$MC2.Prob)
 
 
 
-Comment 1: 
-Similar to the discussion for running the \texttt{Borda} function, 
+Comment 1:
+Similar to the discussion for running the \texttt{Borda} function,
  the results for which the space was explicitly
 specified were expected to be the same as those obtained under the common space
 assumption, which was exactly what we saw above (the two stationary distributions were identical). On the
-other hand, the common-space results were different from those assuming 
+other hand, the common-space results were different from those assuming
 top-\emph{k} space (there were large discrepancies in the aggregated top-\emph{k} lists).
 
 <<>>=
@@ -348,9 +348,9 @@ list(outMC$MC1.TopK, outMC$MC2.TopK, outMC$MC3.TopK)
 
 
 
-Comment 2: All three \texttt{MC} algorithms ranked objects Obj1-Obj10, in that order, in the top-10. \texttt{MC2} also ranked the next two groups, Obj11-Obj15 and Obj16-Obj20 in the correct 
+Comment 2: All three \texttt{MC} algorithms ranked objects Obj1-Obj10, in that order, in the top-10. \texttt{MC2} also ranked the next two groups, Obj11-Obj15 and Obj16-Obj20 in the correct
 order. However, the remaining objects (Obj21-Obj40) were ranked in the reverse of
-the expected order. \texttt{MC3}, on the other hand, had all the correct ordering 
+the expected order. \texttt{MC3}, on the other hand, had all the correct ordering
 except a transposition between the order of objects Obj15 and (Obj16, Obj17).
 The stationary probabilities can be visualized applying the plotting function (described in
 the following), which can be used to detect information degradation heuristically.
@@ -360,16 +360,16 @@ The stationary probabilities can be plotted by
 MC.plot(outMC)
 @
 A plot of the ordered stationary probabilities versus the ranking using the above command can contain useful information
-regarding the relative rankings of objects. 
-For example, Figure~\ref{fig:equil} shows that 
+regarding the relative rankings of objects.
+For example, Figure~\ref{fig:equil} shows that
 for \texttt{MC2}, there was considerable information for ranking objects in the top-20,
-but there was practically no information ranking any object after that position (all 
+but there was practically no information ranking any object after that position (all
 stationary probabilities are the same). This was the reason why the rankings for objects
 Obj21-Obj40 were completely wrong as we saw in the output.
 On the other hand, for \texttt{MC1}, there was less information for ranking
 objects beyond the top-10 compared to \texttt{MC2}, thus objects Obj11-Obj20 were not ranked
-correctly. \texttt{MC3} appears to be a compromise between \texttt{MC1} and \texttt{MC2}, leading to a better 
-aggregate ranked 
+correctly. \texttt{MC3} appears to be a compromise between \texttt{MC1} and \texttt{MC2}, leading to a better
+aggregate ranked
 list.
 
 
@@ -389,24 +389,24 @@ probabilities for all objects in the union set.\\
 \paragraph{The CEMC algorithm}
 The Order Explicit Algorithm (OEA) in \cite{linding} is implemented as the \texttt{CEMC} function in \texttt{TopKSpace}.
 Of the three main input arguments in \texttt{CEMC}, only the first one ({\em input}) is required. If argument {\em space}
-is not provided, then all the underlying spaces are assumed to be a common one, and the union of 
-the input top-\emph{k} lists is supplied as the common space. If argument {\em k} is not specified, then the full 
-aggregate ranked-list (all elements in the union) is outputted. 
+is not provided, then all the underlying spaces are assumed to be a common one, and the union of
+the input top-\emph{k} lists is supplied as the common space. If argument {\em k} is not specified, then the full
+aggregate ranked-list (all elements in the union) is outputted.
 The function also has a number of other arguments, all tuning parameters, that can be set to run the OEA more efficiently.
-The default specified in the \texttt{CEMC} function constitutes a set of 
+The default specified in the \texttt{CEMC} function constitutes a set of
 values that seem to work well for the examples/data that we have analyzed in \cite{linding}, but it is always a good idea
-to run OEA with multiple sets of tuning parameters to increase the chance of finding 
-the global maximum; see \cite{linding} for some recommendations on how to choose these 
+to run OEA with multiple sets of tuning parameters to increase the chance of finding
+the global maximum; see \cite{linding} for some recommendations on how to choose these
 parameters. In fact, the output of \texttt{CEMC} contains the set of tuning parameters used in the current run. If  users
-are unsure of what to use, they are recommended to run \texttt{CEMC} without setting any parameter and use 
+are unsure of what to use, they are recommended to run \texttt{CEMC} without setting any parameter and use
 the parameter file in the output ({\em input.par}) to fine-tune the parameters and apply them as input
-for a more refined analysis. For the convenience of the user, after the parameter values are 
-modified, the file can be directly supplied as an input argument without having to enter the value of 
+for a more refined analysis. For the convenience of the user, after the parameter values are
+modified, the file can be directly supplied as an input argument without having to enter the value of
 each tuning parameter separately.
-Other than {\em input.par}, there are two more elements in the output list. 
-One is the 
+Other than {\em input.par}, there are two more elements in the output list.
+One is the
 aggregate top-\emph{k} list (\texttt{TopK}). The other is the multinomial probability matrix (\texttt{ProbMatrix};
-each column 
+each column
 represents the probability vector of a multinomial distribution and thus sum to 1, albeit with
 small rounding
 errors), from which the aggregate top-\emph{k} list is determined.
@@ -420,7 +420,7 @@ outCEMC=CEMC(input,space,N=4000,N1=400)
 
 <<>>=
 list(outCEMC$TopK)
-outCEMC$ProbMatrix[1:5,1:5] 
+outCEMC$ProbMatrix[1:5,1:5]
 @
 
 Comment 1: From the submatrix shown above for \texttt{CEMC}, it can be seen that item one is ranked no. 1, since the probability vector in the first column for item one is almost 1, but very small for the rest of the items. Similarly, item 2 is ranked no. 2, and so on.
@@ -434,15 +434,15 @@ modify this file and use it as the input to the {\em input.par} argument in
 the \texttt{CEMC} function.
 
 \paragraph{Comparison of performance of the different algorithms}
-In the example given above, we discussed the performances of the different 
+In the example given above, we discussed the performances of the different
 algorithms and assumptions since the underlying truth can be guessed to a large extend since
 the example was contrived.
 However, in a real data application, the ground truth is typically completely unknown,
 therefore, it would be helpful to have some objective criterion to evaluate the relative
-performances of the various algorithms. To this end, we have implemented two functions 
-based on the modified Kendall distance (MKD) \cite{lin} in the \texttt{TopKSpace} module. The first 
-function is \texttt{Kendall}, which computes the weighted sum of 
-MKD between an aggregate top-\emph{k} list with the input lists. 
+performances of the various algorithms. To this end, we have implemented two functions
+based on the modified Kendall distance (MKD) \cite{lin} in the \texttt{TopKSpace} module. The first
+function is \texttt{Kendall}, which computes the weighted sum of
+MKD between an aggregate top-\emph{k} list with the input lists.
 Of the input arguments, the first two ({\em input, aggregate}) are required. If argument
 {\em space} is not supplied, all input lists are assumed to come from the same underlying
 space, the union of all elements in the input. If user has prior information on which list
@@ -450,14 +450,14 @@ is more informative, then that information can be utilized by specifying the wei
 {\em w}.
 The output of \texttt{Kendall} is the \texttt{MKD}, a single number. However, it would be much more meaningful
 to compare \texttt{MKD}s accross results from different algorithms to assess their relative
-performances. This can be achieved by invoking the \texttt{Kendall.plot} function, which not only 
+performances. This can be achieved by invoking the \texttt{Kendall.plot} function, which not only
 provides a vector of \texttt{MKD}s but also provides a plot of the \texttt{MKD}s for ease of comparison visually.
 There are also two mandatory input arguments, \texttt{input} and \texttt{all.aggregates},
-where \texttt{all.aggregates} is a list comprising aggregate top-\emph{k} lists from different 
+where \texttt{all.aggregates} is a list comprising aggregate top-\emph{k} lists from different
 algorithms to be compared. \\
 \vspace{2.5mm}
 
-The following command will compute the \texttt{MKD} for the aggregate list form the  
+The following command will compute the \texttt{MKD} for the aggregate list form the
 Borda algorithm \texttt{ARM}.
 
 <<>>=
@@ -472,14 +472,14 @@ Runing the \texttt{Kendall} function returns the \texttt{MKD} for the aggregate 
 Borda algorithm \texttt{ARM}, whereas the \texttt{Kendall.plot} function returns a vector of \texttt{MKD}s, with
 the first one matching the output from the \texttt{Kendall} function.
 Figure~\ref{fig:plotKendall} is the graphical component of the \texttt{Kendall.plot} output.
-As we can see, the range on the y-axis is very small, indicating similar performance of 
-all algorithms, especially those from \texttt{Borda}. 
+As we can see, the range on the y-axis is very small, indicating similar performance of
+all algorithms, especially those from \texttt{Borda}.
 
 
 
 \subsection{TopKGraphics}
 \subsubsection{Deltaplot}
-The function \texttt{deltaplot} provides an exploratory graph (for examples see Figures \ref{fig:deltaplot_complete} and \ref{fig:deltaplot_subset200}), designed to help the user with selecting the distance parameter $\delta$ in the \texttt{TopKListsGUI} interface. 
+The function \texttt{deltaplot} provides an exploratory graph (for examples see Figures \ref{fig:deltaplot_complete} and \ref{fig:deltaplot_subset200}), designed to help the user with selecting the distance parameter $\delta$ in the \texttt{TopKListsGUI} interface.
 The input for the moderate deviation-based inference procedure is a sequence of $I$'s, taking
 either zero or one, forming a data stream representing the concordance of the paired ranks of an
 object $o$. The data stream depends on some value for the distance $\delta$. The parameter $\delta$ is defined by the shift in
@@ -492,10 +492,10 @@ of column sums (i.e. the number of 0's) for $\delta \in [0,1,2,\ldots,N-1]$) is 
 the so-called \textit{deltaplot}. It represents the reduction of discordance as a function of $\delta$. When all column
 sums remain zero, complete concordance is attained.
 
-\subsubsection{Aggregation map} 
-The aggregation map can only be accessed via the \texttt{TopKListsGUI} (see Section~\ref{GUI}). It can be characterized as follows: We define an index $p=1,2,\ldots$ and combine $\ell-1$ aggregation levels (groupings of truncated lists) in one display: 
-For each group of $\ell-p$ truncated lists down to the smallest group consisting of just one pair of lists, we (i) select an arbitrary reference list $L^0$ under the condition that it 
-comprises $\max_i(\hat{k}_i)$ items among all pairwise comparisons in the group of rankings, (ii) print the symbols of its $\max_i(\hat{k}_i)$ items vertically from the highest 
+\subsubsection{Aggregation map}
+The aggregation map can only be accessed via the \texttt{TopKListsGUI} (see Section~\ref{GUI}). It can be characterized as follows: We define an index $p=1,2,\ldots$ and combine $\ell-1$ aggregation levels (groupings of truncated lists) in one display:
+For each group of $\ell-p$ truncated lists down to the smallest group consisting of just one pair of lists, we (i) select an arbitrary reference list $L^0$ under the condition that it
+comprises $\max_i(\hat{k}_i)$ items among all pairwise comparisons in the group of rankings, (ii) print the symbols of its $\max_i(\hat{k}_i)$ items vertically from the highest
 to the lowest rank position, and (iii) add the aggregation information for all remaining $\ell-p$ rankings (pairwise list combinations) in the group, ordered according to descending list length.
 The aggregation map of the breast cancer dataset can be seen in Figure \ref{aggmap}.
 
@@ -506,7 +506,7 @@ The Venn diagram, and the respective Venn table, show overlaps of objects in the
 
 \section{Parameter selection}
 \label{sec:parameterselection}
-For making inference on pairs of ranked lists, tuning parameters have to be specified. This is for the following reason: For a given set of $N$ objects, arbitrary ranked lists can be constructed by successive permutations. However, this fact does not help in practice when we have to analyze realizations of such lists because they comprise irregularities in terms of position shifts, inverted orderings, missing assignments, etc. As a consequence, a unique top-$k$ list or a complete set of top-conforming objects does not exist. This is the reason why the truncation algorithm (and any other algorithm) in \texttt{TopKLists} needs to be controlled by tuning parameters. 
+For making inference on pairs of ranked lists, tuning parameters have to be specified. This is for the following reason: For a given set of $N$ objects, arbitrary ranked lists can be constructed by successive permutations. However, this fact does not help in practice when we have to analyze realizations of such lists because they comprise irregularities in terms of position shifts, inverted orderings, missing assignments, etc. As a consequence, a unique top-$k$ list or a complete set of top-conforming objects does not exist. This is the reason why the truncation algorithm (and any other algorithm) in \texttt{TopKLists} needs to be controlled by tuning parameters.
 We therefore adhere to the well established notion of top-$k$ list\underline{\textbf{s}}. By definition, a top-$k$ list consists of $k$ items. The next index value after $k$ is $j_0$, the point of overlap degradation ($k$=$j_0$-1).\\
 \quad\newline
 There are two main parameters that need to be specified for the truncation algorithm:
@@ -515,16 +515,16 @@ There are two main parameters that need to be specified for the truncation algor
   \item pilot sample size $\nu$
 \end{enumerate}
 
-Besides the $\delta$ and $\nu$ parameters, the algorithm uses a constant $C$ which allows us to compensate for poor separability between the informative top parts and the remaining random parts of the input lists (the suggested interval is $0.25<C<0.6$). 
+Besides the $\delta$ and $\nu$ parameters, the algorithm uses a constant $C$ which allows us to compensate for poor separability between the informative top parts and the remaining random parts of the input lists (the suggested interval is $0.25<C<0.6$).
 This constant is set to $0.251$ in the code (this value is sufficient in most situations).
 
 \subsection{$\delta$ selection - deltaplot}
-The choice of the distance parameter $\delta$ (which takes the value $0, 1, 2, 3,\ldots $) is crucial for the truncation algorithm. 
-The \texttt{deltaplot} of the module \texttt{TopKGraphics} was designed to help the user with the selection of $\delta$ for any pair of input lists of the same length. 
+The choice of the distance parameter $\delta$ (which takes the value $0, 1, 2, 3,\ldots $) is crucial for the truncation algorithm.
+The \texttt{deltaplot} of the module \texttt{TopKGraphics} was designed to help the user with the selection of $\delta$ for any pair of input lists of the same length.
  A reasonable choice for the distance parameter is associated with a distinct decline in the number of 0's.
 Generally one should choose a value for $\delta$, where the rate of the deltaplot's decrease begins to slow noticeably (i.e. where the discordance is starting to degrade).
 When this plot indicates more than one feasible $\delta$-value, preference should be given to the smallest value.
-  Of course, prior information about the ranking mechanisms involved and the nature of the data is also relevant for the selection of $\delta$. 
+  Of course, prior information about the ranking mechanisms involved and the nature of the data is also relevant for the selection of $\delta$.
 
 
 <<>>=
@@ -532,13 +532,13 @@ deltaplot.dir =  paste0(tempdir(), "/deltaplot")
 dir.create(deltaplot.dir, showWarnings = FALSE)
 subplot.dir = paste0(tempdir(), "/subplot")
 dir.create(subplot.dir, showWarnings = FALSE)
-@ 
+@
 
 <<fig.show='hide'>>=
 library(TopKLists)
 data(breast)
-a=deltaplot(breast, deltas = seq(0,300, by=5), directory=deltaplot.dir) 
-@ 
+a=deltaplot(breast, deltas = seq(0,300, by=5), directory=deltaplot.dir)
+@
 
 \begin{figure}[H]
 \centering
@@ -547,12 +547,12 @@ a=deltaplot(breast, deltas = seq(0,300, by=5), directory=deltaplot.dir)
 \label{fig:deltaplot_complete}
 \end{figure}
 
-When observing the deltaplot for the first two breast cancer lists (Figure \ref{fig:deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used. 
+When observing the deltaplot for the first two breast cancer lists (Figure \ref{fig:deltaplot_complete}), it is not immediately apparent which value for $\delta$ should be used.
 This is because there is no visible point where the \texttt{deltaplot}'s decrease is changing its direction. \\
 \vspace{2.5mm}
 
 It can also be observed from Figure~\ref{fig:deltaplot_complete} that switching the reference list from, for example \texttt{Putsztai} to \texttt{MDCC} or vice versa, has only little impact on the graph. Therefore, the order of the lists is not relevant.
-In order to choose a suitable value for $\delta$, we must limit the deltaplot calculation to a smaller subset of the investigated lists. 
+In order to choose a suitable value for $\delta$, we must limit the deltaplot calculation to a smaller subset of the investigated lists.
 There is no general rule how large this subset should be, but users are encouraged to try a subset of the first 20\% - 50\% objects. One should search for those points where the decrease suddenly slows down. If there are several such points, the user should consider the smallest one as the suitable $\delta$.\\
 \vspace{2.5mm}
 
@@ -560,7 +560,7 @@ In our breast cancer dataset (of length 917), we took approximately the first 20
 Additionally, the \texttt{subplot} parameter can be used, which magnifies a selected range of small $\delta$-values in a subplot, defined by the \texttt{perc.subplot} parameter (the input is a percentage of the main graph, e.g. 50\% of the graph is defined as \verb"perc.subplot=50").
 
 <<fig.show='hide'>>=
-a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE, 
+a=deltaplot(breast, deltas = 1:50, subset.lists=200, subplot = TRUE,
   perc.subplot=50, directory=subplot.dir)
 @
 
@@ -575,21 +575,21 @@ In Figure \ref{fig:deltaplot_subset200}, it can be seen that after $\delta=6$ th
 
 
 \subsection{$\nu$ selection}
-Another important tuning parameter is the pilot sample size $\nu$, which controls the degree of irregularity of the rankings. For this smoothing parameter any positive integer value is admissible. 
-The effect of the choice of the $\nu$ parameter on an arbitrary dataset can be seen in section \ref{different_nu}. For most datasets values between $2$ and $10$ are appropriate. 
+Another important tuning parameter is the pilot sample size $\nu$, which controls the degree of irregularity of the rankings. For this smoothing parameter any positive integer value is admissible.
+The effect of the choice of the $\nu$ parameter on an arbitrary dataset can be seen in section \ref{different_nu}. For most datasets values between $2$ and $10$ are appropriate.
 Very large datasets require larger values of $\nu$ in the order of tens. For our breast cancer data of length 917, we used $\nu=10$.
 
 
 \section{Data analysis}
 \label{sec:analysis}
 
-The purpose of the \texttt{TopKLists} package is to answer the following two main questions: 
+The purpose of the \texttt{TopKLists} package is to answer the following two main questions:
 \begin{enumerate}
   \item What is the top-$k$ range of highest rank overlap between lists?
   \item Which objects in which order form the (top-$k$) consolidated common list?
 \end{enumerate}
 The overall procedure leading to these answers is depicted in Figure \ref{fig:flowchart}. Red is connected to the search for the index top-$k$ and blue to the aggregation of lists.
-Both tasks can be targeted independently for arbitrary list lengths, but users should be warned, that the aggregation functions are computationally extensive and might take a significant amount of time. 
+Both tasks can be targeted independently for arbitrary list lengths, but users should be warned, that the aggregation functions are computationally extensive and might take a significant amount of time.
 That is why we recommend, for lists longer than about 100, to truncate them at the estimated index max $\hat{k}$ to speed up the aggregation algorithms.
 As mentioned in the introduction, the user can achieve these results using the console or the GUI.
 
@@ -598,8 +598,8 @@ As mentioned in the introduction, the user can achieve these results using the c
 
  \subsubsection{Estimation of the index $k$}
 
-The calculation of the overall truncation index $k$ for pre-specified values of $\delta$ and $\nu$ (see section \ref{sec:parameterselection} about their choice) is performed using the \texttt{j0.multi} function. 
-This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's (see section \ref{subsec:topkinference}), and then estimates the $\hat{j}_0=\hat{k}+1$. 
+The calculation of the overall truncation index $k$ for pre-specified values of $\delta$ and $\nu$ (see section \ref{sec:parameterselection} about their choice) is performed using the \texttt{j0.multi} function.
+This function takes the input lists, calculates for all pairwise list combinations \texttt{Idata} vectors of 0's and 1's (see section \ref{subsec:topkinference}), and then estimates the $\hat{j}_0=\hat{k}+1$.
 Finally, the $k$ is calculated as the maximum of all pairwise $\hat{k}$ values, and outputted as \texttt{maxK}. Besides that, the function provides partial results for each pair of lists (under \texttt{L}), and the \texttt{Idata} vector for each pair of lists (under \texttt{Idata}).
 
 <<>>=
@@ -615,9 +615,9 @@ The function \texttt{j0.multi} itself uses the functions \texttt{prepare.idata} 
 \quad\newline
 
  \subsubsection{Aggregation of lists}
-  
+
 To aggregate multiple lists, here we use the three different aggregation methods (\texttt{Borda}, \texttt{MC}, and \texttt{CEMC}) for comparative purposes.
-First we truncate the lists to the length of $k=14$, the estimated index for the most overlapping genes of the three lists. 
+First we truncate the lists to the length of $k=14$, the estimated index for the most overlapping genes of the three lists.
 <<>>=
 k = res$maxK
 TransBig=as.character(breast[1:k,1])
@@ -626,22 +626,22 @@ Pusztai=as.character(breast[1:k,3])
 input=list(TransBig,MDCC,Pusztai)
 @
 
-Then we have to specify the underlying space, i.e. the set of objects the input lists come from. If space is not specified, all lists are treated as coming from a common space defined by the union of all input lists. 
+Then we have to specify the underlying space, i.e. the set of objects the input lists come from. If space is not specified, all lists are treated as coming from a common space defined by the union of all input lists.
 The underlying space is defined by the parameter \texttt{space}, which should be in the \texttt{list} format - one set of objects for each input list. This is because each input list could generally come from a different set of objects (different space).
-In our case, the set of genes contained in each list is not identical and each list can contain a different set of 14 top genes. Since each of the top-14 gene lists come from the 
-common set of 917 genes, we shall define the space as the set of all the genes present in these 3 truncated lists. 
-In this case there are 22 unique genes (variable \texttt{common}). 
+In our case, the set of genes contained in each list is not identical and each list can contain a different set of 14 top genes. Since each of the top-14 gene lists come from the
+common set of 917 genes, we shall define the space as the set of all the genes present in these 3 truncated lists.
+In this case there are 22 unique genes (variable \texttt{common}).
 
 <<>>=
 common=unique(unlist(input))
 space=list(common,common,common)
 @
 
-Finally, we can run the aggregation functions. 
+Finally, we can run the aggregation functions.
 <<>>=
 outBorda=Borda(input,space)
 outMC=MC(input,space)
-outCEMC=CEMC(input,space,N=2000) 
+outCEMC=CEMC(input,space,N=2000)
 outCEMC$TopK[1:k]
 @
 
@@ -653,13 +653,13 @@ agg=list(ARM=outBorda$TopK[,1],MED=outBorda$TopK[,2],GEO=outBorda$TopK[,3],
   L2N=outBorda$TopK[,4],MC1=outMC$MC1.TopK,
   MC2=outMC$MC2.TopK,MC3=outMC$MC3.TopK,CEMC=outCEMC$TopK)
 head(do.call(cbind, agg))
-@ 
+@
 
 Additionally, we can plot the results from the different functions.
 
 <<aggplot, out.width='8cm', out.height='8cm', fig.pos="ht!", fig.cap="Results from different algorithms for the breast cancer example data", fig.align='center'>>=
 Kendall.plot(input,agg,space,algorithm=c("ARM","MED","GEO","L2N","MC1","MC2","MC3","CEMC"))
-@ 
+@
 
 Note: The results indicate that Borda with the median function (MED) and the CEMC algorithm perform the best in this example as they lead to the smallest distance between the aggregate and individual lists (Figure \ref{fig:aggplot}).
 
@@ -668,23 +668,23 @@ Note: The results indicate that Borda with the median function (MED) and the CEM
 \subsection{Via the GUI}
 \label{GUI}
 The \texttt{TopKLists} package comprises a graphical user interface \texttt{TopKListsGUI} that offers applied researchers easy and straightforward access to all the functionality of \texttt{TopKInference} as well as access to the aggregation technique \texttt{CEMC} of \texttt{TopKSpace}, and the \texttt{aggmap} graphical aggregation tool contained in \texttt{TopKGraphics}. Moreover, Venn-diagrams and Venn-tables for the summary of rank aggregation results are accessible.
-The suite of functions supported by the \texttt{TopKListsGUI} facilitates the exploratory analysis of multiple ranked lists. 
+The suite of functions supported by the \texttt{TopKListsGUI} facilitates the exploratory analysis of multiple ranked lists.
 Interactive input facilities (such as a slider for the dynamic specification of the distance $\delta$) allow for the real-time analysis and visualization of results. These results correspond to the distance $\delta$ or the pilot sample size $\nu$ (note that, for large list lengths of $N$, many numbers of calculations must be performed and longer waiting times should be expected). \\
 
 To open the GUI using the breast cancer data introduced in section \ref{subsec:breastdata}, run
 <<eval=FALSE>>=
 TopKListsGUI(breast)
-@ 
-The window shown in Figure~\ref{topkguistart} appears, allowing the user to perform an analysis of two or more lists.
+@
+The window shown in Figure\ref{topkguistart} appears, allowing the user to perform an analysis of two or more lists.
 The TopKListsGUI window is divided into four panels: arguments, analysis status, delta-slider and results.
 
-In the arguments panel (Figure \ref{topkguiarg}), the user is informed about the number of lists and objects in the dataset. Further, the user can set up variable values for the top-\emph{k} list computation. 
-The user must select $\nu$ (default value is 10) and choose the $\delta$ range for which the top-\emph{k} lists should be calculated (the default is from 0 to 10, in steps of 1). 
-A threshold for the minimum percentage of top lists comprising an object, used for gray-shading in the aggregation map, can also be selected (default is 50). 
+In the arguments panel (Figure \ref{topkguiarg}), the user is informed about the number of lists and objects in the dataset. Further, the user can set up variable values for the top-\emph{k} list computation.
+The user must select $\nu$ (default value is 10) and choose the $\delta$ range for which the top-\emph{k} lists should be calculated (the default is from 0 to 10, in steps of 1).
+A threshold for the minimum percentage of top lists comprising an object, used for gray-shading in the aggregation map, can also be selected (default is 50).
 The \texttt{TopKSpace} algorithm for the generation of the aggregate list is set by default to \texttt{CEMC}. Last but not least, this panel contains the calculate button, which starts the analysis.
-In the bottom section of \texttt{TopKListsGUI} the status of the analysis is shown. 
+In the bottom section of \texttt{TopKListsGUI} the status of the analysis is shown.
 
-Once the analysis is complete, the delta-slider (Figure \ref{topkguislider}) allows the user to switch between the results, obtained using different values for $\delta$ interactively. 
+Once the analysis is complete, the delta-slider (Figure \ref{topkguislider}) allows the user to switch between the results, obtained using different values for $\delta$ interactively.
 The moving bar shows the current value of $\delta$, and the aggregation map updates accordingly. Moving the bar to the left or right allows the user to see results for smaller or larger $\delta$ values.
 
 \begin{figure}
@@ -730,16 +730,16 @@ Once the analysis is complete, the main panel in the GUI serves the visualizatio
 \subsection{Aggregation map}
 The aggregation map (Figure \ref{aggmap}) shows the top-$k$ list of overlapping genes and their respective distances. It displays aggregation groups, each with a different reference list $L^0$
 (in our case two groups - first with \texttt{Pusztai} as the reference list, second with \texttt{MDCC} as the reference list).
-The aggregation information per symbol, item, and group consists of three measures represented by colored triangles and rectangles, respectively, outlined in an array format: 
+The aggregation information per symbol, item, and group consists of three measures represented by colored triangles and rectangles, respectively, outlined in an array format:
 \begin{description}
-  \item[a)] The \textbf{membership} of an individual item in the top-\emph{k} lists. \textit{Yes} is denoted by the color `grey' and \textit{no} by the color `white'. 
-  \item[b)]  The \textbf{distance} $d$ of the rank of an individual item $o\in L^0$ from its position in another list, is denoted by a triangle color scaled from `red' \textit{identical} to 
-`yellow' \textit{far distant}. An additional integer value gives the numerical distance between the item's rank positions, a negative sign means ranked lower, and a positive sign means 
-ranked higher in $L$ with respect to $L^0$. 
-  \item[c)] The rectangular of a symbol takes on the color `grey' when the \textbf{percentage} of $d \leq \delta$ across the columns of a group is above 
+  \item[a)] The \textbf{membership} of an individual item in the top-\emph{k} lists. \textit{Yes} is denoted by the color `grey' and \textit{no} by the color `white'.
+  \item[b)]  The \textbf{distance} $d$ of the rank of an individual item $o\in L^0$ from its position in another list, is denoted by a triangle color scaled from `red' \textit{identical} to
+`yellow' \textit{far distant}. An additional integer value gives the numerical distance between the item's rank positions, a negative sign means ranked lower, and a positive sign means
+ranked higher in $L$ with respect to $L^0$.
+  \item[c)] The rectangular of a symbol takes on the color `grey' when the \textbf{percentage} of $d \leq \delta$ across the columns of a group is above
 some prespecified threshold, and `white' otherwise.
 \end{description}
-As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the MDCC and TransBig lists against the Pusztai list, for $\delta = 6$ (see Section~\ref{sec:introduction} for a description of the example data).
+As shown in Figure\ref{aggmap}, the best overlap was found when comparing the MDCC and TransBig lists against the Pusztai list, for $\delta = 6$ (see Section~\ref{sec:introduction} for a description of the example data).
 \vspace{2 cm}
 \begin{figure}[H]
 \centering
@@ -762,17 +762,17 @@ As shown in Figure~\ref{aggmap}, the best overlap was found when comparing the M
 \vspace{2 cm}
 
 \subsection{Summary table}
-The summary table displays a table of objects present in at least one of the top-\emph{k} lists, as shown in the aggregation map. The table describes each object name, position of the object in each of the lists, sum of ranks, frequency in the input lists, and frequency in the truncated lists. 
-Please note, that the objects which have assigned the tag `YES' in the first column are in the top-\emph{k} set of genes selected by \texttt{CEMC} (under default tuning parameters as explained in Section~\ref{sec:topkspace}). The table is ordered in ascending order with regard to the sum of ranks of the objects in the three lists. 
+The summary table displays a table of objects present in at least one of the top-\emph{k} lists, as shown in the aggregation map. The table describes each object name, position of the object in each of the lists, sum of ranks, frequency in the input lists, and frequency in the truncated lists.
+Please note, that the objects which have assigned the tag `YES' in the first column are in the top-\emph{k} set of genes selected by \texttt{CEMC} (under default tuning parameters as explained in Section~\ref{sec:topkspace}). The table is ordered in ascending order with regard to the sum of ranks of the objects in the three lists.
 \subsection{Venn-diagram and Venn-table}
 The produced Venn-diagram and Venn-table show overlaps of objects in the top-\emph{k} lists of all input lists in the analysis. The asterisk-tagged objects, in this example the genes, are those that belong to the final aggregate list as returned by the \texttt{TopKSpace} module.
 
 
 
 \section{Summary of breast cancer data results}
-As can be seen in the previous section, the estimated \verb"maxK" is 14, with 13 genes present in all three top-\emph{k} lists. Another top-ranked gene (BLOC1S1; rank 13) is only supported by Pusztai. 
-Alltogether, the first 14 genes in the input lists are the most informative ones and should be considered as related to breast cancer.  
-In the summary table (Figure \ref{topkgui_summary}), 14 genes are tagged YES, meaning that they belong to the aggregate list calculated by the CEMC method. 
+As can be seen in the previous section, the estimated \verb"maxK" is 14, with 13 genes present in all three top-\emph{k} lists. Another top-ranked gene (BLOC1S1; rank 13) is only supported by Pusztai.
+Alltogether, the first 14 genes in the input lists are the most informative ones and should be considered as related to breast cancer.
+In the summary table (Figure \ref{topkgui_summary}), 14 genes are tagged YES, meaning that they belong to the aggregate list calculated by the CEMC method.
 Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions in all three lists, as displayed in the aggregation map (with a distance of 0 in both MDCC and TransBig compared to Pusztai) and in the consolidated aggregate list obtained from \texttt{CEMC}. The Venn-diagram and Venn-table for the same data provide insight into the overlap characteristics of the top-ranked genes. Platform differences can thus be easily identified.
 
 
@@ -780,7 +780,7 @@ Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions
 \bibliographystyle{plain}
 \begin{thebibliography}{}
 
-\bibitem{desmedt} Desmedt C., Piette F., Loi S., Wang Y. et al. (2007). Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. \emph{Clin Cancer Res}, \textbf{13}, 3207-3214. 
+\bibitem{desmedt} Desmedt C., Piette F., Loi S., Wang Y. et al. (2007). Strong time dependence of the 76-gene prognostic signature for node-negative breast cancer patients in the TRANSBIG multicenter independent validation series. \emph{Clin Cancer Res}, \textbf{13}, 3207-3214.
 
 \bibitem{haschi} Hall, P. and Schimek, M. G. (2012).  Moderate deviation-based inference for random degeneration in paired rank lists. \emph{J. Amer. Statist. Assoc.}, \textbf{107}, 661-672.
 
@@ -790,12 +790,14 @@ Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions
 
 \bibitem{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
 
+\bibitem{schimetal} Schimek, M. G., Budinská, E., Kugler, K. G., Švendová, V., Ding, J., Lin, S. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. \emph{Statistical applications in genetics and molecular biology}.
+
 \bibitem{schimybu} Schimek, M. G., Mysickova, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
-\bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol}, \textbf{28}, 827-838. 
+\bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol}, \textbf{28}, 827-838.
 
-\bibitem{tabchy} Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. \emph{Clin Cancer Res} \textbf{16}, 5351-5361. 
- 
+\bibitem{tabchy} Tabchy A., Valero V., Vidaurre T., Lluch A. et al. (2010). Evaluation of a 30-gene paclitaxel, fluorouracil, doxorubicin, and cyclophosphamide chemotherapy response predictor in a multicenter randomized trial in breast cancer. \emph{Clin Cancer Res} \textbf{16}, 5351-5361.
+
 
 \end{thebibliography}
 \end{document}
