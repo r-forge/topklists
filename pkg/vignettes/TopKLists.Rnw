@@ -49,7 +49,7 @@ For these two tasks this package offers several options which can be selected fr
 \item \texttt{TopKGraphics} provides a collection of graphical tools for the visualization of the inputs to, and the outputs from, the other modules.
 \end{enumerate}
 
-\textbf{Whenever you refer to the package \texttt{TopKLists}, please cite \cite{haschi} and \cite{linding}.} In the following sections, we illustrate the usage of these modules.
+\textbf{Whenever you refer to the package \texttt{TopKLists}, please cite \cite{haschi}, \cite{linding} and \cite{schimetal}}. In the following sections, we illustrate the usage of these modules.
 
 \subsection{Input data}
 The input data should be either lists of ranked object names (see the breast cancer example below), or lists of their actual rank positions.
@@ -790,7 +790,7 @@ Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions
 
 \bibitem{lin} Lin, S. (2010b). Rank aggregation methods. \emph{Wiley Interdisciplinary Reviews: Computational Statistics}, \textbf{2}, 555–570.
 
-\bibitem{schimetal} Schimek, M. G., Budinská, E., Kugler, K. G., Švendová, V., Ding, J., Lin, S. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. \emph{Statistical applications in genetics and molecular biology}.
+\bibitem{schimetal} Schimek, M. G., Budinská, E., Kugler, K. G., Švendová, V., Ding, J., Lin, S. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{14(3)}: 311-316.
 
 \bibitem{schimybu} Schimek, M. G., Mysickova, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
