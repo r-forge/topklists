@@ -743,19 +743,19 @@ As shown in Figure\ref{aggmap}, the best overlap was found when comparing the MD
 \vspace{2 cm}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.35]{TopKListsGUI-2-Results.png}\\
+\includegraphics[scale=0.35]{aggmap.png}\\
 \caption{Aggregation map result of the \texttt{TopKListsGUI}
 \label{aggmap}}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.35]{TopKListsGUI-2-SummaryTable.png}\\
+\includegraphics[scale=0.35]{summarytable.png}\\
 \caption{Summary table result of the \texttt{TopKListsGUI}
 \label{topkgui_summary}}
 \end{figure}
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.35]{TopKListsGUI-2-Venn.png}\\
+\includegraphics[scale=0.35]{venndiagram.png}\\
 \caption{Venn-diagram and Venn-table results of the \texttt{TopKListsGUI}
 \label{venn}}
 \end{figure}
@@ -792,7 +792,7 @@ Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions
 
 \bibitem{schimetal} Schimek, M. G., Budinská, E., Kugler, K. G., Švendová, V., Ding, J., Lin, S. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{14(3)}: 311-316.
 
-\bibitem{schimybu} Schimek, M. G., Mysickova, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
+\bibitem{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
 \bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol}, \textbf{28}, 827-838.
 
