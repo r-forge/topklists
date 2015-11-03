@@ -214,12 +214,20 @@ calculate.maxK <- function(lists, L, d, v, threshold=50) {
 
                                         #conversion of the summary table into a data frame so that the rankings are given as numbers, not as characters, otherwise the ordering is wrong
         
-        summarytable.temp = data.frame(Object=cg_temp,summarytable, stringsAsFactors=FALSE)
-        summarytable.temp2 = summarytable.temp[order(summarytable.temp[,L+2]),]
-        CEMCres =  rep("",nrow(summarytable.temp2))
-        CEMCres[match(resS$TopK,summarytable.temp2$Object)] = "YES"
-        summarytable.final = data.frame(Final.selection.CEMC = CEMCres, summarytable.temp2)
-        
+    summarytable.temp = data.frame(Object=cg_temp,summarytable, stringsAsFactors=FALSE)
+	TopKranks = data.frame(TopK=resS$TopK, ranks=1:length(resS$TopK))
+	CEMCres =  rep("",nrow(summarytable.temp))
+	CEMCres[match(TopKranks$TopK,summarytable.temp$Object)] = "YES"
+	summarytable.temp2 = data.frame(Final.selection.CEMC = CEMCres, summarytable.temp)
+	topk.table = summarytable.temp2[which(summarytable.temp2$Final.selection.CEMC=='YES'),]
+	ranks = numeric()
+	ranks[match(TopKranks$TopK,topk.table$Object)] = TopKranks$ranks
+	topk.table.rank = topk.table[order(ranks),]
+	rest.table = summarytable.temp2[which(summarytable.temp2$Final.selection.CEMC==''),]
+	rest.table = rest.table[order(rest.table[,L+3]),]
+	summarytable.final = rbind(topk.table, rest.table)
+
+
         
                                         #calculate the Venn-lists (to view the Venn-diagram) and the Venn-table
                                         #the calculation takes place only for L between 2 and 4 (a Venn-diagram for L > 4 cannot be properly arranged)
