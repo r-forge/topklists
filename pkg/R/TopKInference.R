@@ -23,7 +23,8 @@ calculate.maxK <- function(lists, L, d, v, threshold=50) {
   if(sum(is.na(res.temp[,5]))<nrow(res.temp)){
     tl = as.list(lists[1:maxK, ])
     tli = as.character(unique(unlist(tl)))
-    resS = CEMC(input = tl, space = tl, k = maxK)
+	sp = rep(list(tli),L)
+    resS = CEMC(input = tl, space = sp, k = maxK)
     temp = tapply(as.numeric(res.temp[, 5]), res.temp[, 1], function(x) max(x, na.rm = TRUE))
     
     if (sum(temp!="-Inf")>1){
@@ -225,7 +226,7 @@ calculate.maxK <- function(lists, L, d, v, threshold=50) {
 	topk.table.rank = topk.table[order(ranks),]
 	rest.table = summarytable.temp2[which(summarytable.temp2$Final.selection.CEMC==''),]
 	rest.table = rest.table[order(rest.table[,L+3]),]
-	summarytable.final = rbind(topk.table, rest.table)
+	summarytable.final = rbind(topk.table.rank, rest.table)
 
 
         
