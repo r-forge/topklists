@@ -792,7 +792,7 @@ Most consistent are the ESR1 and TBC1D9 genes, occupying the first two positions
 
 \bibitem{schimetal} Schimek, M. G., Budinská, E., Kugler, K. G., Švendová, V., Ding, J., Lin, S. (2015). TopKLists: a comprehensive R package for statistical inference, stochastic aggregation, and visualization of multiple omics ranked lists. \emph{Statistical Applications in Genetics and Molecular Biology}, \textbf{14(3)}: 311-316.
 
-\bibitem{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinska, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
+\bibitem{schimybu} Schimek, M. G., My\v{s}i\v{c}kov\'{a}, A. and Budinsk\'{a}, E. (2012). An inference and integration approach for the consolidation of ranked lists. \emph{Communications in Statistics - Simulation and Computation}, \textbf{41:7}, 1152-1166.
 
 \bibitem{shi} Shi L., Campbell G., Jones W.D., Campagne F. et al. (2010). The MicroArray Quality Control (MAQC)-II study of common practices for the development and validation of microarray-based predictive models. \emph{Nat Biotechnol}, \textbf{28}, 827-838.
 
